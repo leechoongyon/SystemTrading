@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tm:TermDictionary xmlns:tm="http://exerd.com/term-model" version="1.1">
+  <term name="종목" description="종목" physicalName="STOCK"/>
+  <term name="코드" description="코드" physicalName="CD"/>
+  <term name="명" description="명" physicalName="NM"/>
+  <term name="그룹" description="그룹" physicalName="GROUP"/>
+  <term name="시장" description="시장" physicalName="MARKET"/>
+  <term name="시가" description="시가" physicalName="OPEN_PRICE"/>
+  <term name="고가" description="고가" physicalName="HIGH_PRICE"/>
+  <term name="저가" description="저가" physicalName="LOW_PRICE"/>
+  <term name="종가" description="종가" physicalName="CLOSE_PRICE"/>
+  <term name="조정된 종가" description="조정된 종가" physicalName="ADJ_CLOSE_PRICE"/>
+  <term name="년월일" description="년월일" physicalName="YM_DD"/>
+  <term name="거래량" description="거래량" physicalName="VOLUME"/>
+  <term name="로그인" description="LOGIN" physicalName="LOGIN"/>
+  <term name="패스워드" description="PASSWD" physicalName="PASSWD"/>
+  <term name="아이디" description="ID" physicalName="ID"/>
+  <term name="일시" description="DT" physicalName="DT"/>
+  <term name="유저" description="USER" physicalName="USER"/>
+  <term name="최종" physicalName="LST"/>
+  <term name="최초" physicalName="PRIM"/>
+  <term name="등록" physicalName="REGST"/>
+  <term name="수정" physicalName="RVSE"/>
+  <term name="거래" physicalName="TRAD"/>
+  <term name="유형" physicalName="TYPE"/>
+  <term name="가격" physicalName="PRICE"/>
+  <term name="시분초" physicalName="TMST"/>
+  <term name="이메일" physicalName="EML"/>
+  <term name="주소" physicalName="ADDR"/>
+  <term name="관심" description="관심종목" physicalName="ATIN"/>
+  <term name="24개월" description="24개월" physicalName="M24C"/>
+  <term name="이내" description="이내" physicalName="WHIN"/>
+  <term name="최저" physicalName="LWST"/>
+  <term name=""/>
+</tm:TermDictionary>
