@@ -43,8 +43,10 @@ if __name__ == "__main__":
     ##    THE FUNCTION CAN LOAD DATA FROM THE WEB OR FROM CSV FILES PREVIOUSLY SAVED TO DISK.
     ##    THE OUTPUT IS GOING TO BE A LOG FILE WITH THE RESULT OF CROSS VALIDATION ON TRAIN SET
     
-    sys.stdout = open('path to log txt file', 'w')  
+    sys.stdout = open('log', 'w')  
     pystocks.performFeatureSelection(maxdeltas, maxlags, fout, cut, start_test, path_datasets, savemodel, method, folds, parameters)             
+    
+    sys.exit(0)
     
     ##########################################################################
     # 2- CHECK BEST PARAMETERS
@@ -69,6 +71,7 @@ if __name__ == "__main__":
     end_period = datetime.datetime(2014,8,28) 
 
     ###### SP500
+    
     symbol = 'S&P-500'
     name = path_datasets + '/sp500.csv'
     prediction = pystocks.getPredictionFromBestModel(9, 9, 'sp500', cut, start_test, path_datasets, 'sp500_57.pickle')[0]

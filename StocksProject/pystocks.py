@@ -607,22 +607,4 @@ class MarketIntradayPortfolio(Portfolio):
      
         portfolio['total'] = self.initial_capital + portfolio['profit'].cumsum()
         portfolio['returns'] = portfolio['total'].pct_change()
-        return portfolio
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
+        return portfolio  
