@@ -36,13 +36,12 @@ if __name__ == '__main__':
     sp.columns.values[-1] = 'AdjClose'
     sp.columns = sp.columns + '_SP500'
     sp['Return_SP500'] = sp['AdjClose_SP500'].pct_change()
-    sp.to_csv('./datasets/sp.csv')
+    sp.to_csv('./datasets/sp500.csv')
 
     plt.plot(sp['AdjClose_SP500'])
     plt.legend(('Dividend Adjusted Close Price S&P-500',))
     plt.show()
     '''
-    
     
     '''
 ### Nasdaq Composite ^IXIC Yahoo Finance

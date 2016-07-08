@@ -1,0 +1,9 @@
+
+=============================================================
+Maximum time lag applied 2
+
+Delta days accounted:  2
+Size of data frame:  (5456, 27)
+Number of NaN after merging:  2349
+Number of NaN after time interpolation:  0
+Number of NaN after mean interpolation:  0

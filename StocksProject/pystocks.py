@@ -129,6 +129,12 @@ def addFeatures(dataframe, adjclose, returns, n):
     - given Return_* computes the return of day i respect to day i-n. 
     - given AdjClose_* computes its moving average on n days
 
+    input
+    adjclose : AdjClose_SP500
+    returns : Return_SP500
+
+    return_n : NasdaqTime2, DjiaTime2 ...
+    roll_n : NasdaqRolMean2, DjiaRolMean2 ...
     """
     
     return_n = adjclose[9:] + "Time" + str(n)
@@ -137,11 +143,19 @@ def addFeatures(dataframe, adjclose, returns, n):
     roll_n = returns[7:] + "RolMean" + str(n)
     dataframe[roll_n] = pd.rolling_mean(dataframe[returns], n)  
 
+    print "dataframe : %s " % dataframe
+
 ###############################################################################
 
 def applyRollMeanDelayedReturns(datasets, delta):
     """
     applies rolling mean and delayed returns to each dataframe in the list
+    
+    delta : range(2,3) = [2]    마지막 숫자는 count 안함. 즉, 3은 카운트 안됨. 
+            range(2,4) = [2,3]
+    columns : Open_SP500, High_SP500 ...
+    adjclose : AdjClose_SP500
+    returns : Return_SP500
     """
     for dataset in datasets:
         columns = dataset.columns    
@@ -314,6 +328,8 @@ def prepareDataForClassification(dataset, start_test):
 
 def performFeatureSelection(maxdeltas, maxlags, fout, cut, start_test, path_datasets, savemodel, method, folds, parameters):
     """
+        maxdeltas = 10
+        maxlags = 10
     """
     
     for maxlag in range(3, maxlags + 2):

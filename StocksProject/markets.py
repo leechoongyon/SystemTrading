@@ -18,7 +18,7 @@ fout = 'sp500'
 method = 'RF'
 best_model = 'sp500_57.pickle'
 ############ SET PARAMETERS ##################################################
-path_datasets = 'path to datasets'
+path_datasets = './datasets'
 cut = datetime.datetime(1993,1,1)
 start_test = datetime.datetime(2014,4,1)
 parameters = []
@@ -43,10 +43,11 @@ if __name__ == "__main__":
     ##    THE FUNCTION CAN LOAD DATA FROM THE WEB OR FROM CSV FILES PREVIOUSLY SAVED TO DISK.
     ##    THE OUTPUT IS GOING TO BE A LOG FILE WITH THE RESULT OF CROSS VALIDATION ON TRAIN SET
     
-    sys.stdout = open('log', 'w')  
+#     log_path = "./log/" + datetime.datetime.today().strftime("%Y%m%d%H%M%S") + ".log" 
+#     sys.stdout = open(log_path, 'w')  
     pystocks.performFeatureSelection(maxdeltas, maxlags, fout, cut, start_test, path_datasets, savemodel, method, folds, parameters)             
-    
     sys.exit(0)
+    
     
     ##########################################################################
     # 2- CHECK BEST PARAMETERS
