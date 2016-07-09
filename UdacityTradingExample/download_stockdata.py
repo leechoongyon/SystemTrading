@@ -9,12 +9,18 @@ import pandas_datareader.data as web
 if __name__ == '__main__':
     
     start = '2010-01-01'
-    end = '2010-12-31'
+    end = '2016-12-31'
     
     # SPY
     '''
     out =  web.DataReader("^GSPC", "yahoo", start, end)
     out.to_csv('./data/SPY.csv')
+    '''
+    
+    # XOM
+    '''
+    out =  web.DataReader("XOM", "yahoo", start, end)
+    out.to_csv('./data/XOM.csv')
     '''
     
     # GLD
