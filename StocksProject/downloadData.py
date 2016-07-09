@@ -5,7 +5,7 @@ Created on Sat Aug 30 19:25:07 2014
 @author: francesco
 """
 import pandas as pd
-import Quandl
+import Quandl 
 import datetime
 import pandas_datareader.data as web
 import matplotlib.pyplot as plt
