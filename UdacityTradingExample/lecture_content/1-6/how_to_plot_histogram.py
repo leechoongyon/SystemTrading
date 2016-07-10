@@ -38,6 +38,8 @@ def test_run():
     plt.axvline(-std, color='r', linestyle='dashed', linewidth=2)
     plt.show()
 
+    # Compute kurtosis
+    print daily_returns.kurtosis()
 
 if __name__ == '__main__':
     test_run()
