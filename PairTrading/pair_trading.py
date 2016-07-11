@@ -28,4 +28,18 @@ if __name__ == '__main__':
 
     df = normalization_price1.join(normalization_price2)
     
+    # 각각 정규화 그래프 plot
+#     plot_data(df)
+    
+    
+    # 정규화 스프레드
+    normalization_price1 = normalization_price1.rename(columns={'HYUNDAI_DEPT':'Adj Close'}) 
+    normalization_price2 = normalization_price2.rename(columns={'HYUNDAI_FOOD':'Ajd Close'})
+    
+    df = pd.DataFrame(normalization_price1.values - normalization_price2.values, index=df.index)
+    
     plot_data(df)
+    
+    
+#     df = normalization_price1 - normalization_price2
+#     plot_data(df)
