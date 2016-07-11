@@ -8,6 +8,7 @@ Created on 2016. 7. 10.
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+import config
 
 def symbol_to_path(symbol, base_dir="data"):
     """Return CSV file path given ticker symbol."""
@@ -20,7 +21,7 @@ def get_data(symbols, dates):
         symbols.insert(0, 'SPY')
 
     for symbol in symbols:
-        df_temp = pd.read_csv(symbol_to_path(symbol, "C:/git/SimpleTrading/UdacityTradingExample/data"), index_col='Date',
+        df_temp = pd.read_csv(symbol_to_path(symbol, config.DATA_PATH), index_col='Date',
                 parse_dates=True, usecols=['Date', 'Adj Close'], na_values=['nan'])
         df_temp = df_temp.rename(columns={'Adj Close': symbol})
         df = df.join(df_temp)

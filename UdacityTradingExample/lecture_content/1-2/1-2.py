@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     df1 = pd.DataFrame(index=dates)
 
-    dfSPY = pd.read_csv("data/SPY.csv", index_col="Date",
+    dfSPY = pd.read_csv("./data/SPY.csv", index_col="Date",
                         parse_dates=True, usecols=['Date', 'Adj Close']
                         , na_values = ['nan'])
     
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     
     symbols = ['GOOG', 'IBM', 'GLD']
     for symbol in symbols:
-        df_temp = pd.read_csv("data/{}.csv".format(symbol), index_col = 'Date',
+        df_temp = pd.read_csv("./data/{}.csv".format(symbol), index_col = 'Date',
                               parse_dates=True, usecols=['Date', 'Adj Close']
                               , na_values=['nan'])
 

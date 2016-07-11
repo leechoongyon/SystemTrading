@@ -143,8 +143,6 @@ def addFeatures(dataframe, adjclose, returns, n):
     roll_n = returns[7:] + "RolMean" + str(n)
     dataframe[roll_n] = pd.rolling_mean(dataframe[returns], n)  
 
-    print "dataframe : %s " % dataframe
-
 ###############################################################################
 
 def applyRollMeanDelayedReturns(datasets, delta):
@@ -203,6 +201,7 @@ def applyTimeLag(dataset, lags, delta):
     at head and tail
     """
     
+    '''
     dataset.Return_Out = dataset.Return_Out.shift(-1)
     maxLag = max(lags)
 
@@ -213,7 +212,15 @@ def applyTimeLag(dataset, lags, delta):
             dataset[newcolumn] = dataset[column].shift(lag)
 
     return dataset.iloc[maxLag:-1,:]    
-    
+    '''
+    maxLag = max(lags)
+    columns = dataset.columns[::(2*max(delta)-1)]
+    for column in columns:
+        for lag in lags:
+            newcolumn = column + str(lag)
+            dataset[newcolumn] = dataset[column].shift(lag)
+
+    return dataset.iloc[maxLag:-1,:]
 ###############################################################################    
     
 def performCV(X_train, y_train, folds, method, parameters, fout, savemodel):

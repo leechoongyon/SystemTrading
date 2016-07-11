@@ -8,6 +8,7 @@ Created on 2016. 7. 9.
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import config
 
 def symbol_to_path(symbol, base_dir="data"):
     """Return CSV file path given ticker symbol."""
@@ -22,7 +23,7 @@ def get_data(symbols, dates):
 
     for symbol in symbols:
         # TODO: Read and join data for each symbol
-        df_temp = pd.read_csv(symbol_to_path(symbol, "C:/git/SimpleTrading/UdacityTradingExample/data"), index_col='Date',
+        df_temp = pd.read_csv(symbol_to_path(symbol, config.DATA_PATH), index_col='Date',
                     parse_dates=True, usecols=['Date', 'Adj Close']
                     , na_values=['nan'])
         
@@ -41,6 +42,7 @@ if __name__ == '__main__':
     
     ax = df['SPY'].plot(title="SPY rolling mean", label='SPY')
 
+    # Rolling mean은 하나의 박스권을 설정해놓고(사이즈 20) 그 박스권에 해당하는 평균을 구함.
     rm_SPY = pd.rolling_mean(df['SPY'], window=20)
     rm_SPY.plot(label="Rolling mean", ax=ax)
     

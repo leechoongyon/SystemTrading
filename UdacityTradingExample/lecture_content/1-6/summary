@@ -3,9 +3,7 @@ daily returns는 single stock에 소용없다.
 다른 것과 비교해야 효과가 있다.
 
 
-Daily returns 를 Historygram 으로 그리면 정규분포를 이룬다.
-
-이를 Kurtosis 라고 부른다. 또는 가우시안 분포 
+Daily returns 를 Historygram 으로 그리면 정규분포를 이룬다. (가우시안 분포) 
 
 Kurtosis 는 첨도라고 하며, 확률분포의 뾰족한 정도를 나타내는 척도
 
@@ -22,8 +20,10 @@ Kurtosis 는 첨도라고 하며, 확률분포의 뾰족한 정도를 나타내�
 
 # Scatter plots (산포도, 점도표)
 
-2개의 stock 간에 daily_returns 관계를 산포도로 표시 
+2개의 stock 간에 daily_returns 관계를 산포도로 표시
+
+(x축 GOOG, y축 APPL 이 관계를 점으로 찍어서 표시한 것이 산포도)  
 
 
 
-여기서 Linear 가 나오는데 직선을 그려서 관계를 보여줌. spy가 1%오를 때 stocks가격이 1프로 오른다 (Slope)c 
+여기서 Linear 가 나오는데 직선을 그려서 관계를 보여줌. spy가 1%오를 때 stocks가격이 1프로 오른다 (Slope)

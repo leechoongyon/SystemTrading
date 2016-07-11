@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-from util import get_data, plot_data, compute_daily_returns
+from common import get_data, plot_data, compute_daily_returns
 
 
 def test_run():
@@ -25,11 +25,13 @@ def test_run():
 
     # Scatterplot SPY vs XOM
     # 기울기와 절편을 구함. 1차함수로  (뒤에 1이 함수 결정)
-
+    # polyfit를 통해 x,y의 관계식을 구함. 그것이 beta_XOM, alpha_XOM / 이것을 1차 함수로 표현
     daily_returns.plot(kind='scatter', x='SPY', y='XOM')
     beta_XOM, alpha_XOM = np.polyfit(daily_returns['SPY'], daily_returns['XOM'], 1)
     print "beta_XOM= ", beta_XOM
     print "alpha_XOM= ", alpha_XOM
+    
+    # 선형함수를 plt에 그림
     plt.plot(daily_returns['SPY'], beta_XOM * daily_returns['SPY'] + alpha_XOM, '-', color='r')
     plt.show()
     

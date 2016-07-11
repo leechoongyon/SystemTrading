@@ -7,7 +7,7 @@ Created on 2016. 7. 10.
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from util import get_data, plot_data, compute_daily_returns
+from common import get_data, plot_data, compute_daily_returns
 
 
 def test_run():

@@ -59,6 +59,7 @@ def test_run():
     # Get stock data
     df = get_data(symbols, dates)
     
+    # 현재 날짜에서 기준 날짜를 나눈다.
     print normalize_data(df)
     
     # Slice and plot

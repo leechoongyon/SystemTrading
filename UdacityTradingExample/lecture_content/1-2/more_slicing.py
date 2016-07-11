@@ -21,7 +21,7 @@ def get_data(symbols, dates):
 
     for symbol in symbols:
         # TODO: Read and join data for each symbol
-        df_temp = pd.read_csv(symbol_to_path(symbol, "C:/git/SimpleTrading/UdacityTradingExample/data"), index_col='Date',
+        df_temp = pd.read_csv(symbol_to_path(symbol, "C:/Windows/System32/git/SystemTrading/UdacityTradingExample/data"), index_col='Date',
                     parse_dates=True, usecols=['Date', 'Adj Close']
                     , na_values=['nan'])
         
