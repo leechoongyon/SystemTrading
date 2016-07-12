@@ -9,6 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import config
+import math
 
 def symbol_to_path(symbol, base_dir="data"):
     """Return CSV file path given ticker symbol."""
@@ -68,6 +69,8 @@ def normalize(symbols, dates, df):
 
 
 # symbols required argument 2
+# 사용법 : symbols 2개가 넘어오고 정규화된 dataFrame이 넘어오면 그것의 values subtract
+# 해서 normalize_spread를 만듬
 def normalize_spread(symbols, normal_df):
     df_list = []
     for symbol in symbols:
@@ -75,3 +78,9 @@ def normalize_spread(symbols, normal_df):
     
     normal_spread_df = pd.DataFrame(df_list[0].values - df_list[1].values, index=normal_df.index)
     return normal_spread_df
+
+# 수익률 구하기
+def get_earnings_rate(after_stock_price, before_stock_price):
+    return math.log(after_stock_price / before_stock_price)
+
+

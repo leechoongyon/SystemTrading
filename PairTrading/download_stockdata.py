@@ -10,16 +10,34 @@ import config
 
 if __name__ == '__main__':
     
-    start = '2010-01-01'
-    end = '2016-12-31'
+    start = '2009-09-04'
+    end = '2012-01-30'
     
     # HYUNDAI_DEPT (069960)
+    '''
     out = web.DataReader("069960.KS", "yahoo", start, end)
     out.to_csv(config.DATA_PATH + "/HYUNDAI_DEPT.csv")
-    
+    '''
     # HYUNDAI_FOOD (005440)
+    '''
     out = web.DataReader("005440.KS", "yahoo", start, end)
     out.to_csv(config.DATA_PATH + "/HYUNDAI_FOOD.csv")
+    '''
+    
+    # HYUNDAI_MOBIS (012330)
+    '''
+    out = web.DataReader("012330.KS", "yahoo", start, end)
+    out.to_csv(config.DATA_PATH + "/HYUNDAI_MOBIS.csv")
+    '''
+    
+    # HANRA_GONGJO (018880)
+    out = web.DataReader("018880.KS", "yahoo", start, end)
+    out.to_csv(config.DATA_PATH + "/HANRA_GONGJO.csv")
+    
+    
+    # SAMSUNG (005930)
+    
+    # SAMSUNG_ABOVE (005935)
     
     # SPY
     '''
