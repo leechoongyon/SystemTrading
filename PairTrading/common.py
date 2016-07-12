@@ -47,3 +47,31 @@ def compute_daily_returns(df):
     daily_returns.ix[0, :] = 0
     # Note: Returned DataFrame must have the same number of rows
     return daily_returns
+
+def normalize(symbols, dates, df):
+    
+    # Compute mean, std
+    means = {}
+    stds = {}
+    for symbol in symbols:
+        means[symbol] = df[symbol].mean()
+        stds[symbol] = df[symbol].std()
+        
+    # normalize
+    normal_df = pd.DataFrame(index=dates)
+    
+    for symbol in symbols:
+        df_temp = (df[symbol] - means[symbol]) / stds[symbol]
+        normal_df = normal_df.join(df_temp)
+        
+    return normal_df
+
+
+# symbols required argument 2
+def normalize_spread(symbols, normal_df):
+    df_list = []
+    for symbol in symbols:
+        df_list.append(normal_df[symbol])
+    
+    normal_spread_df = pd.DataFrame(df_list[0].values - df_list[1].values, index=normal_df.index)
+    return normal_spread_df
