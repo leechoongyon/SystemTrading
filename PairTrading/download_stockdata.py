@@ -11,7 +11,7 @@ import config
 if __name__ == '__main__':
     
     start = '2009-09-04'
-    end = '2012-01-30'
+    end = '2016-01-30'
     
     # HYUNDAI_DEPT (069960)
     '''

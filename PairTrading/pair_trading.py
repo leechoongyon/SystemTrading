@@ -25,9 +25,9 @@ if __name__ == '__main__':
     dates = pd.date_range('2010-01-01', '2012-01-31')
     symbols = ['HYUNDAI_DEPT', 'HYUNDAI_FOOD']
     df = get_data(symbols, dates)
-    
+    refined_df = df.dropna()
     # normalize
-    normal_df = normalize(symbols, dates, df)
+    normal_df = normalize(symbols, dates, refined_df)
     plot_data(normal_df)
     
     # normalize_spread
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     normal_spread_df = normalize_spread(symbols, normal_df)
     plot_data(normal_spread_df)
     '''
-    
+ 
  
     '''
         2. log_spread
@@ -47,12 +47,9 @@ if __name__ == '__main__':
          2.6 차트 그리기
     '''
     
-    # Read data
+    # 핵심은 0.12 일 때 A를 매도하고 B를 매수하면 향후 스프레드가 낮아질 때 이득이지
+    # A에 대해서 B를 평가한거기에 A가 고평가되있을 때 팔고 B가 저평가되있을 때 산다.
     dates = pd.date_range('2010-01-01', '2012-01-31')
-    symbols = ['SAMSUNG', 'SAMSUNG_ABOVE']
-    df = get_data(symbols, dates)
-    ln_df = np.log(df)
-    cov_df = ln_df.cov()
-    print cov_df['HYUNDAI_DEPT']['HYUNDAI_FOOD']
-    
-    
+    df = pd.read_csv('./data/Sample.csv', index_col='Date', usecols=['Date', 'A', 'B'])
+    spread_residual = get_spread_residual(df)
+    plot_data(spread_residual)
