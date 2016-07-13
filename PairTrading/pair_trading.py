@@ -7,6 +7,7 @@ Created on 2016. 7. 11.
 
     1. normalize_spread
     2. log_spread
+    
 '''
 
 from common import *
