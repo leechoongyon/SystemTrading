@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
 encoding//erd/StockDictionary.xdic=utf-8
+encoding//simple/algorithm/trading_algorithm.py=utf-8
+encoding//simple/common/services.py=utf-8
 encoding//simple/context/das/jdbc/sql_template.py=utf-8
 encoding//simple/context/stock/data_model.py=utf-8
 encoding//simple/crawler/data_crawler.py=utf-8
@@ -8,7 +10,9 @@ encoding//simple/db/mysql/data_handler.py=utf-8
 encoding//simple/strategy/pairtrading/common/pairtrading_common.py=utf-8
 encoding//simple/strategy/pairtrading/common/util/download_stockdata.py=utf-8
 encoding//sql/STOCK_ITEM\ test\ data.sql=UTF-8
+encoding//test/strategy/pairtrading/meirtz.py=utf-8
 encoding//test/trader/__init__.py=utf-8
+encoding//test/trader/insanely_simple_trader.py=utf-8
 encoding/<project>=UTF-8
 encoding/data_process.py=utf-8
 encoding/value_analysis.py=utf-8
