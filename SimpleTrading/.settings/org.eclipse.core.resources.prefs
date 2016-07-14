@@ -8,6 +8,7 @@ encoding//simple/db/mysql/data_handler.py=utf-8
 encoding//simple/strategy/pairtrading/common/pairtrading_common.py=utf-8
 encoding//simple/strategy/pairtrading/common/util/download_stockdata.py=utf-8
 encoding//sql/STOCK_ITEM\ test\ data.sql=UTF-8
+encoding//test/trader/__init__.py=utf-8
 encoding/<project>=UTF-8
 encoding/data_process.py=utf-8
 encoding/value_analysis.py=utf-8
