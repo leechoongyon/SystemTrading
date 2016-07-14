@@ -97,11 +97,22 @@ def get_earnings_rate(after_stock_price, before_stock_price):
     return math.log(after_stock_price / before_stock_price)
 
 
-# get_spread_residual
-def get_spread_residual(df):
-    ln_df = np.log(df).round(2)
-    cointegration_coefficient = ln_df.cov()['A']['B'] / ln_df['B'].var()
-    log_spread = ln_df['A'] - cointegration_coefficient * ln_df['B']
+def get_log(df):
+    return np.log(df).round(2)
+
+# log_spread와 log_spread_residual 는 다르다. residual는 잔차다 (두 개간의 차이)
+def get_log_spread(df, cointegration, symbols):
+    ln_df = get_log(df)
+    log_spread = ln_df[symbols[0]] - cointegration * ln_df[symbols[1]]
+    return log_spread
+
+def get_log_spread_residual(df, cointegration, symbols):
+    log_spread = get_log_spread(df, cointegration, symbols) 
     log_spread_mean = log_spread.mean()
-    spread_residual = log_spread - log_spread_mean
-    return spread_residual
+    log_spread_residual = log_spread - log_spread_mean
+    return log_spread_residual
+
+def get_cointegration(df, symbols):
+    ln_df = np.log(df).round(2)
+    cointegration = ln_df.cov()[symbols[0]][symbols[1]] / ln_df[symbols[1]].var()
+    return cointegration

@@ -52,7 +52,23 @@ if __name__ == '__main__':
         3. 위 2개 사항에 대해 결정됬으면 매수 타이밍은 잔차가 가장 큰 것
                 매도 타이밍은 볼린저 밴드와 균형점이 0으로 향했을 때 시그널 발생하는 것으로 방향을 잡자.  
     '''
+    
+    # log_spread_residual SAMPLE
     dates = pd.date_range('2010-01-01', '2012-01-31')
     df = pd.read_csv('./data/Sample.csv', index_col='Date', usecols=['Date', 'A', 'B'])
-    spread_residual = get_spread_residual(df)
+    symbols = ['A', 'B']
+    
+    cointegration = get_cointegration(df, symbols)
+    spread_residual = get_log_spread_residual(df, cointegration, symbols)
     plot_data(spread_residual, xlabel="Date", ylabel="Spread_residual")
+    
+    # get_cointegration
+    '''
+    dates = pd.date_range('2014-01-01', '2016-07-13')
+    symbols = ['MERITZ_SECURITY', 'MERITZ_FINANCIAL']
+    df = get_data(symbols, dates)
+    refined_df = df.dropna()
+    normal_df = normalize(symbols, dates, refined_df)
+    plot_data(normal_df)
+    print get_cointegration(refined_df, symbols)
+    '''
