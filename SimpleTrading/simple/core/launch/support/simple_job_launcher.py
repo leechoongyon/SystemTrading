@@ -13,17 +13,23 @@ from simple.context import simple_biz_postprocess, simple_biz_preprocess,\
 from simple.core.job import simple_job
 
 
-def run(interval):
+def run(interval, properties_path):
 
-    simple_system_preprocess.pre_process()
-    simple_biz_preprocess.pre_process()
+    # preProcess
+    simple_system_preprocess.pre_process(properties_path)
+    simple_biz_preprocess.pre_process(properties_path)
     
+    
+    
+    # MainService
     schedule.every(interval).minutes.do(simple_job.job)
+    
     # 나중에 while문에 특정시간이 됬을 때 종료시키는 로직 추가
     while 1:
         schedule.run_pending()
         time.sleep(1)
         
          
-    simple_biz_postprocess.post_process()
-    simple_system_postprocess.post_process()
+    # postProcess
+    simple_biz_postprocess.post_process(properties_path)
+    simple_system_postprocess.post_process(properties_path)

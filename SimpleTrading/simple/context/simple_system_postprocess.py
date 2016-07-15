@@ -5,5 +5,5 @@ Created on 2016. 7. 15.
 '''
 
 
-def post_process():
+def post_process(properties_path):
     pass
