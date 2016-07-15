@@ -1,0 +1,33 @@
+1. Daily portfolio 구성
+
+prices -> normlize -> allocation -> postion_value -> port_val
+
+
+가격을 normalize하고 (prices/prices[0]
+
+가중치를 allocation 하고 postion에 맞게 계산
+
+
+
+2. Shapre ratio
+
+SR = mean[Daily.return - Daily.risk free] / std(Daily.return)
+
+
+여기에 SR annualized 을 넣어줘야하는데 SR은 연간 측정이란다.
+
+SR = 루트 252 * 위에 식
+
+252는 daily에서 매일 거래하는 날
+52는 주단위
+달은 12 
+
+
+example
+
+60 daiys of data
+avg daily return : 0.001
+daily risk free = 0.0002
+std daily return = 0.001
+
+루트 252 * (10-2) / 10 = 12.7
