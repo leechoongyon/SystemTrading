@@ -32,4 +32,5 @@
   <term name="이내" description="이내" physicalName="WHIN"/>
   <term name="최저" physicalName="LWST"/>
   <term name=""/>
+  <term name="기타" physicalName="ETC"/>
 </tm:TermDictionary>
