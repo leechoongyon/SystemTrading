@@ -5,17 +5,36 @@ Created on 2016. 7. 15.
 @author: lee
 '''
 
+import datetime
+
+from simple.common.util.properties_util import *
 from simple.data.controlway.db.db_data import db_data
 from simple.data.controlway.db.mysql.data_handler import DataHandler
 from simple.data.controlway.db.query import select_query
+from simple.data.stock.stock_data import *
 
 
 def pre_process(properties_path):
     
     print "pre_process starting"
     
+    # 0. STOCK_RELATED_DATA init
+    properties = PropertiesUtil(properties_path)
     
+    temp_market_open_time = properties.config_section_map(STOCK_DATA)[MARKET_OPEN_TIME]
+    temp_market_close_time = properties.config_section_map(STOCK_DATA)[MARKET_CLOSE_TIME]
     
+    time = temp_market_open_time.split(":")
+    hour = int(time[0])
+    min = int(time[1]) 
+    market_open_time = datetime.time(hour, min, 0, 0)
+    
+    time = temp_market_close_time.split(":")
+    hour = int(time[0])
+    min = int(time[1]) 
+    market_close_time = datetime.time(hour, min, 0, 0)
+    
+    stock_data.set_market_time(market_open_time, market_close_time)
     
     '''
     
@@ -38,7 +57,6 @@ def pre_process(properties_path):
     target_stock_item = []
     for result in results:
         target_stock_item.append(result)
-        print result[0]
     
         
     

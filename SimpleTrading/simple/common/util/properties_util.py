@@ -8,6 +8,10 @@ Created on 2016. 7. 15.
 
 import ConfigParser
 
+DB_DATA = "DB_DATA"
+STOCK_DATA = "STOCK_DATA"
+MARKET_OPEN_TIME = "market_open_time"
+MARKET_CLOSE_TIME = "market_close_time"
 
 class PropertiesUtil():
     def __init__(self, filename):
