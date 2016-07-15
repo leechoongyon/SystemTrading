@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
+
 import MySQLdb as mdb
 
+
 class DataHandler():
-	def __init__(self, host, user, passwd, db, charset, use_unicode):
+	def __init__(self, host, user, passwd, db, charset, use_unicode, dict_cursor=True):
+		if dict_cursor:
+			self.dict_cursor = mdb.cursors.DictCursor 
 		self.conn = mdb.connect(host=host, 
                              	user=user, 
                               	passwd=passwd, 
 							  	db=db, 
                              	charset=charset, 
                               	use_unicode=use_unicode);
+         
+	def set_dict_cursor(self):
+		self.dict_cursor = mdb.cursors.DictCursor
 
 	def beginTrans(self):
 		self.conn.autocommit(False)
@@ -25,7 +32,7 @@ class DataHandler():
 
 	def openSql(self,sql):
 		try:
-			cursor = self.conn.cursor()
+			cursor = self.conn.cursor(self.dict_cursor)
 			cursor.execute(sql)
 			return cursor
 		except Exception as e:

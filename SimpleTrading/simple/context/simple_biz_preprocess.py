@@ -53,12 +53,9 @@ def pre_process(properties_path):
     
     
     cursor = data_handler.openSql(select_query.SELECT_JOIN_STOCK_ITEM_DAILY_AND_TARGET_PORTFOLIO)
-    results = cursor.fetchall()
-    target_stock_item = []
-    for result in results:
-        target_stock_item.append(result)
-    
-        
+    stock_items = cursor.fetchall()
+    for stock_item in stock_items:
+        print stock_item["stock_cd"]
     
     data_handler.close()
     

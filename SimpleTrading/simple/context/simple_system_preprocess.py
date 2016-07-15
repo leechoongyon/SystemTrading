@@ -5,6 +5,7 @@ Created on 2016. 7. 15.
 '''
 from simple.common.util.properties_util import *
 from simple.data.controlway.db.db_data import db_data
+import MySQLdb as mdb
 
 
 def pre_process(properties_path):
@@ -17,8 +18,14 @@ def pre_process(properties_path):
     db = properties.config_section_map(DB_DATA)['db']
     charset = properties.config_section_map(DB_DATA)['charset']
     use_unicode = properties.config_section_map(DB_DATA)['use_unicode']
+    is_dictCursor = properties.config_section_map(DB_DATA)['dict_cursor']
     
-    db_data.set_data(host, user, passwd, db, charset, use_unicode)
+#     dictCursor = mdb.cursors.DictCursor
+#     print dict_cursor
+#      if is_dictCursor else None
+#     print dict_cursor
+    
+    db_data.set_data(host, user, passwd, db, charset, use_unicode, is_dictCursor)
     
     
     
