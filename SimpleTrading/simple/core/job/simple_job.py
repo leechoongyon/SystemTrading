@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 2016. 7. 15.
 
@@ -6,8 +7,10 @@ Created on 2016. 7. 15.
 from simple.algorithm import trading_algorithm
 
 
+ 
 def before_job():
     print "beforeJob starting"
+    
     
 def job():
     before_job()
@@ -16,3 +19,4 @@ def job():
 
 def after_job():
     print "afterJob starting"
+    

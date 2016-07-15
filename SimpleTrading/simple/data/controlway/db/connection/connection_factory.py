@@ -30,16 +30,10 @@ class ConnectionFactory:
         
     
 if __name__ == '__main__':
-    
-    host = "112.150.214.10"
-    user = "InsanelySimple"
-    passwd = "1234"
-    db = "stock"
-    charset = "utf8"
-    use_unicode = True
-    
-    conn_factory = ConnectionFactory(host, user, passwd, db, charset, use_unicode)
-    print conn_factory.getConnection()
-    conn_factory.close()
+    pass
+#     
+#     conn_factory = ConnectionFactory(host, user, passwd, db, charset, use_unicode)
+#     print conn_factory.getConnection()
+#     conn_factory.close()
     
     

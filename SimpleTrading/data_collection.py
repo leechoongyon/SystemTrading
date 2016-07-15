@@ -5,7 +5,7 @@ Created on 2016. 7. 1.
 '''
 
 import pandas_datareader.data as web
-from simple.db.mysql.data_handler import DataHandler
+from simple.data.controlway.db.mysql.data_handler import DataHandler
 
 class DataCollection():
     

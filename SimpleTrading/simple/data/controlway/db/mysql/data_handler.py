@@ -80,6 +80,9 @@ class DataHandler():
 			print "--- %s ---" % (sql)
 			self.conn.rollback()
 
+	def close(self):
+		self.conn.close()
+		
 if __name__ == '__main__':
 	pass
 	
