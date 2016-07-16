@@ -7,11 +7,11 @@ Created on 2016. 7. 9.
 
 import pandas as pd
 import pandas_datareader.data as web
+from simple.common.util import dataframe_util
 from simple.common.util.properties_util import PropertiesUtil, STOCK_DATA, \
-    DB_DATA
-from simple.config.configuration import PROPERTIES_PATH
-from simple.data.controlway.db.mysql.data_handler import DataHandler
+    DB_DATA, properties
 from simple.data.controlway.db.factory.data_handler_factory import get_data_handler_in_mysql
+from simple.data.controlway.db.mysql.data_handler import DataHandler
 
 
 # from simple.trader.trader import properties_path
@@ -20,9 +20,19 @@ def get_stock_data_using_datareader(stock_cd, market_cd, start, end):
     out = web.DataReader(make_code(stock_cd, market_cd), "yahoo", start, end)
     return out
 
+def process_stock_data(df, stock_cd):
+
+    dataframe_util.insert(df, 0, 'STOCK_CD', stock_cd)
+    
+    indexs = df.index
+    print type(indexs)
+    dataframe_util.insert(df, 1, 'YM_DD', df.index)
+    columns={"Open":"OPEN_PRICE","High":"HIGH_PRICE", "Low":"LOW_PRICE", "Close":"CLOSE_PRICE", "Adj Close":"ADJ_CLOSE_PRICE"}
+    df = dataframe_util.rename(df, columns)
+    return df
+
 def regitster_stock_data_in_file(df, stock_nm):
-    properties = PropertiesUtil(PROPERTIES_PATH)
-    register_path = properties.config_section_map(STOCK_DATA)['stock_download_path']
+    register_path = properties.get_selection(STOCK_DATA)['stock_download_path']
     df.to_csv(register_path + "/" + stock_nm + ".csv")
 
 '''
@@ -43,14 +53,14 @@ def make_code(stock_cd, market_cd):
     
 
 if __name__ == '__main__':
-    raw_data = {'A': [100, 110, 120, 110, 130, 140, 120, 125, 110, 100, 90, 100, 120],
+    raw_data = {'A': [222, 110, 120, 110, 130, 140, 120, 125, 110, 100, 90, 100, 120],
                 'B': [300, 320, 350, 330, 370, 390, 380, 385, 365, 300, 310, 270, 310]}
     
     df = pd.DataFrame(raw_data)
     print df
     data_handler = get_data_handler_in_mysql()
     conn = data_handler.get_conn()
-    register_stock_data_in_db(conn, df, "test", "replace", 'mysql')
+    register_stock_data_in_db(conn, df, "test", "append", 'mysql')
 #     register_stock_data_in_db(conn, df, STOCK_ITEM_DAILY, 'exists_option', db)
 #     regitster_stock_data(None, "CJ_CGV")
     '''

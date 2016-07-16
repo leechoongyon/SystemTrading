@@ -12,7 +12,7 @@ from simple.common.util.time_util import get_today_with_formatting, \
     get_day_from_specific_day, convert_string_to_datetime, \
     convert_string_to_time
 from simple.data.controlway.dataframe.process_stock_data import get_stock_data_using_datareader, \
-    register_stock_data_in_db
+    register_stock_data_in_db, process_stock_data
 from simple.data.controlway.db.factory.data_handler_factory import get_data_handler_in_mysql, \
     close_handler
 from simple.data.controlway.db.mysql.data_handler import DataHandler
@@ -62,14 +62,15 @@ def pre_process(properties_path):
         ym_dd = stock_item[StockColumn.YM_DD]
         start = get_day_from_specific_day(convert_string_to_time(ym_dd, "%Y%m%d"), +1, "%Y%m%d")
         end = get_today_with_formatting("%Y%m%d")
-        df = get_stock_data_using_datareader(stock_item[StockColumn.STOCK_CD], \
-                                              stock_item[StockColumn.MARKET_CD], start, end)
-        print df
+        stock_cd = stock_item[StockColumn.STOCK_CD]
+        market_cd = stock_item[StockColumn.MARKET_CD]
+        df = get_stock_data_using_datareader(stock_cd, market_cd, start, end)
+        df = process_stock_data(df, stock_cd)
         exists_option = properties.get_selection(DB_DATA)['exists_option']
         db_type = properties.get_selection(DB_DATA)['db_type']
-        register_stock_data_in_db(data_handler.get_conn(), df, StockTable.STOCK_TEST, exists_option, db_type) 
+        register_stock_data_in_db(data_handler.get_conn(), df, StockTable.STOCK_ITEM_DAILY, exists_option, db_type) 
         
-    close_handler()
+    close_handler(data_handler)
     
     
     
