@@ -4,9 +4,7 @@ import MySQLdb as mdb
 
 
 class DataHandler():
-	def __init__(self, host, user, passwd, db, charset, use_unicode, dict_cursor=True):
-		if dict_cursor:
-			self.dict_cursor = mdb.cursors.DictCursor 
+	def __init__(self, host, user, passwd, db, charset, use_unicode):
 		self.conn = mdb.connect(host=host, 
                              	user=user, 
                               	passwd=passwd, 
@@ -32,7 +30,7 @@ class DataHandler():
 
 	def openSql(self,sql):
 		try:
-			cursor = self.conn.cursor(self.dict_cursor)
+			cursor = self.conn.cursor(mdb.cursors.DictCursor)
 			cursor.execute(sql)
 			return cursor
 		except Exception as e:
@@ -42,7 +40,7 @@ class DataHandler():
 	
 	def execSql(self,sql,db_commit=True):
 		try:
-			cursor = self.conn.cursor()
+			cursor = self.conn.cursor(mdb.cursors.DictCursor)
 			cursor.execute(sql)
 			if db_commit:
 				self.conn.commit()
@@ -53,7 +51,7 @@ class DataHandler():
 	
 	def execSqlWithParam(self, sql, param, db_commit=True):
 		try:
-			cursor = self.conn.cursor()
+			cursor = self.conn.cursor(mdb.cursors.DictCursor)
 			cursor.execute(sql, param)
 			if db_commit:
 				self.conn.commit()
@@ -65,7 +63,7 @@ class DataHandler():
 	
 	def execSqlMany(self, sql, param, db_commit=True):
 		try:
-			cursor = self.conn.cursor()
+			cursor = self.conn.cursor(mdb.cursors.DictCursor)
 			cursor.execute(sql)
 			if db_commit:
 				self.conn.commit()
@@ -77,7 +75,7 @@ class DataHandler():
 			
 	def execSqlManyWithParam(self, sql, param, db_commit=True):
 		try:
-			cursor = self.conn.cursor()
+			cursor = self.conn.cursor(mdb.cursors.DictCursor)
 			cursor.executemany(sql, param)
 			if db_commit:
 				self.conn.commit()

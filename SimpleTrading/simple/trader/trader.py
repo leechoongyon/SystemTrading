@@ -6,7 +6,11 @@ Created on 2016. 7. 15.
 
 from simple.core.launch.support import simple_job_launcher as launcher
 
-properties_path = "C:/Windows/System32/git/SystemTrading/SimpleTrading/properties/stock.properties"
+# Company
+# properties_path = "C:/Windows/System32/git/SystemTrading/SimpleTrading/properties/stock.properties"
+
+# Home
+properties_path = "C:/git/SimpleTrading/SimpleTrading/properties/stock.properties"
 
 class Trader():
     
