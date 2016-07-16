@@ -9,6 +9,14 @@ import datetime
 
 from simple.common.util.properties_util import *
 
+MARKET_OPEN_TIME = "market_open_time"
+MARKET_CLOSE_TIME = "market_close_time"
+
+class StockTable():
+    STOCK_ITEM = "STOCK_ITEM"
+    STOCK_ITEM_DAILY = "STOCK_ITEM_DAILY"
+    STOCK_TEST = "STOCK_TEST"
+    
 class StockColumn():
     STOCK_CD = "stock_cd"
     MARKET_CD = "market_cd"
@@ -17,15 +25,17 @@ class StockColumn():
 class StockData():
 
     def __init__(self):
+        self.dict = {}
         pass
-    def set_market_time(self, open_time, close_time):
-        stock_data.market_open_time = open_time 
-        stock_data.market_close_time = close_time
+#     def set_market_time(self, open_time, close_time):
+#         self.dict[MARKET_OPEN_TIME] = open_time
+#         self.dict[MARKET_CLOSE_TIME] = close_time
         
 stock_data = StockData() 
 
 if __name__ == '__main__':
-    
+  
+    '''  
     properties_path = "C:/Windows/System32/git/SystemTrading/SimpleTrading/properties/stock.properties"
     properties = PropertiesUtil(properties_path)
 
@@ -44,3 +54,4 @@ if __name__ == '__main__':
     
     STATIC_MARKET_OPEN_TIME = market_open_time
     STATIC_MARKET_CLOSE_TIME = market_close_time
+    '''

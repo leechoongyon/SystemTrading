@@ -5,6 +5,7 @@ Created on 2016. 7. 9.
 @author: lee
 '''
 
+import pandas as pd
 import pandas_datareader.data as web
 from simple.common.util.properties_util import PropertiesUtil, STOCK_DATA, \
     DB_DATA
@@ -27,8 +28,8 @@ def regitster_stock_data_in_file(df, stock_nm):
 '''
     exists_oprtion : append, fail, replace
 '''
-def register_stock_data_in_db(con, sql, df, table_nm, exists_option, db):
-    df.to_sql(con=con, name=table_nm, if_exists=exists_option, flavor=db)
+def register_stock_data_in_db(con, df, table_nm, exists_option, db):
+    df.to_sql(con=con, name=table_nm, if_exists=exists_option, flavor=db, index=False)
 
 def make_code(stock_cd, market_cd):
     if market_cd == "KOSPI": 
@@ -42,11 +43,15 @@ def make_code(stock_cd, market_cd):
     
 
 if __name__ == '__main__':
-
+    raw_data = {'A': [100, 110, 120, 110, 130, 140, 120, 125, 110, 100, 90, 100, 120],
+                'B': [300, 320, 350, 330, 370, 390, 380, 385, 365, 300, 310, 270, 310]}
+    
+    df = pd.DataFrame(raw_data)
+    print df
     data_handler = get_data_handler_in_mysql()
     conn = data_handler.get_conn()
-    print conn
-    
+    register_stock_data_in_db(conn, df, "test", "replace", 'mysql')
+#     register_stock_data_in_db(conn, df, STOCK_ITEM_DAILY, 'exists_option', db)
 #     regitster_stock_data(None, "CJ_CGV")
     '''
     properties_path = "C:/git/SimpleTrading/SimpleTrading/properties/stock.properties"

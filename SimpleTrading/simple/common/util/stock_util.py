@@ -5,14 +5,15 @@ Created on 2016. 7. 15.
 '''
 import datetime
 
-from simple.data.stock.stock_data import stock_data
+from simple.data.stock.stock_data import stock_data, MARKET_CLOSE_TIME, \
+    MARKET_OPEN_TIME
 
 
 def check_if_open_market():
     
     dt = datetime.datetime.now()
     curr_time = dt.time()
-    return  (stock_data.market_open_time < curr_time) and (curr_time < stock_data.market_close_time) 
+    return  (stock_data.dict[MARKET_OPEN_TIME] < curr_time) and (curr_time < stock_data.dict[MARKET_CLOSE_TIME]) 
 
     '''
     dt = datetime.datetime.now()

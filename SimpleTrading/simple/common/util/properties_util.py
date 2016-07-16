@@ -7,19 +7,18 @@ Created on 2016. 7. 15.
 
 
 import ConfigParser
+from simple.config.configuration import PROPERTIES_PATH
 
 DB_DATA = "DB_DATA"
 STOCK_DATA = "STOCK_DATA"
-MARKET_OPEN_TIME = "market_open_time"
-MARKET_CLOSE_TIME = "market_close_time"
 
 class PropertiesUtil():
     def __init__(self, filename):
         self.config = ConfigParser.ConfigParser()
         self.config.read(filename)
-
+        
  
-    def config_section_map(self, section):
+    def get_selection(self, section):
         dict1 = {}
         options = self.config.options(section)
         for option in options:
@@ -32,13 +31,17 @@ class PropertiesUtil():
                 dict1[option] = None
         return dict1
 
+properties = PropertiesUtil(PROPERTIES_PATH)
 
 
 if __name__ == '__main__':
-    db_properties = PropertiesUtil("C:/Windows/System32/git/SystemTrading/SimpleTrading/properties/db.properties")
-    Name = db_properties.ConfigSectionMap("InsanelySimple")['host']
+    print properties.get_selection("DB_DATA")['host']
+#     print properties.config_section_map("DB_DATA")['host']
+    
+#     db_properties = PropertiesUtil(PROPERTIES_PATH)
+#     print db_properties.config_section_map("DB_DATA")['host']
 #     Age = db_properties.ConfigSectionMap("SectionOne")['age']
-    print "Hello %s. You are  years old." % (Name)
+#     print "Hello %s. You are  years old." % (Name)
 
     '''
     Config = ConfigParser.ConfigParser()
