@@ -32,3 +32,6 @@ def run(interval, properties_path):
     # postProcess
     simple_biz_postprocess.post_process(properties_path)
     simple_system_postprocess.post_process(properties_path)
+    
+if __name__ == '__main__':
+    print "simple_job_launcher test"

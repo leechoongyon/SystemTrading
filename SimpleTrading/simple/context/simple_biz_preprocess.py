@@ -8,6 +8,10 @@ Created on 2016. 7. 15.
 import datetime
 
 from simple.common.util.properties_util import *
+from simple.common.util.time_util import get_today_with_formatting,\
+    get_day_from_specific_day, convert_string_to_datetime,\
+    convert_string_to_time
+from simple.data.controlway.datareader.process_stock_data import get_stock_data
 from simple.data.controlway.db.db_data import db_data
 from simple.data.controlway.db.mysql.data_handler import DataHandler
 from simple.data.controlway.db.query import select_query
@@ -54,9 +58,14 @@ def pre_process(properties_path):
     
     cursor = data_handler.openSql(select_query.SELECT_JOIN_STOCK_ITEM_DAILY_AND_TARGET_PORTFOLIO)
     stock_items = cursor.fetchall()
-    for stock_item in stock_items:
-        print stock_item["stock_cd"]
     
+    for stock_item in stock_items:
+        ym_dd = stock_item[StockColumn.YM_DD]
+        start = get_day_from_specific_day(convert_string_to_time(ym_dd, "%Y%m%d"), +1, "%Y%m%d")
+        end = get_today_with_formatting("%Y%m%d") 
+        print stock_item[StockColumn.STOCK_CD], stock_item[StockColumn.MARKET_CD], start, end
+        print get_stock_data(stock_item[StockColumn.STOCK_CD], stock_item[StockColumn.MARKET_CD], start, end)
+        
     data_handler.close()
     
     
@@ -66,4 +75,6 @@ def pre_process(properties_path):
     
     
 if __name__ == '__main__':
-    pre_process()
+    print "simple_biz_preprocess test"
+#     pre_process()
+    

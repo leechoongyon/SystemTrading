@@ -4,13 +4,10 @@ Created on 2016. 7. 15.
 @author: lee
 '''
 
+
+from simple.config.configuration import PROPERTIES_PATH
 from simple.core.launch.support import simple_job_launcher as launcher
 
-# Company
-# properties_path = "C:/Windows/System32/git/SystemTrading/SimpleTrading/properties/stock.properties"
-
-# Home
-properties_path = "C:/git/SimpleTrading/SimpleTrading/properties/stock.properties"
 
 class Trader():
     
@@ -20,4 +17,4 @@ class Trader():
 if __name__ == '__main__':
     interval = 0
     trader = Trader()
-    trader.execute(interval, properties_path)
+    trader.execute(interval, PROPERTIES_PATH)

@@ -11,10 +11,10 @@ from enum import Enum
 
     
 SELECT_JOIN_STOCK_ITEM_DAILY_AND_TARGET_PORTFOLIO = (
-"select a.stock_cd, a.ym_dd, a.open_price, a.high_price, a.low_price, a.close_price, a.ADJ_CLOSE_PRICE, a.volume " 
- + "from stock_item_daily a, target_portfolio b " 
- + "where a.stock_cd = b.stock_cd "
- + "order by a.ym_dd desc "
+"select b.stock_cd, b.ym_dd, a.market_cd " 
+ + "from stock_item a, stock_item_daily b, target_portfolio c " 
+ + "where a.stock_cd = b.stock_cd and b.stock_cd = c.stock_cd "
+ + "order by b.ym_dd desc "
  + "limit 1;")
 
 if __name__ == '__main__':

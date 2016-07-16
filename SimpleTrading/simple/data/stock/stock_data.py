@@ -9,6 +9,11 @@ import datetime
 
 from simple.common.util.properties_util import *
 
+class StockColumn():
+    STOCK_CD = "stock_cd"
+    MARKET_CD = "market_cd"
+    YM_DD = "ym_dd"
+
 class StockData():
 
     def __init__(self):

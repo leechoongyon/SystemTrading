@@ -1,0 +1,11 @@
+1. Optimizer
+
+1.1 How to use an optimizer
+
+1) Provide a function to minimize
+
+	f(x) = x2 + 5
+	
+2) Provide an initial guess
+
+3) Call the optimizer 
