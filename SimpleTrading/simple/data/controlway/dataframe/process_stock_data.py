@@ -6,12 +6,15 @@ Created on 2016. 7. 9.
 '''
 
 import pandas_datareader.data as web
-from simple.common.util.properties_util import PropertiesUtil, STOCK_DATA
+from simple.common.util.properties_util import PropertiesUtil, STOCK_DATA, \
+    DB_DATA
 from simple.config.configuration import PROPERTIES_PATH
+from simple.data.controlway.db.mysql.data_handler import DataHandler
+from simple.data.controlway.db.factory.data_handler_factory import get_data_handler_in_mysql
 
 
 # from simple.trader.trader import properties_path
-def get_stock_data(stock_cd, market_cd, start, end):
+def get_stock_data_using_datareader(stock_cd, market_cd, start, end):
         
     out = web.DataReader(make_code(stock_cd, market_cd), "yahoo", start, end)
     return out
@@ -21,8 +24,11 @@ def regitster_stock_data_in_file(df, stock_nm):
     register_path = properties.config_section_map(STOCK_DATA)['stock_download_path']
     df.to_csv(register_path + "/" + stock_nm + ".csv")
 
-def register_stock_data_in_db(data_handler, sql, df):
-    pass
+'''
+    exists_oprtion : append, fail, replace
+'''
+def register_stock_data_in_db(con, sql, df, table_nm, exists_option, db):
+    df.to_sql(con=con, name=table_nm, if_exists=exists_option, flavor=db)
 
 def make_code(stock_cd, market_cd):
     if market_cd == "KOSPI": 
@@ -36,11 +42,11 @@ def make_code(stock_cd, market_cd):
     
 
 if __name__ == '__main__':
-    stock_cd = "079160"
-    market_cd = "KOSPI"
-    start = '20160202'
-    end = '20160606'
-    print get_stock_data(stock_cd, market_cd, start, end)
+
+    data_handler = get_data_handler_in_mysql()
+    conn = data_handler.get_conn()
+    print conn
+    
 #     regitster_stock_data(None, "CJ_CGV")
     '''
     properties_path = "C:/git/SimpleTrading/SimpleTrading/properties/stock.properties"

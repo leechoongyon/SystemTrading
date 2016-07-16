@@ -12,9 +12,11 @@ class DataHandler():
                              	charset=charset, 
                               	use_unicode=use_unicode);
          
-	def set_dict_cursor(self):
-		self.dict_cursor = mdb.cursors.DictCursor
-
+	def get_conn(self):
+		if (self.conn == None):
+			raise Exception("conn = None")
+		return self.conn
+	
 	def beginTrans(self):
 		self.conn.autocommit(False)
 
