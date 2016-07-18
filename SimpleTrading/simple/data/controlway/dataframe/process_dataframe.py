@@ -7,7 +7,7 @@ Created on 2016. 7. 9.
 
 import pandas as pd
 import pandas_datareader.data as web
-from simple.common.util import dataframe_util
+from simple.common.util import dataframe_util, string_util
 from simple.common.util.properties_util import PropertiesUtil, STOCK_DATA, \
     DB_DATA, properties
 from simple.data.controlway.db.factory.data_handler_factory import get_data_handler_in_mysql
@@ -17,7 +17,7 @@ from simple.data.controlway.db.mysql.data_handler import DataHandler
 # from simple.trader.trader import properties_path
 def get_stock_data_using_datareader(stock_cd, market_cd, start, end):
         
-    out = web.DataReader(make_code(stock_cd, market_cd), "yahoo", start, end)
+    out = web.DataReader(make_code(stock_cd, market_cd), "google", start, end)
     return out
 
 def process_stock_data(df, stock_cd):
@@ -25,8 +25,9 @@ def process_stock_data(df, stock_cd):
     dataframe_util.insert(df, 0, 'STOCK_CD', stock_cd)
     
     indexs = df.index
-    print type(indexs)
-    dataframe_util.insert(df, 1, 'YM_DD', df.index)
+    indexs = indexs.format()
+    indexs = string_util.replace(indexs, "-", "")
+    dataframe_util.insert(df, 1, 'YM_DD', indexs)
     columns={"Open":"OPEN_PRICE","High":"HIGH_PRICE", "Low":"LOW_PRICE", "Close":"CLOSE_PRICE", "Adj Close":"ADJ_CLOSE_PRICE"}
     df = dataframe_util.rename(df, columns)
     return df
