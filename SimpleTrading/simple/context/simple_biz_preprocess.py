@@ -11,8 +11,8 @@ from simple.common.util.properties_util import properties, DB_DATA, STOCK_DATA
 from simple.common.util.time_util import get_today_with_formatting, \
     get_day_from_specific_day, convert_string_to_datetime, \
     convert_string_to_time
-from simple.data.controlway.dataframe.process_stock_data import get_stock_data_using_datareader, \
-    register_stock_data_in_db, process_stock_data
+from simple.data.controlway.dataframe.process_dataframe import get_stock_data_using_datareader, register_stock_data_in_db,\
+                                                                register_stock_data_in_db, process_stock_data
 from simple.data.controlway.db.factory.data_handler_factory import get_data_handler_in_mysql, \
     close_handler
 from simple.data.controlway.db.mysql.data_handler import DataHandler
