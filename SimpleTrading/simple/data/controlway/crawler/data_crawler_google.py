@@ -47,17 +47,33 @@ def get_historical_data2(symbol, start, end):
     url_string = 'http://www.google.com/finance/historical?q={0}'.format(symbol.upper())
     url_string += "&startdate={0}&enddate={1}d&f=d,o,h,l,c,v&start=0&num=200".format(start, end)
     
-    # 이거 되는거임. 그냥 전체 한줄씩 다 찍어버림.
+    # 번호 뽑아서 그걸로 for문 돌림
     sock = urllib2.urlopen(url_string)
     ch = sock.read()
     sock.close()
-    print re.findall(r"0,\n200,\n[0-9]*", ch)
-#     regex = re.compile('^google.finance.applyPagination(*});$')
-#     for mat in regex.find(ch):
-#         print mat
+    page = re.findall(r"0,\n200,\n[0-9]*", ch)
+
     
-#     print '\n'.join(str(i) + '  ' + repr(line)
-#                 for i,line in enumerate(ch.splitlines(True)))
+    soup = BeautifulSoup(ch)
+    table = soup.find("table", {"class":"gf-table historical_price"})
+    ths = table.findAll("th")
+    trs = table.findAll("tr")
+    print ths
+    for tr in trs:
+        cols = tr.findAll('td')
+        if len(cols) ==0:
+            continue
+        
+#         print "Date : %s " % cols[0].text
+#         print "Open : %s " % cols[1].text
+#         print "High : %s " % cols[2].text
+#         print "Low : %s " % cols[3].text
+#         print "Close : %s " % cols[4].text
+#         print "Volume : %s " % cols[5].text
+
+
+    
+    # price rows 한 줄씩 뽑기
     
         
 def get_historical_data(symbol, start, end):
@@ -66,13 +82,15 @@ def get_historical_data(symbol, start, end):
     url_string = 'http://www.google.com/finance/historical?q={0}'.format(symbol.upper())
     url_string += "&startdate={0}&enddate={1}d&f=d,o,h,l,c,v&start=0&num=200".format(start, end)
     
-    print url_string
     source_code = requests.get(url_string)
     plain_text = source_code.text
     soup = BeautifulSoup(plain_text, 'lxml')
-    print soup
     page = soup.findAll('script', 'applyPagination')
     
+    table = soup.find('table', {'class:gf-table historical_price'})
+    print table
+    trs = table.findAll('tr')
+    print trs
     
     
     # Request the text, and split by each line
@@ -91,7 +109,7 @@ if __name__ == '__main__':
     start = "2014-01-01"
     end = "2016-07-18"
     # kakao = 035720 / combine = 047770
-#     symbol = "035720"
-    symbol = "047770"
+    symbol = "035720"
+#     symbol = "047770"
     get_historical_data2(symbol, start, end)
     
