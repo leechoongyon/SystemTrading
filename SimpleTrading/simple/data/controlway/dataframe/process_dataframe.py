@@ -54,6 +54,8 @@ def make_code(stock_cd, market_cd):
     
 
 if __name__ == '__main__':
+    
+    '''
     raw_data = {'A': [222, 110, 120, 110, 130, 140, 120, 125, 110, 100, 90, 100, 120],
                 'B': [300, 320, 350, 330, 370, 390, 380, 385, 365, 300, 310, 270, 310]}
     
@@ -64,6 +66,9 @@ if __name__ == '__main__':
     register_stock_data_in_db(conn, df, "test", "append", 'mysql')
 #     register_stock_data_in_db(conn, df, STOCK_ITEM_DAILY, 'exists_option', db)
 #     regitster_stock_data(None, "CJ_CGV")
+
+    '''
+    
     '''
     properties_path = "C:/git/SimpleTrading/SimpleTrading/properties/stock.properties"
     properties = PropertiesUtil(properties_path)
@@ -134,6 +139,60 @@ if __name__ == '__main__':
     out = web.DataReader("018880.KS", "yahoo", start, end)
     out.to_csv(config.DATA_PATH + "/HANRA_GONGJO.csv")
     '''
+    
+    
+    
+    
+    
+    # Hanwha Investment&Securities Co (003530)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("003530.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/Hanwha_Investment&Securities.csv')
+    '''
+    
+    # Hanwha General Insurance (000370)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("000370.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/Hanwha_General_Insurance.csv')
+    '''
+    # Hanwha Investment&Securities 우 (003535)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("003535.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/Hanwha Investment&Securities_Wo.csv')
+    '''
+    
+    # 한화에이스스팩2호 (219860)
+    # 한화ACPC스팩 (217620)
+    
+    # Hanwha (000880)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("000880.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/Hanwha.csv')
+    '''
+    
+    # Hanwha Life Insurance Co (088350)
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("088350.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/Hanwha_Life_Insurance.csv')
+
+    
+    # 한화우 (000885)
+    # 한화에이스스팩1호 (정지)
+    # 한화갤러리아타임월드 (027390)
+    # 한화MGI스팩 (215380)
+    # 한화테크원 (012450)
+    # 한화케미칼우 (009835)
+    
+    
     
     ######################################################
     # I                                                  #  
