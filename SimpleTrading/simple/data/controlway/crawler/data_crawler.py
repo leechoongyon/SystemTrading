@@ -22,6 +22,8 @@ def get_intraday_data(symbol, interval_seconds=301, num_days=10):
     url_string = 'http://www.google.com/finance/getprices?q={0}'.format(symbol.upper())
     url_string += "&i={0}&p={1}d&f=d,o,h,l,c,v".format(interval_seconds,num_days)
 
+    print url_string
+
     # Request the text, and split by each line
     r = requests.get(url_string).text.split()
 
