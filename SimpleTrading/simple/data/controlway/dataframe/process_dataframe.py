@@ -96,6 +96,92 @@ if __name__ == '__main__':
     out = web.DataReader("079160.KS", "yahoo", start, end)
     out.to_csv(config.DATA_PATH + "/CJ_CGV.csv")
     '''
+    
+    # 제일제당 우 (097955)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("097955.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ_Cheiljedang_Wo.csv')
+    '''
+    
+    # CJ 씨푸드 (011150)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("011150.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ_Seafood.csv')
+    '''
+    
+    # CJ 대한통운 (000120)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("000120.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ_KoreaExpress.csv')
+    '''
+    
+    # CJ 오쇼핑 (035760)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("035760.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ_OShopping.csv')
+    '''
+    
+    # CJ 제일제당 (097950)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("097950.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ_Cheiljedang.csv')
+    '''
+    
+    # CJ 씨푸드1우 (011155)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("011155.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ_Seafood_Wo.csv')
+    '''
+    
+    # CJ 프레시웨이 (051500)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("051500.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ_Freshway.csv')
+    '''
+    
+    # CJ E&M (130960)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("130960.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ_E&M.csv')
+    '''
+    
+    # CJ (001040)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("001040.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ.csv')
+    '''
+    
+    # CJ우 (001045)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("001045.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ_Wo.csv')
+    '''
+    
+    # CJ헬로비전 (037560)
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("037560.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ_HelloVision.csv')
 
     ######################################################
     # G                                                  #  
@@ -179,17 +265,26 @@ if __name__ == '__main__':
     '''
     
     # Hanwha Life Insurance Co (088350)
+    '''
     start = '2014-01-01'
     end = '2016-07-19'
     out = web.DataReader("088350.KS", "yahoo", start, end)
     out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/Hanwha_Life_Insurance.csv')
-
+    '''
     
     # 한화우 (000885)
     # 한화에이스스팩1호 (정지)
     # 한화갤러리아타임월드 (027390)
     # 한화MGI스팩 (215380)
+
     # 한화테크원 (012450)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-19'
+    out = web.DataReader("012450.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/Hanwha_Tech.csv')
+    '''
+    
     # 한화케미칼우 (009835)
     
     

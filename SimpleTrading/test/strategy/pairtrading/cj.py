@@ -19,20 +19,49 @@ if __name__ == '__main__':
     today = datetime.date.fromtimestamp(time.time())
     dates = pd.date_range(two_years_ago, today)
     
-    # -0.273754393105 기가막힌 반비례
-    symbols = ['Hanwha_Life_Insurance', 'Hanwha_Tech']
+    # 0.446616493819, Seafood가 약간 더 고평가네
+#     symbols = ['CJ_Seafood', 'CJ_CGV']2
     
-    # 0.202601661191 / 얘도 생명보험이 저평가
-#     symbols = ['Hanwha_Life_Insurance', 'Hanwha Investment&Securities_Wo']
+    # 1.20085728854, 스프레드가 거의 비슷
+#     symbols = ['CJ_Seafood', 'CJ_Cheiljedang_Wo']
     
-    # -0.171738456361 / 진정한 반비례
-#     symbols = ['Hanwha_Life_Insurance', 'Hanwha_General_Insurance']
+    # 1.07068293799 씨푸드가 약간 저평가
+#     symbols = ['CJ_Seafood', 'CJ_Cheiljedang']
     
-    # 0.277096679487 , 얘는 절반앞에는 반비례인데 뒤에는 비례임. 마찬가지로 생명보험이 저평가
-#     symbols = ['Hanwha_Life_Insurance', 'Hanwha_Investment&Securities']
+    # 0.288423206405 씨푸드가 고평가
+#     symbols = ['CJ_Seafood', 'CJ_HelloVision']
+
+    # 0.403827967574, 잔차 없음
+#     symbols = ['CJ_Seafood', 'CJ_KoreaExpress']
+
+    # 0.343803329457, 잔차 거의 없음
+#     symbols = ['CJ_Seafood', 'CJ_Seafood_Wo']
     
-    # 0.123523295779 , 그래프가 반비례적인 모양인데? 그리고 생명보험이 전체 그래프가 저점을 찍음
-#     symbols = ['Hanwha_Life_Insurance', 'Hanwha'] 
+    # 0.793170891881, 잔차 거의 없음
+#     symbols = ['CJ_Seafood', 'CJ']
+    
+    
+    
+    
+    
+    ######################################
+    # CJ_Seafood_Wo
+    ######################################
+    # 1.16907182031, 잔차 거의 없음
+#     symbols = ['CJ_Seafood_Wo', 'CJ_CGV']
+    
+    # 2.62938576394 , 잔차 거의 없음
+#     symbols = ['CJ_Seafood_Wo', 'CJ_Cheiljedang_Wo']
+    
+    
+    # 2.64749759518, 잔차 없음
+    symbols = ['CJ_Seafood_Wo', 'CJ_Cheiljedang']
+    
+    
+    
+    
+    
+    
     df = get_data(symbols, dates)
     refined_df = df.dropna()
     

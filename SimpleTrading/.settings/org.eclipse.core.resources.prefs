@@ -21,6 +21,7 @@ encoding//simple/portfolio/target_portfolio.py=utf-8
 encoding//simple/strategy/pairtrading/common/pairtrading_common.py=utf-8
 encoding//simple/strategy/pairtrading/common/util/download_stockdata.py=utf-8
 encoding//sql/STOCK_ITEM\ test\ data.sql=UTF-8
+encoding//test/strategy/pairtrading/cj.py=utf-8
 encoding//test/strategy/pairtrading/hanhwa.py=utf-8
 encoding//test/strategy/pairtrading/meirtz.py=utf-8
 encoding//test/trader/__init__.py=utf-8
