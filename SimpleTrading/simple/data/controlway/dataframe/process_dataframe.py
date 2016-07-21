@@ -178,10 +178,12 @@ if __name__ == '__main__':
     '''
     
     # CJ헬로비전 (037560)
+    '''
     start = '2014-01-01'
     end = '2016-07-19'
     out = web.DataReader("037560.KS", "yahoo", start, end)
     out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ_HelloVision.csv')
+    '''
 
     ######################################################
     # G                                                  #  
@@ -304,22 +306,26 @@ if __name__ == '__main__':
     ######################################################
     
     # MEIRTZ_FIRE&MARINE_INSURANCE (000060.KS)
+    
     '''
+    start = '2014-01-01'
+    end = '2016-07-21'
     out = web.DataReader("000060.KS", "yahoo", start, end)
-    out.to_csv('./data/MEIRTZ_FIRE&MARINE_INSURANCE.csv')
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/MEIRTZ_FIRE&MARINE_INSURANCE.csv')
     '''
     
-    # MEIRTZ_FINANCIAL (138040.KS)
+    # MEIRTZ_FINANCIAL_GROUP (138040.KS)
     '''
+    start = '2014-01-01'
+    end = '2016-07-21'
     out = web.DataReader("138040.KS", "yahoo", start, end)
-    out.to_csv('./data/MEIRTZ_FINANCIAL.csv')
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/MEIRTZ_FINANCIAL_GROUP.csv')
     '''
-    
     # MEIRTZ_SECURITY (008560.KS)
-    '''
+    start = '2014-01-01'
+    end = '2016-07-21'
     out = web.DataReader("008560.KS", "yahoo", start, end)
-    out.to_csv('./data/MEIRTZ_SECURITY.csv')
-    '''
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/MEIRTZ_SECURITY.csv')
     
     ######################################################
     # S                                                  #  
