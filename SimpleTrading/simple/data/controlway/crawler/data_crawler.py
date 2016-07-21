@@ -41,40 +41,51 @@ def get_intraday_data(symbol, interval_seconds=301, num_days=10):
 
     return df
 
-def get_historical_data(symbol, start, end, page_num):
-    
+def get_total_page_num(symbol, start, end, page_num):
     url_string = 'http://www.google.com/finance/historical?q={0}'.format(symbol.upper())
     url_string += "&startdate={0}&enddate={1}d&f=d,o,h,l,c,v&start=0&num={2}".format(start, end, page_num)
-    
-    # 번호 뽑아서 그걸로 for문 돌림
     sock = urllib2.urlopen(url_string)
     ch = sock.read()
     sock.close()
     page = re.findall(r"0,\n" + page_num + ",\n[0-9]*", ch)
     total_num = page[0].replace("\n", "").split(",")[2]
-    print total_num
-    
-    soup = BeautifulSoup(ch)
-    table = soup.find("table", {"class":"gf-table historical_price"})
-    ths = table.findAll("th")
-    trs = table.findAll("tr")
-    for tr in trs:
-        cols = tr.findAll('td')
-        if len(cols) ==0:
-            continue
-        
-#         print "Date : %s " % cols[0].text
-#         print "Open : %s " % cols[1].text
-#         print "High : %s " % cols[2].text
-#         print "Low : %s " % cols[3].text
-#         print "Close : %s " % cols[4].text
-#         print "Volume : %s " % cols[5].text
+    return total_num
 
-
+# 다 돌려보고 총 row와 Dataframe 갯수가 맞는지 확인
+def get_historical_data(symbol, start, end, page_num, total_page_num):
     
-    # price rows 한 줄씩 뽑기
+    quotient = total_page_num / page_num
+    reminder = total_page_num % page_num
+    
+    loop_num = 0
+    if reminder != 0:
+        loop_num = quotient + 1
+    else:
+        loop_num = quotient
+    
+    for i in range(0, loop_num):
+        url_string = 'http://www.google.com/finance/historical?q={0}'.format(symbol.upper())
+        url_string += "&startdate={0}&enddate={1}d&f=d,o,h,l,c,v&start={2}&num={3}".format(start, end, page_num * i, page_num)
+        print url_string
+        sock = urllib2.urlopen(url_string)
+        ch = sock.read()
+        sock.close()
+        soup = BeautifulSoup(ch)
+        table = soup.find("table", {"class":"gf-table historical_price"})
+        trs = table.findAll("tr")
+        for tr in trs:
+            cols = tr.findAll('td')
+            if len(cols) ==0:
+                continue
+#             print "Date : %s " % cols[0].text
+#             print "Open : %s " % cols[1].text
+#             print "High : %s " % cols[2].text
+#             print "Low : %s " % cols[3].text
+#             print "Close : %s " % cols[4].text
+#             print "Volume : %s " % cols[5].text
     
 if __name__ == '__main__':
+    
     start = "2014-01-01"
     end = "2016-07-21"
     # kakao = 035720 / combine = 047770
@@ -82,5 +93,6 @@ if __name__ == '__main__':
 #     symbol = "047770"
 
     page_num = properties.get_selection(CRAWLER)[PAGE_NUM]
-
-    get_historical_data(symbol, start, end, page_num)
+    total_page_num = get_total_page_num(symbol, start, end, page_num)
+    get_historical_data(symbol, start, end, int(page_num), int(total_page_num))    
+    
