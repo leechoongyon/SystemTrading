@@ -8,7 +8,7 @@ from simple.data.controlway.db.db_data import db_data
 import MySQLdb as mdb
 
 
-def pre_process(properties_path):
+def pre_process():
     print "systemPreProcess start" 
     
 if __name__ == '__main__':

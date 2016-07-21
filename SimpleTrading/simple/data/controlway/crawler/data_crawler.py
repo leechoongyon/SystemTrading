@@ -4,7 +4,6 @@ Created on 2016. 6. 30.
 
 @author: lee
 '''
-
 '''
     num_day는 날짜
     interval_seconds 는 가져오는 분 Interval (301은 5분간격)
@@ -18,7 +17,10 @@ from bs4 import BeautifulSoup
 import requests
 
 import pandas as pd
+from simple.common.util import properties_util
+from simple.common.util.properties_util import CRAWLER, properties
 
+PAGE_NUM = "page_num"
 
 def get_intraday_data(symbol, interval_seconds=301, num_days=10):
     # Specify URL string based on function inputs.
@@ -39,23 +41,23 @@ def get_intraday_data(symbol, interval_seconds=301, num_days=10):
 
     return df
 
-def get_historical_data(symbol, start, end):
+def get_historical_data(symbol, start, end, page_num):
     
     url_string = 'http://www.google.com/finance/historical?q={0}'.format(symbol.upper())
-    url_string += "&startdate={0}&enddate={1}d&f=d,o,h,l,c,v&start=0&num=200".format(start, end)
+    url_string += "&startdate={0}&enddate={1}d&f=d,o,h,l,c,v&start=0&num={2}".format(start, end, page_num)
     
     # 번호 뽑아서 그걸로 for문 돌림
     sock = urllib2.urlopen(url_string)
     ch = sock.read()
     sock.close()
-    page = re.findall(r"0,\n200,\n[0-9]*", ch)
-
+    page = re.findall(r"0,\n" + page_num + ",\n[0-9]*", ch)
+    total_num = page[0].replace("\n", "").split(",")[2]
+    print total_num
     
     soup = BeautifulSoup(ch)
     table = soup.find("table", {"class":"gf-table historical_price"})
     ths = table.findAll("th")
     trs = table.findAll("tr")
-    print ths
     for tr in trs:
         cols = tr.findAll('td')
         if len(cols) ==0:
@@ -74,8 +76,11 @@ def get_historical_data(symbol, start, end):
     
 if __name__ == '__main__':
     start = "2014-01-01"
-    end = "2016-07-18"
+    end = "2016-07-21"
     # kakao = 035720 / combine = 047770
     symbol = "035720"
 #     symbol = "047770"
-    get_historical_data(symbol, start, end)
+
+    page_num = properties.get_selection(CRAWLER)[PAGE_NUM]
+
+    get_historical_data(symbol, start, end, page_num)

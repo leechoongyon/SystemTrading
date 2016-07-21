@@ -11,10 +11,10 @@ from simple.core.launch.support import simple_job_launcher as launcher
 
 class Trader():
     
-    def execute(self, interval, properties_path):
-        launcher.run(interval, properties_path)
+    def execute(self, interval):
+        launcher.run(interval)
         
 if __name__ == '__main__':
     interval = 0
     trader = Trader()
-    trader.execute(interval, PROPERTIES_PATH)
+    trader.execute(interval)

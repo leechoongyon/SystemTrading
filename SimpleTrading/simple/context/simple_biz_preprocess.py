@@ -21,7 +21,7 @@ from simple.data.stock.stock_data import StockColumn, MARKET_OPEN_TIME, \
     MARKET_CLOSE_TIME, stock_data, StockTable
 
 
-def pre_process(properties_path):
+def pre_process():
     
     print "pre_process starting"
     
