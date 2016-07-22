@@ -305,6 +305,41 @@ if __name__ == '__main__':
     # M                                                  #  
     ######################################################
     
+    # MIRAEASSET_DAEWOO (006800)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-22'
+    out = web.DataReader("006800.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/MIRAEASSET_DAEWOO.csv')
+    '''
+    
+    # MIRAEASSET_LIFE (085620)
+    '''
+    start = '2015-08-01'
+    end = '2016-07-22'
+    out = web.DataReader("085620.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/MIRAEASSET_LIFE.csv')
+    '''
+    
+    # MIRAEASSET_FINANCE (037620)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-22'
+    out = web.DataReader("037620.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/MIRAEASSET_FINANCE.csv')
+    '''
+    
+    # MIRAEASSET_DAEWOO_WO (006805)
+    '''
+    start = '2014-01-01'
+    end = '2016-07-22'
+    out = web.DataReader("006805.KS", "yahoo", start, end)
+    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/MIRAEASSET_DAEWOO_WO.csv')
+    '''
+    
+    
+    
+    
     # MEIRTZ_FIRE&MARINE_INSURANCE (000060.KS)
     
     '''
@@ -322,10 +357,12 @@ if __name__ == '__main__':
     out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/MEIRTZ_FINANCIAL_GROUP.csv')
     '''
     # MEIRTZ_SECURITY (008560.KS)
+    '''
     start = '2014-01-01'
     end = '2016-07-21'
     out = web.DataReader("008560.KS", "yahoo", start, end)
     out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/MEIRTZ_SECURITY.csv')
+    '''
     
     ######################################################
     # S                                                  #  

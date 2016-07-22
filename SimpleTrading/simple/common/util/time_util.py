@@ -8,6 +8,9 @@ Created on 2016. 7. 16.
 import datetime
 import time
 
+from dateutil import parser
+
+
 def get_today():
     return datetime.datetime.today()
 
@@ -15,14 +18,25 @@ def get_today():
     1. %Y%m%d -> 20160101
     2. %Y-%m-%d -> 2016-01-01
 '''  
+
+
 def get_today_with_formatting(format):
     return get_today().strftime(format)
 
 def convert_datetime_to_time(datetime):
     return time.mktime(datetime.timetuple())
 
+
+# 2012-02-02(str) -> 2012-02-02(datetime)
 def convert_string_to_datetime(str, format):
     return datetime.datetime.strptime(str, format)
+
+# Jan 15, 2014(str) -> 2014-01-15(datetime)
+# ex) convert_string_to_datetime2("Aug 28, 2000", "%Y-%m-%d")
+# 2000-8-28
+def convert_string_to_datetime2(str, format):
+    dt = parser.parse(str)
+    return dt.strftime(format)
 
 def convert_string_to_time(str, format):
     date_time = convert_string_to_datetime(str, format)

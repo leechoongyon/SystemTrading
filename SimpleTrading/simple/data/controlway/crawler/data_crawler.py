@@ -17,8 +17,11 @@ from bs4 import BeautifulSoup
 import requests
 
 import pandas as pd
-from simple.common.util import properties_util
+from simple.common.util import properties_util, time_util, string_util
 from simple.common.util.properties_util import CRAWLER, properties
+
+
+
 
 PAGE_NUM = "page_num"
 
@@ -63,10 +66,11 @@ def get_historical_data(symbol, start, end, page_num, total_page_num):
     else:
         loop_num = quotient
     
+    
+    rows = []
     for i in range(0, loop_num):
         url_string = 'http://www.google.com/finance/historical?q={0}'.format(symbol.upper())
         url_string += "&startdate={0}&enddate={1}d&f=d,o,h,l,c,v&start={2}&num={3}".format(start, end, page_num * i, page_num)
-        print url_string
         sock = urllib2.urlopen(url_string)
         ch = sock.read()
         sock.close()
@@ -77,22 +81,32 @@ def get_historical_data(symbol, start, end, page_num, total_page_num):
             cols = tr.findAll('td')
             if len(cols) ==0:
                 continue
-#             print "Date : %s " % cols[0].text
-#             print "Open : %s " % cols[1].text
-#             print "High : %s " % cols[2].text
-#             print "Low : %s " % cols[3].text
-#             print "Close : %s " % cols[4].text
-#             print "Volume : %s " % cols[5].text
+            
+            date = time_util.convert_string_to_datetime2(cols[0].text.replace("\n", ""), "%Y-%m-%d")
+            open = string_util.multi_replace(cols[1].text, {"\n":"",",":""})
+            high = string_util.multi_replace(cols[2].text, {"\n":"",",":""})
+            low = string_util.multi_replace(cols[3].text, {"\n":"",",":""})
+            close = string_util.multi_replace(cols[4].text, {"\n":"",",":""})
+            volume = string_util.multi_replace(cols[5].text, {"\n":"",",":""})
+            adj_close = 0
+            
+            rows.append((date, open, high, \
+                        low, close, volume, 0))
+            
+    
+    
+    df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", "Close", "Volume", "Adj Close"])
+    return df
     
 if __name__ == '__main__':
     
     start = "2014-01-01"
-    end = "2016-07-21"
+    end = "2016-07-22"
     # kakao = 035720 / combine = 047770
     symbol = "035720"
 #     symbol = "047770"
 
     page_num = properties.get_selection(CRAWLER)[PAGE_NUM]
     total_page_num = get_total_page_num(symbol, start, end, page_num)
-    get_historical_data(symbol, start, end, int(page_num), int(total_page_num))    
+    print get_historical_data(symbol, start, end, int(page_num), int(total_page_num))    
     
