@@ -4,10 +4,7 @@ Created on 2016. 7. 15.
 @author: lee
 '''
 
-
-from simple.config.configuration import PROPERTIES_PATH
 from simple.core.launch.support import simple_job_launcher as launcher
-
 
 class Trader():
     

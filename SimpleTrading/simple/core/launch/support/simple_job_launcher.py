@@ -16,6 +16,7 @@ from simple.common.util.stock_util import check_if_open_market
 
 def run(interval):
 
+    
     # preProcess
     simple_system_preprocess.pre_process()
     simple_biz_preprocess.pre_process()

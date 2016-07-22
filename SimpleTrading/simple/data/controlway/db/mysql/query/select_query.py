@@ -8,6 +8,7 @@ Created on 2016. 7. 15.
 from enum import Enum
 
 
+SELECT_TARGET_PORTFOLIO = ("select * from target_portfolio;")
 
     
 SELECT_JOIN_STOCK_ITEM_DAILY_AND_TARGET_PORTFOLIO = (

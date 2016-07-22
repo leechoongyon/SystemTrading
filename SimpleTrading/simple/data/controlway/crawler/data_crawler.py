@@ -4,11 +4,6 @@ Created on 2016. 6. 30.
 
 @author: lee
 '''
-'''
-    num_day는 날짜
-    interval_seconds 는 가져오는 분 Interval (301은 5분간격)
-'''
-
 from datetime import datetime
 import re
 import urllib2
@@ -19,8 +14,15 @@ import requests
 import pandas as pd
 from simple.common.util import properties_util, time_util, string_util
 from simple.common.util.properties_util import CRAWLER, properties
+from simple.data.controlway.dataframe import process_dataframe
+from simple.data.controlway.db.factory import data_handler_factory
+from simple.data.stock import process_stock_data
 
 
+'''
+    num_day는 날짜
+    interval_seconds 는 가져오는 분 Interval (301은 5분간격)
+'''
 
 
 PAGE_NUM = "page_num"
@@ -82,7 +84,7 @@ def get_historical_data(symbol, start, end, page_num, total_page_num):
             if len(cols) ==0:
                 continue
             
-            date = time_util.convert_string_to_datetime2(cols[0].text.replace("\n", ""), "%Y-%m-%d")
+            date = time_util.convert_string_to_datetime2(cols[0].text.replace("\n", ""), "%Y%m%d")
             open = string_util.multi_replace(cols[1].text, {"\n":"",",":""})
             high = string_util.multi_replace(cols[2].text, {"\n":"",",":""})
             low = string_util.multi_replace(cols[3].text, {"\n":"",",":""})
@@ -108,5 +110,9 @@ if __name__ == '__main__':
 
     page_num = properties.get_selection(CRAWLER)[PAGE_NUM]
     total_page_num = get_total_page_num(symbol, start, end, page_num)
-    print get_historical_data(symbol, start, end, int(page_num), int(total_page_num))    
+    df = get_historical_data(symbol, start, end, int(page_num), int(total_page_num))
+    processed_df = process_stock_data.process_stock_data2(df, symbol)
     
+    data_handler = data_handler_factory.get_data_handler_in_mysql()
+    process_dataframe.register_stock_data_in_db(data_handler.get_conn(), processed_df, "STOCK_ITEM_DAILY", "append", "mysql")
+    data_handler_factory.close_handler(data_handler)

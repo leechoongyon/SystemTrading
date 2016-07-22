@@ -5,6 +5,8 @@ Created on 2016. 7. 9.
 @author: lee
 '''
 
+from _mysql import IntegrityError
+
 import pandas as pd
 import pandas_datareader.data as web
 from simple.common.util import dataframe_util, string_util
@@ -20,18 +22,6 @@ def get_stock_data_using_datareader(stock_cd, market_cd, start, end):
     out = web.DataReader(make_code(stock_cd, market_cd), "google", start, end)
     return out
 
-def process_stock_data(df, stock_cd):
-
-    dataframe_util.insert(df, 0, 'STOCK_CD', stock_cd)
-    
-    indexs = df.index
-    indexs = indexs.format()
-    indexs = string_util.replace(indexs, "-", "")
-    dataframe_util.insert(df, 1, 'YM_DD', indexs)
-    columns={"Open":"OPEN_PRICE","High":"HIGH_PRICE", "Low":"LOW_PRICE", "Close":"CLOSE_PRICE", "Adj Close":"ADJ_CLOSE_PRICE"}
-    df = dataframe_util.rename(df, columns)
-    return df
-
 def regitster_stock_data_in_file(df, stock_nm):
     register_path = properties.get_selection(STOCK_DATA)['stock_download_path']
     df.to_csv(register_path + "/" + stock_nm + ".csv")
@@ -40,7 +30,7 @@ def regitster_stock_data_in_file(df, stock_nm):
     exists_oprtion : append, fail, replace
 '''
 def register_stock_data_in_db(con, df, table_nm, exists_option, db):
-    df.to_sql(con=con, name=table_nm, if_exists=exists_option, flavor=db, index=False)
+    df.to_sql(con=con, name=table_nm, if_exists=exists_option, flavor=db, index=False, chunksize=None, dtype=None)
 
 def make_code(stock_cd, market_cd):
     if market_cd == "KOSPI": 
