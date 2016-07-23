@@ -11,7 +11,8 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from simple.strategy.pairtrading.config.pairtrading_config import DATA_PATH
+from simple.common.util.properties_util import properties, STOCK_DATA
+from simple.config.configuration import PROPERTIES_PATH
 
 
 def symbol_to_path(symbol, base_dir="data"):
@@ -23,7 +24,7 @@ def get_data(symbols, dates):
     df = pd.DataFrame(index=dates)
 
     for symbol in symbols:
-        df_temp = pd.read_csv(symbol_to_path(symbol, DATA_PATH), index_col='Date',
+        df_temp = pd.read_csv(symbol_to_path(symbol, properties.get_selection(STOCK_DATA)['stock_download_path']), index_col='Date',
                 parse_dates=True, usecols=['Date', 'Adj Close'], na_values=['nan'])
         df_temp = df_temp.rename(columns={'Adj Close': symbol})
         df = df.join(df_temp)
@@ -35,7 +36,7 @@ def get_close_data(symbols, dates):
     df = pd.DataFrame(index=dates)
 
     for symbol in symbols:
-        df_temp = pd.read_csv(symbol_to_path(symbol, DATA_PATH), index_col='Date',
+        df_temp = pd.read_csv(symbol_to_path(symbol, properties.get_selection(STOCK_DATA)['stock_download_path']), index_col='Date',
                 parse_dates=True, usecols=['Date', 'Close'], na_values=['nan'])
         df_temp = df_temp.rename(columns={'Close': symbol})
         df = df.join(df_temp)
