@@ -11,6 +11,7 @@ from simple.config.configuration import PROPERTIES_PATH
 
 DB_DATA = "DB_DATA"
 STOCK_DATA = "STOCK_DATA"
+CRAWLER = "CRAWLER"
 
 class PropertiesUtil():
     def __init__(self, filename):
