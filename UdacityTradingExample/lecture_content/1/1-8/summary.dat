@@ -9,3 +9,25 @@
 2) Provide an initial guess
 
 3) Call the optimizer 
+
+
+4) optimizer 안에서 func 에 대한 minimizer를 담당하는데 
+
+	그 중에 대표적인 함수로 scipy.optimize 의 minimize 함수로 찾게 되는데
+	
+	그레디언트 디센트 방식을 이용해서 찾게 된다. (대충 원리는 기울기 구해서 빼고 빼다 보면 기울기가 0인 순간이 오겠지. 그게 최저점이겠지)
+	
+	minizer.py 예제에 이 내용이 있다.
+
+
+
+5) Convex 문제가 나왔는데
+
+   두 점을 이어서 직선을 그렸을 때 위에 non convex가 있으면 그건 non convex다?
+	
+	
+	** Question
+	
+	근데 왜 갑자기 Minimizer 설명이 나온거지?
+	
+	앞에 장이 portfolio 인데 거기서  optimizer를 쓰니까 그 요소 중 하나인 minimizer를 설명한건가?
