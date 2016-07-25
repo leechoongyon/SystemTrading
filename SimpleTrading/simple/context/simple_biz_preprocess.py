@@ -6,22 +6,26 @@ Created on 2016. 7. 15.
 '''
 
 import datetime
+import time
 
 from simple.common.util.properties_util import properties, DB_DATA, STOCK_DATA, \
     CRAWLER
-from simple.common.util.time_util import get_today_with_formatting, \
-    get_day_from_specific_day, convert_string_to_datetime, \
-    convert_string_to_time
+from simple.common.util.time_util import getTodayWithFormatting, \
+    getDayFromSpecificDay, convertStringToDatetime, \
+    convertStringToTime, getDayFromSpecificDay, getTodayWithFormatting
+from simple.data.controlway.crawler import data_crawler
 from simple.data.controlway.crawler.data_crawler import PAGE_NUM, \
-    get_total_page_num, get_historical_data
+    getTotalPageNum, getHistoricalData
 from simple.data.controlway.dataframe import process_dataframe
 from simple.data.controlway.dataframe.process_dataframe import get_stock_data_using_datareader, register_stock_data_in_db, \
                                                                 register_stock_data_in_db
 from simple.data.controlway.db.factory import data_handler_factory
-from simple.data.controlway.db.factory.data_handler_factory import get_data_handler_in_mysql, \
-    close_handler
+from simple.data.controlway.db.factory.data_handler_factory import getDataHandler, \
+    close
 from simple.data.controlway.db.mysql.data_handler import DataHandler
 from simple.data.controlway.db.mysql.query import select_query
+from simple.data.controlway.db.mysql.query.insert_query import INSERT_STOCK_ITEM_DAILY_01
+from simple.data.controlway.db.mysql.query.select_query import SELECT_TARGET_PORTFOLIO
 from simple.data.stock import process_stock_data
 from simple.data.stock.stock_data import StockColumn, MARKET_OPEN_TIME, \
     MARKET_CLOSE_TIME, stock_data, StockTable
@@ -32,21 +36,21 @@ def pre_process():
     print "pre_process starting"
     
     # 0. STOCK_RELATED_DATA init
-    temp_market_open_time = properties.get_selection(STOCK_DATA)[MARKET_OPEN_TIME]
-    temp_market_close_time = properties.get_selection(STOCK_DATA)[MARKET_CLOSE_TIME]
+    tempMarketOpenTime = properties.get_selection(STOCK_DATA)[MARKET_OPEN_TIME]
+    tempMarketCloseTime = properties.get_selection(STOCK_DATA)[MARKET_CLOSE_TIME]
      
-    time = temp_market_open_time.split(":")
-    hour = int(time[0])
-    min = int(time[1]) 
-    market_open_time = datetime.time(hour, min, 0, 0)
+    marketTime = tempMarketOpenTime.split(":")
+    hour = int(marketTime[0])
+    min = int(marketTime[1]) 
+    marketOpenTime = datetime.time(hour, min, 0, 0)
      
-    time = temp_market_close_time.split(":")
-    hour = int(time[0])
-    min = int(time[1]) 
-    market_close_time = datetime.time(hour, min, 0, 0)
+    marketTime = tempMarketCloseTime.split(":")
+    hour = int(marketTime[0])
+    min = int(marketTime[1]) 
+    marketCloseTime = datetime.time(hour, min, 0, 0)
      
-    stock_data.dict[MARKET_OPEN_TIME] = market_open_time 
-    stock_data.dict[MARKET_CLOSE_TIME] = market_close_time
+    stock_data.dict[MARKET_OPEN_TIME] = marketOpenTime 
+    stock_data.dict[MARKET_CLOSE_TIME] = marketCloseTime
     
     '''
     
@@ -60,50 +64,30 @@ def pre_process():
     
     # 1. TARGET_PORTFOLIO 선처리
     #  1.1 PORTFOLIO에 있는 종목 DAILY_DATA 최신화
-    data_handler = data_handler_factory.get_data_handler_in_mysql()
-    cursor = data_handler.openSql(select_query.SELECT_TARGET_PORTFOLIO)
+    data_handler = data_handler_factory.getDataHandler()
+    cursor = data_handler.openSql(SELECT_TARGET_PORTFOLIO)
     stock_items = cursor.fetchall()
     
     
-    # TARGET에는 있는데 DAILY에는 없을 수 있다.
     '''
           설계 :TARGET에 있는 STOCK_ITEMS를 뽑아오고
-              뽑아온 STOCK_ITEM을 2년이내로 돌리자. (옵션으로 빼고)
-              
+              뽑아온 STOCK_ITEM을 2년이내로 정보를 가져오자. (옵션으로 빼고)
     '''
     
-    for stock_item in stock_items:
+    for stockItem in stock_items:
+        print stockItem['STOCK_CD']
+        start = getDayFromSpecificDay(time.time(), -700, "%Y%m%d")
+        end = getTodayWithFormatting("%Y%m%d")
+        pageNum = properties.get_selection(CRAWLER)[PAGE_NUM]
+        totalPageNum = data_crawler.getTotalPageNum(stockItem[StockColumn.STOCK_CD],
+                                     start, end, pageNum)
+        rows = data_crawler.getHistoricalData(stockItem[StockColumn.STOCK_CD],
+                                              start, end, int(pageNum), int(totalPageNum))
+        data_handler.execSqlManyWithParam(INSERT_STOCK_ITEM_DAILY_01,
+                                           rows)
         
-        # 굳이 주식데이터를 DataFrame으로 가져오지말고
-        # list로 가져와서 SQL로 넣자
         
-        ym_dd = stock_item[StockColumn.YM_DD]
-        start = get_day_from_specific_day(convert_string_to_time(ym_dd, "%Y%m%d"), +1, "%Y%m%d")
-        end = get_today_with_formatting("%Y%m%d")
-        stock_cd = stock_item[StockColumn.STOCK_CD]
-        
-        page_num = properties.get_selection(CRAWLER)[PAGE_NUM]
-        total_page_num = get_total_page_num(stock_cd, start, end, page_num)
-        df = get_historical_data(stock_cd, start, end, int(page_num), int(total_page_num))
-        processed_df = process_stock_data.process_stock_data2(df, stock_cd)
-        
-        process_dataframe.register_stock_data_in_db(data_handler.get_conn(), \
-                                                    processed_df, StockTable.STOCK_ITEM_DAILY, \
-                                                    properties.get_selection(DB_DATA)['exists_option'], \
-                                                    properties.get_selection(DB_DATA)['db_type'])
-        
-        '''
-        market_cd = stock_item[StockColumn.MARKET_CD]
-        df = get_stock_data_using_datareader(stock_cd, market_cd, start, end)
-        df = process_stock_data.process_stock_data2(df, stock_cd)
-        exists_option = properties.get_selection(DB_DATA)['exists_option']
-        db_type = properties.get_selection(DB_DATA)['db_type']
-        register_stock_data_in_db(data_handler.get_conn(), df, StockTable.STOCK_ITEM_DAILY, exists_option, db_type) 
-        '''
-        
-    print data_handler
-    if data_handler is not None:
-        data_handler_factory.close_handler(data_handler)
+    data_handler_factory.close(data_handler)
     
     
     

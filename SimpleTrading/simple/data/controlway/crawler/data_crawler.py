@@ -46,33 +46,33 @@ def get_intraday_data(symbol, interval_seconds=301, num_days=10):
 
     return df
 
-def get_total_page_num(symbol, start, end, page_num):
+def getTotalPageNum(symbol, start, end, pageNum):
     url_string = 'http://www.google.com/finance/historical?q={0}'.format(symbol.upper())
-    url_string += "&startdate={0}&enddate={1}d&f=d,o,h,l,c,v&start=0&num={2}".format(start, end, page_num)
+    url_string += "&startdate={0}&enddate={1}d&f=d,o,h,l,c,v&start=0&num={2}".format(start, end, pageNum)
     sock = urllib2.urlopen(url_string)
     ch = sock.read()
     sock.close()
-    page = re.findall(r"0,\n" + page_num + ",\n[0-9]*", ch)
+    page = re.findall(r"0,\n" + pageNum + ",\n[0-9]*", ch)
     total_num = page[0].replace("\n", "").split(",")[2]
     return total_num
 
 # 다 돌려보고 총 row와 Dataframe 갯수가 맞는지 확인
-def get_historical_data(symbol, start, end, page_num, total_page_num):
+def getHistoricalData(stockCd, start, end, pageNum, totalPageNum):
     
-    quotient = total_page_num / page_num
-    reminder = total_page_num % page_num
+    quotient = totalPageNum / pageNum
+    reminder = totalPageNum % pageNum
     
-    loop_num = 0
+    loopNum = 0
     if reminder != 0:
-        loop_num = quotient + 1
+        loopNum = quotient + 1
     else:
-        loop_num = quotient
+        loopNum = quotient
     
     
     rows = []
-    for i in range(0, loop_num):
-        url_string = 'http://www.google.com/finance/historical?q={0}'.format(symbol.upper())
-        url_string += "&startdate={0}&enddate={1}d&f=d,o,h,l,c,v&start={2}&num={3}".format(start, end, page_num * i, page_num)
+    for i in range(0, loopNum):
+        url_string = 'http://www.google.com/finance/historical?q={0}'.format(stockCd.upper())
+        url_string += "&startdate={0}&enddate={1}d&f=d,o,h,l,c,v&start={2}&num={3}".format(start, end, pageNum * i, pageNum)
         sock = urllib2.urlopen(url_string)
         ch = sock.read()
         sock.close()
@@ -84,35 +84,57 @@ def get_historical_data(symbol, start, end, page_num, total_page_num):
             if len(cols) ==0:
                 continue
             
-            date = time_util.convert_string_to_datetime2(cols[0].text.replace("\n", ""), "%Y%m%d")
-            open = string_util.multi_replace(cols[1].text, {"\n":"",",":""})
-            high = string_util.multi_replace(cols[2].text, {"\n":"",",":""})
-            low = string_util.multi_replace(cols[3].text, {"\n":"",",":""})
-            close = string_util.multi_replace(cols[4].text, {"\n":"",",":""})
-            volume = string_util.multi_replace(cols[5].text, {"\n":"",",":""})
+            date = time_util.convertStringToDatetime2(cols[0].text.replace("\n", ""), "%Y%m%d")
+            open = string_util.multiReplace(cols[1].text, {"\n":"",",":""})
+            high = string_util.multiReplace(cols[2].text, {"\n":"",",":""})
+            low = string_util.multiReplace(cols[3].text, {"\n":"",",":""})
+            close = string_util.multiReplace(cols[4].text, {"\n":"",",":""})
+            volume = string_util.multiReplace(cols[5].text, {"\n":"",",":""})
             adj_close = 0
             
-            rows.append((date, open, high, \
+            rows.append((stockCd, date, open, high, \
                         low, close, volume, 0))
-            
+    
+    # 이렇게 하면 DataFrame으로 리턴
+    # df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", "Close", "Volume", "Adj Close"])
+    # return df
+    
+    return rows
     
     
-    df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", "Close", "Volume", "Adj Close"])
-    return df
     
 if __name__ == '__main__':
     
     start = "2014-01-01"
-    end = "2016-07-22"
+    end = "2016-07-25"
     # kakao = 035720 / combine = 047770
     symbol = "035720"
 #     symbol = "047770"
 
-    page_num = properties.get_selection(CRAWLER)[PAGE_NUM]
-    total_page_num = get_total_page_num(symbol, start, end, page_num)
-    df = get_historical_data(symbol, start, end, int(page_num), int(total_page_num))
-    processed_df = process_stock_data.process_stock_data2(df, symbol)
+    pageNum = properties.get_selection(CRAWLER)[PAGE_NUM]
+    print pageNum
+    print type(pageNum)
+    totalPageNum = getTotalPageNum(symbol, start, end, pageNum)
+    print totalPageNum
+    print type(totalPageNum)
+    '''
+    rows = getHistoricalData(symbol, start, end, int(pageNum), int(totalPageNum))
+
+    dataHandler = data_handler_factory.getDataHandler()
+    sql = (
+           "INSERT INTO STOCK_ITEM_DAILY " 
+                "(STOCK_CD, YM_DD, OPEN_PRICE, HIGH_PRICE, LOW_PRICE, " 
+                " CLOSE_PRICE, VOLUME, ADJ_CLOSE_PRICE) "
+            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s) "
+            "ON DUPLICATE KEY UPDATE "
+                "YM_DD = VALUES(YM_DD),"
+                "OPEN_PRICE = VALUES(OPEN_PRICE), "
+                "HIGH_PRICE = VALUES(HIGH_PRICE), "
+                "LOW_PRICE = VALUES(LOW_PRICE), "
+                "CLOSE_PRICE = VALUES(CLOSE_PRICE), "
+                "VOLUME = VALUES(VOLUME), "
+                "ADJ_CLOSE_PRICE = VALUES(ADJ_CLOSE_PRICE)"
+           )
     
-    data_handler = data_handler_factory.get_data_handler_in_mysql()
-    process_dataframe.register_stock_data_in_db(data_handler.get_conn(), processed_df, "STOCK_ITEM_DAILY", "append", "mysql")
-    data_handler_factory.close_handler(data_handler)
+    dataHandler.execSqlManyWithParam(sql, rows)
+    '''

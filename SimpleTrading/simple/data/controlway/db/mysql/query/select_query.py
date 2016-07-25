@@ -10,6 +10,7 @@ from enum import Enum
 
 SELECT_TARGET_PORTFOLIO = ("select * from target_portfolio;")
 
+
     
 SELECT_JOIN_STOCK_ITEM_DAILY_AND_TARGET_PORTFOLIO = (
 "select b.stock_cd, b.ym_dd, a.market_cd " 

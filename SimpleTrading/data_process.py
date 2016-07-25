@@ -36,7 +36,7 @@ class DataProcess():
                 result = results[0]
                 update_param = {'m24c_whin_lwst_price':result[0], 'stock_cd':code}
                 update_params.add(update_param)
-            self.dataHandler.execSqlManyWithParam(sql, update_params)
+            self.dataHandler.execSqlManyexecSqlManyWithParame_params)
         
         except Exception, e:
             print "Error decideM24CWhinLwstPrice codes : %s" % code

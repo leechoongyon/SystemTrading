@@ -9,7 +9,7 @@ from simple.config.configuration import PROPERTIES_PATH
 from simple.data.controlway.db.mysql.data_handler import DataHandler
 
 
-def get_data_handler_in_mysql():
+def getDataHandler():
     host = properties.get_selection(DB_DATA)['host']
     user = properties.get_selection(DB_DATA)['user']
     passwd = properties.get_selection(DB_DATA)['passwd']
@@ -22,7 +22,7 @@ def get_data_handler_in_mysql():
     
     return data_handler
 
-def close_handler(data_handler):
+def close(data_handler):
     data_handler.close()
     
 

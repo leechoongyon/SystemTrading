@@ -18,9 +18,9 @@ class StockTable():
     STOCK_TEST = "STOCK_TEST"
     
 class StockColumn():
-    STOCK_CD = "stock_cd"
-    MARKET_CD = "market_cd"
-    YM_DD = "ym_dd"
+    STOCK_CD = "STOCK_CD"
+    MARKET_CD = "MARKET_CD"
+    YM_DD = "YM_DD"
 
 class StockData():
 

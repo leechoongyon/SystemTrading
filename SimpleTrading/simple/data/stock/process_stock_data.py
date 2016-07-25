@@ -7,7 +7,7 @@ Created on 2016. 7. 18.
 from simple.common.util import dataframe_util, string_util
 from simple.data.controlway.dataframe.process_dataframe import get_stock_data_using_datareader, \
     register_stock_data_in_db
-from simple.data.controlway.db.factory.data_handler_factory import get_data_handler_in_mysql
+from simple.data.controlway.db.factory.data_handler_factory import getDataHandler
 
 
 def get_stock_data(stock_cd, start, end):
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     table_nm = "STOCK_ITEM_DAILY"
     exists_option = "append"
     db = "mysql"
-    data_handler = get_data_handler_in_mysql()
+    data_handler = getDataHandler()
     con = data_handler.get_conn()
     
     df = get_stock_data_using_datareader(stock_cd, market_cd, start, end)

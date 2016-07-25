@@ -12,7 +12,7 @@ import pandas_datareader.data as web
 from simple.common.util import dataframe_util, string_util
 from simple.common.util.properties_util import PropertiesUtil, STOCK_DATA, \
     DB_DATA, properties
-from simple.data.controlway.db.factory.data_handler_factory import get_data_handler_in_mysql
+from simple.data.controlway.db.factory.data_handler_factory import getDataHandler
 from simple.data.controlway.db.mysql.data_handler import DataHandler
 
 
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     
     df = pd.DataFrame(raw_data)
     print df
-    data_handler = get_data_handler_in_mysql()
+    data_handler = getDataHandler()
     conn = data_handler.get_conn()
     register_stock_data_in_db(conn, df, "test", "append", 'mysql')
 #     register_stock_data_in_db(conn, df, STOCK_ITEM_DAILY, 'exists_option', db)

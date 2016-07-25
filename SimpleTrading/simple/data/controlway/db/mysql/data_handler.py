@@ -63,18 +63,6 @@ class DataHandler():
 			print "--- %s ---" % (sql)
 		
 	
-	def execSqlMany(self, sql, param, db_commit=True):
-		try:
-			cursor = self.conn.cursor(mdb.cursors.DictCursor)
-			cursor.execute(sql)
-			if db_commit:
-				self.conn.commit()
-			return cursor
-		except Exception as e:
-			print ">>> Unexpected error in ExecSQL: ", e
-			print "--- %s ---" % (sql)
-			self.conn.rollback()
-			
 	def execSqlManyWithParam(self, sql, param, db_commit=True):
 		try:
 			cursor = self.conn.cursor(mdb.cursors.DictCursor)

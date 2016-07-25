@@ -10,7 +10,7 @@ import re
     ex) print multi_replace("94,100.00", {",":"", ".":""})
         9410000
 '''
-def multi_replace(str, rep):
+def multiReplace(str, rep):
     rep = dict((re.escape(k), v) for k, v in rep.iteritems())
     pattern = re.compile("|".join(rep.keys()))
     str = pattern.sub(lambda m: rep[re.escape(m.group(0))], str)
@@ -39,4 +39,4 @@ if __name__ == '__main__':
     print replace(str, "-", "")
     '''
     
-    print multi_replace("94,100.00", {",":"", ".":""})
+    print multiReplace("94,100.00", {",":"", ".":""})
