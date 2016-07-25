@@ -20,7 +20,7 @@ if __name__ == '__main__':
     dates = pd.date_range(two_years_ago, today)
     
     # 0.446616493819, Seafood가 약간 더 고평가네
-#     symbols = ['CJ_Seafood', 'CJ_CGV']2
+    symbols = ['CJ_Seafood', 'CJ_CGV']
     
     # 1.20085728854, 스프레드가 거의 비슷
 #     symbols = ['CJ_Seafood', 'CJ_Cheiljedang_Wo']

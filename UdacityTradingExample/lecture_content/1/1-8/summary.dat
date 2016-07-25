@@ -9,3 +9,47 @@
 2) Provide an initial guess
 
 3) Call the optimizer 
+
+
+4) optimizer 안에서 func 에 대한 minimizer를 담당하는데 
+
+	그 중에 대표적인 함수로 scipy.optimize 의 minimize 함수로 찾게 되는데
+	
+	그레디언트 디센트 방식을 이용해서 찾게 된다. (대충 원리는 기울기 구해서 빼고 빼다 보면 기울기가 0인 순간이 오겠지. 그게 최저점이겠지)
+	
+	minizer.py 예제에 이 내용이 있다.
+
+
+
+5) Convex 문제가 나왔는데
+
+   두 점을 이어서 직선을 그렸을 때 위에 non convex가 있으면 그건 non convex다?
+	
+	
+	
+	
+6) Building a parameterized model
+
+
+	- f(x) = c0 * x + c1
+	
+		습도와 비가 오는 날을 그래프로 그렸을 때 그것들을 점으로 찍는다. 그런 그 점들은
+		
+		어느 일정한 분포를 가질테고 그 분포를 나타내는 직선을 그릴 수 있다. 직선의 기울기는 C0
+		
+		절편은 C1이겠지.
+		
+		그럼 여기서 질문. 이것을 가지고 우리는 minimizer에 어떻게 적용할 수 있을까?
+	
+	
+		첫번째는, 직선에 대한 점들의 오차를 구하는 것이다.
+		
+		오차를 구할 때는 절대값의 합 또는 오차의 제곱의 합을 구해주는 것이 좋다. (음수를 반영할 수 있기 때문에)
+	
+	
+	
+	** Question
+	
+	근데 왜 갑자기 Minimizer 설명이 나온거지?
+	
+	앞에 장이 portfolio 인데 거기서  optimizer를 쓰니까 그 요소 중 하나인 minimizer를 설명한건가?
