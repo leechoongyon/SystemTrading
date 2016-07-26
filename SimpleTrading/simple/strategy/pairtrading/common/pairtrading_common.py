@@ -15,28 +15,28 @@ from simple.common.util.properties_util import properties, STOCK_DATA
 from simple.config.configuration import PROPERTIES_PATH
 
 
-def symbol_to_path(symbol, base_dir="data"):
+def symbolToPath(symbol, base_dir="data"):
     """Return CSV file path given ticker symbol."""
     return os.path.join(base_dir, "{}.csv".format(str(symbol)))
 
-def get_data(symbols, dates):
+def getData(symbols, dates):
     """Read stock data (adjusted close) for given symbols from CSV files."""
     df = pd.DataFrame(index=dates)
 
     for symbol in symbols:
-        df_temp = pd.read_csv(symbol_to_path(symbol, properties.get_selection(STOCK_DATA)['stock_download_path']), index_col='Date',
+        df_temp = pd.read_csv(symbolToPath(symbol, properties.getSelection(STOCK_DATA)['stock_download_path']), index_col='Date',
                 parse_dates=True, usecols=['Date', 'Adj Close'], na_values=['nan'])
         df_temp = df_temp.rename(columns={'Adj Close': symbol})
         df = df.join(df_temp)
 
     return df
 
-def get_close_data(symbols, dates):
+def getCloseData(symbols, dates):
     """Read stock data (close) for given symbols from CSV files."""
     df = pd.DataFrame(index=dates)
 
     for symbol in symbols:
-        df_temp = pd.read_csv(symbol_to_path(symbol, properties.get_selection(STOCK_DATA)['stock_download_path']), index_col='Date',
+        df_temp = pd.read_csv(symbol_to_path(symbol, properties.getSelection(STOCK_DATA)['stock_download_path']), index_col='Date',
                 parse_dates=True, usecols=['Date', 'Close'], na_values=['nan'])
         df_temp = df_temp.rename(columns={'Close': symbol})
         df = df.join(df_temp)

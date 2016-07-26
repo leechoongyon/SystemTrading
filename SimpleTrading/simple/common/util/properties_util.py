@@ -15,13 +15,12 @@ DB_DATA = "DB_DATA"
 # STOCK_DATA
 STOCK_DATA = "STOCK_DATA"
 
+STOCK_DOWNLOAD_PATH = "stock_download_path"
 MARKET_OPEN_TIME = "market_open_time"
 MARKET_CLOSE_TIME = "market_close_time"
 
 # CRAWLER
 CRAWLER = "CRAWLER"
-
-
 
 # [BIZ_PRE_PROCESS]
 BIZ_PRE_PROCESS = "BIZ_PRE_PROCESS"
