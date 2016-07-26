@@ -16,7 +16,8 @@ from simple.data.controlway.dataframe.process_dataframe import getStockDataUsing
     registerStockDataInDb
 from simple.data.controlway.db.factory.data_handler_factory import getDataHandler
 from simple.data.stock.query.insert_query import INSERT_STOCK_ITEM_DAILY_01
-from simple.data.stock.query.select_query import SELECT_TARGET_PORTFOLIO
+from simple.data.stock.query.select_query import SELECT_TARGET_PORTFOLIO, \
+    SELECT_LIVE_PORTFOLIO
 from simple.data.stock.stock_data import StockColumn
 
 
@@ -26,9 +27,31 @@ def getTargetPortfolio(dataHandler):
     stockItems = cursor.fetchall()
     return stockItems
 
+# LIVE PORTFOLIO 가져오기
+def getLivePortfolio(dataHandler):
+    cursor = dataHandler.openSql(SELECT_LIVE_PORTFOLIO)
+    stockItems = cursor.fetchall()
+    return stockItems
+
 # TARGET PORTFOLIO 데이터를 STOCK_ITEM_DAILY 테이블에 저장
-def insertTargetPortFolioStockData(stockItems, dataHandler):
+def insertTargetPortfolioStockData(stockItems, dataHandler, startNum, end=getTodayWithFormatting("%Y%m%d")):
+     print "Insert TargetPortfolio stockData"
      for stockItem in stockItems:
+        print "stockItem : %s " % stockItem
+        start = getDayFromSpecificDay(time.time(), int(startNum), "%Y%m%d")
+        end = getTodayWithFormatting("%Y%m%d")
+        pageNum = properties.getSelection(CRAWLER)[PAGE_NUM]
+        totalPageNum = data_crawler.getTotalPageNum(stockItem[StockColumn.STOCK_CD],
+                                     start, end, pageNum)
+        rows = data_crawler.getHistoricalData(stockItem[StockColumn.STOCK_CD],
+                                              start, end, int(pageNum), int(totalPageNum))
+        dataHandler.execSqlManyWithParam(INSERT_STOCK_ITEM_DAILY_01,
+                                           rows)
+        
+
+# LIVE PORTFOLIO 데이터를 STOCK_ITEM_DAILY 테이블에 저장
+def insertLivePortfolioStockData(stockItems, dataHandler):        
+    for stockItem in stockItems:
         start = getDayFromSpecificDay(time.time(), -700, "%Y%m%d")
         end = getTodayWithFormatting("%Y%m%d")
         pageNum = properties.getSelection(CRAWLER)[PAGE_NUM]
@@ -38,6 +61,7 @@ def insertTargetPortFolioStockData(stockItems, dataHandler):
                                               start, end, int(pageNum), int(totalPageNum))
         dataHandler.execSqlManyWithParam(INSERT_STOCK_ITEM_DAILY_01,
                                            rows)
+
 # stock_item_daily에 대한 가공
 def processStockData(df, stockCd):
 

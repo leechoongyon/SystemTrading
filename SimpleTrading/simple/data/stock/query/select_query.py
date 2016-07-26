@@ -9,7 +9,7 @@ from enum import Enum
 
 
 SELECT_TARGET_PORTFOLIO = ("select * from target_portfolio;")
-
+SELECT_LIVE_PORTFOLIO = ("select * from live_portfolio;")
 
     
 SELECT_JOIN_STOCK_ITEM_DAILY_AND_TARGET_PORTFOLIO = (
