@@ -16,7 +16,6 @@ from simple.common.util import properties_util, time_util, string_util
 from simple.common.util.properties_util import CRAWLER, properties
 from simple.data.controlway.dataframe import process_dataframe
 from simple.data.controlway.db.factory import data_handler_factory
-from simple.data.stock import process_stock_data
 
 
 '''
@@ -27,7 +26,7 @@ from simple.data.stock import process_stock_data
 
 PAGE_NUM = "page_num"
 
-def get_intraday_data(symbol, interval_seconds=301, num_days=10):
+def getIntradayData(symbol, interval_seconds=301, num_days=10):
     # Specify URL string based on function inputs.
     url_string = 'http://www.google.com/finance/getprices?q={0}'.format(symbol.upper())
     url_string += "&i={0}&p={1}d&f=d,o,h,l,c,v".format(interval_seconds,num_days)
@@ -111,7 +110,7 @@ if __name__ == '__main__':
     symbol = "035720"
 #     symbol = "047770"
 
-    pageNum = properties.get_selection(CRAWLER)[PAGE_NUM]
+    pageNum = properties.getSelection(CRAWLER)[PAGE_NUM]
     print pageNum
     print type(pageNum)
     totalPageNum = getTotalPageNum(symbol, start, end, pageNum)

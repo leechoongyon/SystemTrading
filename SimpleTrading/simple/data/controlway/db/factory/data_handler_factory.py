@@ -10,12 +10,12 @@ from simple.data.controlway.db.mysql.data_handler import DataHandler
 
 
 def getDataHandler():
-    host = properties.get_selection(DB_DATA)['host']
-    user = properties.get_selection(DB_DATA)['user']
-    passwd = properties.get_selection(DB_DATA)['passwd']
-    db = properties.get_selection(DB_DATA)['db']
-    charset = properties.get_selection(DB_DATA)['charset']
-    use_unicode = properties.get_selection(DB_DATA)['use_unicode']
+    host = properties.getSelection(DB_DATA)['host']
+    user = properties.getSelection(DB_DATA)['user']
+    passwd = properties.getSelection(DB_DATA)['passwd']
+    db = properties.getSelection(DB_DATA)['db']
+    charset = properties.getSelection(DB_DATA)['charset']
+    use_unicode = properties.getSelection(DB_DATA)['use_unicode']
 
     data_handler = DataHandler(host, user, passwd, db,\
                                 charset, use_unicode)

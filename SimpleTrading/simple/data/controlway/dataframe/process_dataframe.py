@@ -17,22 +17,22 @@ from simple.data.controlway.db.mysql.data_handler import DataHandler
 
 
 # from simple.trader.trader import properties_path
-def get_stock_data_using_datareader(stock_cd, market_cd, start, end):
+def getStockDataUsingDatareader(stock_cd, market_cd, start, end):
         
-    out = web.DataReader(make_code(stock_cd, market_cd), "google", start, end)
+    out = web.DataReader(makeCode(stock_cd, market_cd), "google", start, end)
     return out
 
-def regitster_stock_data_in_file(df, stock_nm):
+def regitsterStockDataInFile(df, stock_nm):
     register_path = properties.get_selection(STOCK_DATA)['stock_download_path']
     df.to_csv(register_path + "/" + stock_nm + ".csv")
 
 '''
     exists_oprtion : append, fail, replace
 '''
-def register_stock_data_in_db(con, df, table_nm, exists_option, db):
+def registerStockDataInDb(con, df, table_nm, exists_option, db):
     df.to_sql(con=con, name=table_nm, if_exists=exists_option, flavor=db, index=False, chunksize=None, dtype=None)
 
-def make_code(stock_cd, market_cd):
+def makeCode(stock_cd, market_cd):
     if market_cd == "KOSPI": 
         full_stock_cd = "%s.KS" % (stock_cd)
     elif market_cd == "KOSDAQ":

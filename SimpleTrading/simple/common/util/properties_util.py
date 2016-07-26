@@ -19,7 +19,7 @@ class PropertiesUtil():
         self.config.read(filename)
         
  
-    def get_selection(self, section):
+    def getSelection(self, section):
         dict1 = {}
         options = self.config.options(section)
         for option in options:

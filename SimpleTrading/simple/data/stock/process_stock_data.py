@@ -4,22 +4,44 @@ Created on 2016. 7. 18.
 
 @author: lee
 '''
+import time
+
 from simple.common.util import dataframe_util, string_util
-from simple.data.controlway.dataframe.process_dataframe import get_stock_data_using_datareader, \
-    register_stock_data_in_db
+from simple.common.util.properties_util import properties, CRAWLER
+from simple.common.util.time_util import getDayFromSpecificDay, \
+    getTodayWithFormatting
+from simple.data.controlway.crawler import data_crawler
+from simple.data.controlway.crawler.data_crawler import PAGE_NUM
+from simple.data.controlway.dataframe.process_dataframe import getStockDataUsingDatareader, \
+    registerStockDataInDb
 from simple.data.controlway.db.factory.data_handler_factory import getDataHandler
+from simple.data.stock.query.insert_query import INSERT_STOCK_ITEM_DAILY_01
+from simple.data.stock.query.select_query import SELECT_TARGET_PORTFOLIO
+from simple.data.stock.stock_data import StockColumn
 
 
-def get_stock_data(stock_cd, start, end):
-    pass
+# TARGET PORTFOLIO 가져오기
+def getTargetPortfolio(dataHandler):
+    cursor = dataHandler.openSql(SELECT_TARGET_PORTFOLIO)
+    stockItems = cursor.fetchall()
+    return stockItems
 
-def insert_stock_data():
-    pass
-
+# TARGET PORTFOLIO 데이터를 STOCK_ITEM_DAILY 테이블에 저장
+def insertTargetPortFolioStockData(stockItems, dataHandler):
+     for stockItem in stockItems:
+        start = getDayFromSpecificDay(time.time(), -700, "%Y%m%d")
+        end = getTodayWithFormatting("%Y%m%d")
+        pageNum = properties.getSelection(CRAWLER)[PAGE_NUM]
+        totalPageNum = data_crawler.getTotalPageNum(stockItem[StockColumn.STOCK_CD],
+                                     start, end, pageNum)
+        rows = data_crawler.getHistoricalData(stockItem[StockColumn.STOCK_CD],
+                                              start, end, int(pageNum), int(totalPageNum))
+        dataHandler.execSqlManyWithParam(INSERT_STOCK_ITEM_DAILY_01,
+                                           rows)
 # stock_item_daily에 대한 가공
-def process_stock_data(df, stock_cd):
+def processStockData(df, stockCd):
 
-    dataframe_util.insert(df, 0, 'STOCK_CD', stock_cd)
+    dataframe_util.insert(df, 0, 'STOCK_CD', stockCd)
     
     indexs = df.index
     indexs = indexs.format()
@@ -30,14 +52,18 @@ def process_stock_data(df, stock_cd):
     return df
 
 # stock_item_daily에 대한 가공2 (data_crawler CRAWLER에서 사용)
-def process_stock_data2(df, stock_cd):
-    dataframe_util.insert(df, 0, 'STOCK_CD', stock_cd)
-    columns={"Date":"YM_DD","Open":"OPEN_PRICE","High":"HIGH_PRICE", "Low":"LOW_PRICE", "Close":"CLOSE_PRICE", "Adj Close":"ADJ_CLOSE_PRICE"}
+def processStockData2(df, stockCd):
+    dataframe_util.insert(df, 0, 'STOCK_CD', stockCd)
+    columns = {"Date":"YM_DD","Open":"OPEN_PRICE","High":"HIGH_PRICE", "Low":"LOW_PRICE", "Close":"CLOSE_PRICE", "Adj Close":"ADJ_CLOSE_PRICE"}
     df = dataframe_util.rename(df, columns)
     return df
     
 if __name__ == '__main__':
+    
+    print "test"
 
+    '''
+        
     # Stock 데이터를 한꺼번에 DB에 밀어넣는다.
     start = "20140101"
     end = "20160718"
@@ -53,8 +79,10 @@ if __name__ == '__main__':
     data_handler = getDataHandler()
     con = data_handler.get_conn()
     
-    df = get_stock_data_using_datareader(stock_cd, market_cd, start, end)
-    df = process_stock_data(df, stock_cd)
-    register_stock_data_in_db(con, df, table_nm, exists_option, db)
+    df = getStockDataUsingDatareader(stock_cd, market_cd, start, end)
+    df = processStockData(df, stock_cd)
+    registerStockDataInDb(con, df, table_nm, exists_option, db)
     
     data_handler.close()
+    
+    '''
