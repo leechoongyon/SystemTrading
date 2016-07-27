@@ -22,7 +22,6 @@ from simple.strategy.pairtrading.common.pairtrading_common import symbolToPath, 
 
 if __name__ == '__main__':
     
-    # 코드 2개를 입력받아 2년치 데이터를 가져와서 파일로 만들기
     # 035720 : KaKao, 079160 : CJ CGV
     # 0. 초기 세팅 (stockCds에 2개만 넣어주면 작동
     stockCds = ["035720", "079160"]
