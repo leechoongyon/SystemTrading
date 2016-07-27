@@ -62,7 +62,7 @@ if __name__ == '__main__':
     
     
     
-    df = get_data(symbols, dates)
+    df = getData(symbols, dates)
     refined_df = df.dropna()
     
     # normalize

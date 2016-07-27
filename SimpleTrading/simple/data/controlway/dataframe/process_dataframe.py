@@ -23,7 +23,7 @@ def getStockDataUsingDatareader(stock_cd, market_cd, start, end):
     return out
 
 def regitsterStockDataInFile(df, stock_nm):
-    register_path = properties.get_selection(STOCK_DATA)['stock_download_path']
+    register_path = properties.getSelection(STOCK_DATA)['stock_download_path']
     df.to_csv(register_path + "/" + stock_nm + ".csv")
 
 '''
