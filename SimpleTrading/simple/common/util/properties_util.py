@@ -57,7 +57,7 @@ if __name__ == '__main__':
     
     isTargetDataLoad = properties.getSelection("BIZ_PRE_PROCESS")["target_data_load"]
     
-    if isTargetDataLoad:
+    if isTargetDataLoad == "True":
         print "True"
     else :
         print "False"

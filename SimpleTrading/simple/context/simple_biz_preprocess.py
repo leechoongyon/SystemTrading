@@ -30,6 +30,7 @@ from simple.data.stock.process_stock_data import getTargetPortfolio, \
     getLivePortfolio, insertLivePortfolioStockData
 from simple.data.stock.stock_data import StockColumn, \
     stock_data, StockTable
+from simple.portfolio import target_portfolio
 
 
 def init():
@@ -67,7 +68,7 @@ def preProcess():
     # 1. TARGET_PORTFOLIO 선처리
     #  1.1 PORTFOLIO에 있는 종목 DAILY_DATA 최신화
     isTargetDataLoad = properties.getSelection(BIZ_PRE_PROCESS)[TARGET_DATA_LOAD]
-    if isTargetDataLoad:
+    if "True" == isTargetDataLoad:
         print "executing target data load"
         dataHandler = data_handler_factory.getDataHandler()
         stockItems = getTargetPortfolio(dataHandler)
@@ -75,11 +76,26 @@ def preProcess():
         insertTargetPortfolioStockData(stockItems, dataHandler, startNum)
         data_handler_factory.close(dataHandler)
             
+        
+    '''
+      1.2 타겟포트폴리오 종목 선정
+       1.2.1 업종별 코드 테이블 조회해서 업종별 코드 가져오기.
+       1.2.2 각 업종에 해당하는 종목 받아오기
+       1.2.3 각 종목에 해당하는 2~3년치 데이터 가져옴.
+       1.2.4 받아온 업종별 데이터에 대한 표준편차, 분산 구하기 (수익률에 대한)
+       1.2.5 재무재표 비교 (업종별 평균 이하는 다 버림)
+       1.2.6 추출된 것 중 박스권 최저 10~20% 추출
+       1.2.7 여기서 추출된 것을 페어트레이딩 돌리기.
+    '''    
+        
+    target_portfolio.selectionOfStockItems()
+    
+    
     
     # 2. LIVE_PORTFOLIO 선처리
     #  2.2 PORTFOLIO에 있는 종목 DAILY_DATA 최신화
     isLiveDataLoad = properties.getSelection(BIZ_PRE_PROCESS)[LIVE_DATA_LOAD]
-    if isLiveDataLoad:
+    if "True" == isLiveDataLoad:
         print "executing live data load"
         dataHandler = data_handler_factory.getDataHandler()
         stockItems = getLivePortfolio(dataHandler)

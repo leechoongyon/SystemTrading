@@ -2,7 +2,6 @@
 
 import MySQLdb as mdb
 
-
 class DataHandler():
 	def __init__(self, host, user, passwd, db, charset, use_unicode):
 		self.conn = mdb.connect(host=host, 
@@ -11,7 +10,6 @@ class DataHandler():
 							  	db=db, 
                              	charset=charset, 
                               	use_unicode=use_unicode);
-         
 	def get_conn(self):
 		if (self.conn == None):
 			raise Exception("conn = None")
@@ -29,7 +27,11 @@ class DataHandler():
 			print e
 			self.conn.rollback()
 
-
+	'''
+		ex) 
+			cursor = dataHandler.openSql(SELECT_TARGET_PORTFOLIO)
+    	   	stockItems = cursor.fetchall()
+	'''
 	def openSql(self,sql):
 		try:
 			cursor = self.conn.cursor(mdb.cursors.DictCursor)

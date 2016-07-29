@@ -40,11 +40,8 @@ def insertTargetPortfolioStockData(stockItems, dataHandler, startNum, end=getTod
         print "stockItem : %s " % stockItem
         start = getDayFromSpecificDay(time.time(), int(startNum), "%Y%m%d")
         end = getTodayWithFormatting("%Y%m%d")
-        pageNum = properties.getSelection(CRAWLER)[PAGE_NUM]
-        totalPageNum = data_crawler.getTotalPageNum(stockItem[StockColumn.STOCK_CD],
-                                     start, end, pageNum)
         rows = data_crawler.getHistoricalData(stockItem[StockColumn.STOCK_CD],
-                                              start, end, int(pageNum), int(totalPageNum))
+                                              start, end)
         dataHandler.execSqlManyWithParam(INSERT_STOCK_ITEM_DAILY_01,
                                            rows)
         

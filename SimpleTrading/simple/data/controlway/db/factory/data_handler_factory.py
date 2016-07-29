@@ -3,9 +3,8 @@ Created on 2016. 7. 16.
 
 @author: lee
 '''
-from simple.common.util.properties_util import PropertiesUtil, DB_DATA, \
+from simple.common.util.properties_util import DB_DATA, \
     properties
-from simple.config.configuration import PROPERTIES_PATH
 from simple.data.controlway.db.mysql.data_handler import DataHandler
 
 
