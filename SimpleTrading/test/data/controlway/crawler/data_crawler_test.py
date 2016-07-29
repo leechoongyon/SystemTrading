@@ -14,13 +14,16 @@ if __name__ == '__main__':
     # kakao = 035720 / combine = 047770
     symbol = "035720"
     
-    '''
     rows = getHistoricalData(symbol, start, end)
     df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", 
                                      "Close", "Volume", "Adj Close"])
-    print df
-    '''
+    max = df['Close'].arg
+    min = df['Close'].argmin()
+    
+    print df[max]['Close']
+    print df[min]['Close']
     
     columns = ['STOCK_CD', 'HIGH', 'LOW', 'STDEV']
     refinedDf = pd.DataFrame(columns=columns)
+    refinedDf.loc[0] = [symbol, df[max]['Close'], df[min]['Close'], 0]
     print refinedDf
