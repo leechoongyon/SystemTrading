@@ -7,7 +7,7 @@ import os,sys
 # 저장하고 관리하는 일종의 레지스트리로, 전역변수로 선언되어 모든 클래스에서
 # 사용할 수 있다.
 
-
+ 
 class BaseService():
 	def __init__(self):
 		self.items = {}
