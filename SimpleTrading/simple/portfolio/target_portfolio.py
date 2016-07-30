@@ -14,6 +14,8 @@ from simple.data.controlway.crawler.data_crawler import getHistoricalData
 from simple.data.controlway.db.factory import data_handler_factory
 from simple.data.stock.query.select_query import SELECT_STOCK_ITEM_WITH_PARAM
 
+import pandas as pd
+
 
 def pre_process():
     pass
@@ -49,9 +51,14 @@ def selectionOfStockItems():
     startNum = int(properties.getSelection(BIZ_PRE_PROCESS)[TARGET_DATA_LOAD_PERIOD])
     start = getDayFromSpecificDay(time.time(), startNum, "%Y%m%d")
     end = getTodayWithFormatting("%Y%m%d")
+    
+    columns = ['STOCK_CD', 'HIGH', 'LOW', 'STDEV']
+    refinedDf = pd.DataFrame(columns=columns)
+    count = 0
+    
     for toinItem in toinItems:
         dataHandler = data_handler_factory.getDataHandler()
-        cursor = dataHandler.execSqlWithParam(SELECT_STOCK_ITEM_WITH_PARAM, "기계")
+        cursor = dataHandler.execSqlWithParam(SELECT_STOCK_ITEM_WITH_PARAM, toinItem)
         stockItems = cursor.fetchall()
         
     # 4. STOCK_ITEM에 해당되는 것을 2년치~3년치 받아옴. (기존 만들어진 것)
@@ -61,9 +68,15 @@ def selectionOfStockItems():
         
         for stockItem in stockItems:
             rows = getHistoricalData(stockItem['STOCK_CD'], start, end)
-            for row in rows:
-                print row
-
+            df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", 
+                                     "Close", "Volume", "Adj Close"])
+            df[['Close']] = df[['Close']].apply(pd.to_numeric)
+            closeMax = df['Close'].max()
+            closeMin = df['Close'].min()
+            refinedDf.loc[count] = [stockItem['STOCK_CD'], closeMax, closeMin, 0]
+            count += 1
+    
+    return refinedDf
     
     
 if __name__ == '__main__':

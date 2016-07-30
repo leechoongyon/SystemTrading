@@ -15,6 +15,11 @@ def rename(df, columns):
     df = df.rename(columns=columns)
     return df
 
+def printAll(df):
+    pd.set_option('display.max_rows', len(df))
+    print df
+    pd.reset_option('display.max_rows')
+
 
 if __name__ == '__main__':
     raw_data = {'col0': [1, 2, 3, 4, 5],

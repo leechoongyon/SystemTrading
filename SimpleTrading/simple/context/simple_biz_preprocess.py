@@ -88,7 +88,8 @@ def preProcess():
        1.2.7 여기서 추출된 것을 페어트레이딩 돌리기.
     '''    
         
-    target_portfolio.selectionOfStockItems()
+    refinedDf = target_portfolio.selectionOfStockItems()
+    print refinedDf
     
     
     

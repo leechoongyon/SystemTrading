@@ -17,13 +17,13 @@ if __name__ == '__main__':
     rows = getHistoricalData(symbol, start, end)
     df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", 
                                      "Close", "Volume", "Adj Close"])
-    max = df['Close'].arg
-    min = df['Close'].argmin()
     
-    print df[max]['Close']
-    print df[min]['Close']
+    
+    df[['Close']] = df[['Close']].apply(pd.to_numeric)
+    closeMax = df['Close'].max()
+    closeMin = df['Close'].min()
     
     columns = ['STOCK_CD', 'HIGH', 'LOW', 'STDEV']
     refinedDf = pd.DataFrame(columns=columns)
-    refinedDf.loc[0] = [symbol, df[max]['Close'], df[min]['Close'], 0]
+    refinedDf.loc[0] = [symbol, closeMax, closeMin, 0]
     print refinedDf
