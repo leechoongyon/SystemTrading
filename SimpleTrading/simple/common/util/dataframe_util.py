@@ -6,6 +6,13 @@ Created on 2016. 7. 16.
 
 import pandas as pd
 
+def readToCsv(path):
+    df = pd.read_csv(path)
+    return df
+
+def writeToCsv(df, path, fileName):
+    df.to_csv(path + "/" + fileName)
+
 
 def insert(df, idx, col_name, value):
     df.insert(idx, col_name, value)

@@ -24,6 +24,7 @@ encoding//simple/strategy/pairtrading/common/util/download_stockdata.py=utf-8
 encoding//sql/STOCK_ITEM\ test\ data.sql=UTF-8
 encoding//test/data/controlway/crawler/data_crawler_test.py=utf-8
 encoding//test/data/controlway/db/mysql/data_handler_test.py=utf-8
+encoding//test/data/stock/process_stock_data_test.py=utf-8
 encoding//test/strategy/pairtrading/cj.py=utf-8
 encoding//test/strategy/pairtrading/hanhwa.py=utf-8
 encoding//test/strategy/pairtrading/meirtz.py=utf-8

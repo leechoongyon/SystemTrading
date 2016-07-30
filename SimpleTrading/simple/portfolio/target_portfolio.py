@@ -52,7 +52,7 @@ def selectionOfStockItems():
     start = getDayFromSpecificDay(time.time(), startNum, "%Y%m%d")
     end = getTodayWithFormatting("%Y%m%d")
     
-    columns = ['STOCK_CD', 'HIGH', 'LOW', 'STDEV']
+    columns = ['STOCK_CD', 'CURR_PRICE', 'HIGH', 'LOW', 'VAR', 'STD']
     refinedDf = pd.DataFrame(columns=columns)
     count = 0
     
@@ -73,7 +73,18 @@ def selectionOfStockItems():
             df[['Close']] = df[['Close']].apply(pd.to_numeric)
             closeMax = df['Close'].max()
             closeMin = df['Close'].min()
-            refinedDf.loc[count] = [stockItem['STOCK_CD'], closeMax, closeMin, 0]
+            currPrice = df['Close'][0]
+            earningsRate = df['Close'].copy()
+            earningsRate[1:] = (earningsRate[1:] / earningsRate[:-1].values) - 1
+            earningsRate[0] = 0
+            var = earningsRate.var()
+            std = earningsRate.std()
+            
+            # 1차 비교 재무정보 가져와서
+            # 2차 비교 LOW와 CURR_PRICE 비교해서 차이가 10~20% 정도 되는지
+            # 3차 PairTrading
+            
+            refinedDf.loc[count] = [stockItem['STOCK_CD'], currPrice, closeMax, closeMin, var, std]
             count += 1
     
     return refinedDf

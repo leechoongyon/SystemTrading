@@ -5,13 +5,15 @@ Created on 2016. 7. 18.
 @author: lee
 '''
 import time
+import pandas as pd
 
 from simple.common.util import dataframe_util, string_util
 from simple.common.util.properties_util import properties, CRAWLER
 from simple.common.util.time_util import getDayFromSpecificDay, \
     getTodayWithFormatting
 from simple.data.controlway.crawler import data_crawler
-from simple.data.controlway.crawler.data_crawler import PAGE_NUM
+from simple.data.controlway.crawler.data_crawler import PAGE_NUM, \
+    getHistoricalData
 from simple.data.controlway.dataframe.process_dataframe import getStockDataUsingDatareader, \
     registerStockDataInDb
 from simple.data.controlway.db.factory.data_handler_factory import getDataHandler
@@ -79,6 +81,16 @@ def processStockData2(df, stockCd):
     df = dataframe_util.rename(df, columns)
     return df
     
+
+def computeEarningsRate():
+    pass    
+
+def downloadStockData(stockCd, start, end, filePath):
+    rows = getHistoricalData(stockCd, start, end)
+    df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", 
+                                     "Close", "Volume", "Adj Close"])
+    dataframe_util.toCsv(df, filePath, stockCd +".csv")
+
 if __name__ == '__main__':
     
     print "test"
