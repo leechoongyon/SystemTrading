@@ -9,8 +9,15 @@ from enum import Enum
 
 
 SELECT_TARGET_PORTFOLIO = ("select * from target_portfolio;")
-
+SELECT_LIVE_PORTFOLIO = ("select * from live_portfolio;")
     
+
+SELECT_STOCK_ITEM_WITH_PARAM = (
+"select * "
+ + "from stock_item "
+ + "where stock_group_cd = %s "
+)    
+
 SELECT_JOIN_STOCK_ITEM_DAILY_AND_TARGET_PORTFOLIO = (
 "select b.stock_cd, b.ym_dd, a.market_cd " 
  + "from stock_item a, stock_item_daily b, target_portfolio c " 

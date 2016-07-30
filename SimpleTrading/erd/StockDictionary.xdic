@@ -33,4 +33,6 @@
   <term name="최저" physicalName="LWST"/>
   <term name=""/>
   <term name="기타" physicalName="ETC"/>
+  <term name="업종" physicalName="TOIN"/>
+  <term name="대분류" physicalName="BIGCSS"/>
 </tm:TermDictionary>

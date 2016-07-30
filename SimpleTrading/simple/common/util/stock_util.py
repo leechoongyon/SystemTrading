@@ -9,11 +9,11 @@ from simple.data.stock.stock_data import stock_data, MARKET_CLOSE_TIME, \
     MARKET_OPEN_TIME
 
 
-def check_if_open_market():
+def checkIfOpenMarket():
     
     dt = datetime.datetime.now()
-    curr_time = dt.time()
-    return  (stock_data.dict[MARKET_OPEN_TIME] < curr_time) and (curr_time < stock_data.dict[MARKET_CLOSE_TIME]) 
+    currTime = dt.time()
+    return  (stock_data.dict[MARKET_OPEN_TIME] < currTime) and (currTime < stock_data.dict[MARKET_CLOSE_TIME]) 
 
     '''
     dt = datetime.datetime.now()

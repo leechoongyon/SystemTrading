@@ -9,9 +9,27 @@ Created on 2016. 7. 15.
 import ConfigParser
 from simple.config.configuration import PROPERTIES_PATH
 
+# DB_DATA
 DB_DATA = "DB_DATA"
+
+# STOCK_DATA
 STOCK_DATA = "STOCK_DATA"
+
+STOCK_DOWNLOAD_PATH = "stock_download_path"
+MARKET_OPEN_TIME = "market_open_time"
+MARKET_CLOSE_TIME = "market_close_time"
+
+# CRAWLER
 CRAWLER = "CRAWLER"
+
+# [BIZ_PRE_PROCESS]
+BIZ_PRE_PROCESS = "BIZ_PRE_PROCESS"
+
+TARGET_DATA_LOAD = "target_data_load"
+TARGET_DATA_LOAD_PERIOD = "target_data_load_period"
+
+LIVE_DATA_LOAD = "live_data_load"
+
 
 class PropertiesUtil():
     def __init__(self, filename):
@@ -19,7 +37,7 @@ class PropertiesUtil():
         self.config.read(filename)
         
  
-    def get_selection(self, section):
+    def getSelection(self, section):
         dict1 = {}
         options = self.config.options(section)
         for option in options:
@@ -36,7 +54,15 @@ properties = PropertiesUtil(PROPERTIES_PATH)
 
 
 if __name__ == '__main__':
-    print properties.get_selection("DB_DATA")['host']
+    
+    isTargetDataLoad = properties.getSelection("BIZ_PRE_PROCESS")["target_data_load"]
+    
+    if isTargetDataLoad == "True":
+        print "True"
+    else :
+        print "False"
+    
+#     print properties.get_selection("DB_DATA")['host']
 #     print properties.config_section_map("DB_DATA")['host']
     
 #     db_properties = PropertiesUtil(PROPERTIES_PATH)

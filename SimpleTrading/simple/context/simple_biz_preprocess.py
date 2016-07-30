@@ -6,111 +6,103 @@ Created on 2016. 7. 15.
 '''
 
 import datetime
+import time
 
 from simple.common.util.properties_util import properties, DB_DATA, STOCK_DATA, \
-    CRAWLER
-from simple.common.util.time_util import get_today_with_formatting, \
-    get_day_from_specific_day, convert_string_to_datetime, \
-    convert_string_to_time
+    CRAWLER, BIZ_PRE_PROCESS, MARKET_OPEN_TIME, MARKET_CLOSE_TIME, \
+    TARGET_DATA_LOAD, LIVE_DATA_LOAD, TARGET_DATA_LOAD_PERIOD
+from simple.common.util.time_util import getTodayWithFormatting, \
+    getDayFromSpecificDay, convertStringToDatetime, \
+    convertStringToTime, getDayFromSpecificDay, getTodayWithFormatting
+from simple.data.controlway.crawler import data_crawler
 from simple.data.controlway.crawler.data_crawler import PAGE_NUM, \
-    get_total_page_num, get_historical_data
+    getTotalPageNum, getHistoricalData 
 from simple.data.controlway.dataframe import process_dataframe
-from simple.data.controlway.dataframe.process_dataframe import get_stock_data_using_datareader, register_stock_data_in_db, \
-                                                                register_stock_data_in_db
+from simple.data.controlway.dataframe.process_dataframe import getStockDataUsingDatareader, registerStockDataInDb, \
+                                                                registerStockDataInDb
 from simple.data.controlway.db.factory import data_handler_factory
-from simple.data.controlway.db.factory.data_handler_factory import get_data_handler_in_mysql, \
-    close_handler
+from simple.data.controlway.db.factory.data_handler_factory import getDataHandler, \
+    close
 from simple.data.controlway.db.mysql.data_handler import DataHandler
-from simple.data.controlway.db.mysql.query import select_query
 from simple.data.stock import process_stock_data
-from simple.data.stock.stock_data import StockColumn, MARKET_OPEN_TIME, \
-    MARKET_CLOSE_TIME, stock_data, StockTable
+from simple.data.stock.process_stock_data import getTargetPortfolio, \
+    insertTargetPortfolioStockData, \
+    getLivePortfolio, insertLivePortfolioStockData
+from simple.data.stock.stock_data import StockColumn, \
+    stock_data, StockTable
+from simple.portfolio import target_portfolio
 
 
-def pre_process():
+def init():
+    tempMarketOpenTime = properties.getSelection(STOCK_DATA)[MARKET_OPEN_TIME]
+    tempMarketCloseTime = properties.getSelection(STOCK_DATA)[MARKET_CLOSE_TIME]
     
-    print "pre_process starting"
+    marketTime = tempMarketOpenTime.split(":")
+    hour = int(marketTime[0])
+    min = int(marketTime[1]) 
+    marketOpenTime = datetime.time(hour, min, 0, 0)
+     
+    marketTime = tempMarketCloseTime.split(":")
+    hour = int(marketTime[0])
+    min = int(marketTime[1]) 
+    marketCloseTime = datetime.time(hour, min, 0, 0)
+     
+    stock_data.dict[MARKET_OPEN_TIME] = marketOpenTime 
+    stock_data.dict[MARKET_CLOSE_TIME] = marketCloseTime
+
+def preProcess():
+    
+    print "preProcess starting"
     
     # 0. STOCK_RELATED_DATA init
-    temp_market_open_time = properties.get_selection(STOCK_DATA)[MARKET_OPEN_TIME]
-    temp_market_close_time = properties.get_selection(STOCK_DATA)[MARKET_CLOSE_TIME]
-     
-    time = temp_market_open_time.split(":")
-    hour = int(time[0])
-    min = int(time[1]) 
-    market_open_time = datetime.time(hour, min, 0, 0)
-     
-    time = temp_market_close_time.split(":")
-    hour = int(time[0])
-    min = int(time[1]) 
-    market_close_time = datetime.time(hour, min, 0, 0)
-     
-    stock_data.dict[MARKET_OPEN_TIME] = market_open_time 
-    stock_data.dict[MARKET_CLOSE_TIME] = market_close_time
+    init()
     
     '''
-    
         1. TARGET_PORTFOLIO 읽어오기
          1.1 읽어온 종목코드의 STOCK_ITEM_DEILY 최신 YM_DD 읽어오기 
         2. LIVE_PORTFOLIO 읽어오기
          2.1 읽어온 종목코드의 STOCK_ITEM_DEILY 최신 YM_DD 읽어오기
         3. 읽어온 종목 코드들의 최신 YM_DD를 가지고   
-    
     ''' 
     
     # 1. TARGET_PORTFOLIO 선처리
     #  1.1 PORTFOLIO에 있는 종목 DAILY_DATA 최신화
-    data_handler = data_handler_factory.get_data_handler_in_mysql()
-    cursor = data_handler.openSql(select_query.SELECT_TARGET_PORTFOLIO)
-    stock_items = cursor.fetchall()
-    
-    
-    # TARGET에는 있는데 DAILY에는 없을 수 있다.
+    isTargetDataLoad = properties.getSelection(BIZ_PRE_PROCESS)[TARGET_DATA_LOAD]
+    if "True" == isTargetDataLoad:
+        print "executing target data load"
+        dataHandler = data_handler_factory.getDataHandler()
+        stockItems = getTargetPortfolio(dataHandler)
+        startNum = properties.getSelection(BIZ_PRE_PROCESS)[TARGET_DATA_LOAD_PERIOD]
+        insertTargetPortfolioStockData(stockItems, dataHandler, startNum)
+        data_handler_factory.close(dataHandler)
+            
+        
     '''
-          설계 :TARGET에 있는 STOCK_ITEMS를 뽑아오고
-              뽑아온 STOCK_ITEM을 2년이내로 돌리자. (옵션으로 빼고)
-              
-    '''
-    
-    for stock_item in stock_items:
+      1.2 타겟포트폴리오 종목 선정
+       1.2.1 업종별 코드 테이블 조회해서 업종별 코드 가져오기.
+       1.2.2 각 업종에 해당하는 종목 받아오기
+       1.2.3 각 종목에 해당하는 2~3년치 데이터 가져옴.
+       1.2.4 받아온 업종별 데이터에 대한 표준편차, 분산 구하기 (수익률에 대한)
+       1.2.5 재무재표 비교 (업종별 평균 이하는 다 버림)
+       1.2.6 추출된 것 중 박스권 최저 10~20% 추출
+       1.2.7 여기서 추출된 것을 페어트레이딩 돌리기.
+    '''    
         
-        # 굳이 주식데이터를 DataFrame으로 가져오지말고
-        # list로 가져와서 SQL로 넣자
-        
-        ym_dd = stock_item[StockColumn.YM_DD]
-        start = get_day_from_specific_day(convert_string_to_time(ym_dd, "%Y%m%d"), +1, "%Y%m%d")
-        end = get_today_with_formatting("%Y%m%d")
-        stock_cd = stock_item[StockColumn.STOCK_CD]
-        
-        page_num = properties.get_selection(CRAWLER)[PAGE_NUM]
-        total_page_num = get_total_page_num(stock_cd, start, end, page_num)
-        df = get_historical_data(stock_cd, start, end, int(page_num), int(total_page_num))
-        processed_df = process_stock_data.process_stock_data2(df, stock_cd)
-        
-        process_dataframe.register_stock_data_in_db(data_handler.get_conn(), \
-                                                    processed_df, StockTable.STOCK_ITEM_DAILY, \
-                                                    properties.get_selection(DB_DATA)['exists_option'], \
-                                                    properties.get_selection(DB_DATA)['db_type'])
-        
-        '''
-        market_cd = stock_item[StockColumn.MARKET_CD]
-        df = get_stock_data_using_datareader(stock_cd, market_cd, start, end)
-        df = process_stock_data.process_stock_data2(df, stock_cd)
-        exists_option = properties.get_selection(DB_DATA)['exists_option']
-        db_type = properties.get_selection(DB_DATA)['db_type']
-        register_stock_data_in_db(data_handler.get_conn(), df, StockTable.STOCK_ITEM_DAILY, exists_option, db_type) 
-        '''
-        
-    print data_handler
-    if data_handler is not None:
-        data_handler_factory.close_handler(data_handler)
+    target_portfolio.selectionOfStockItems()
     
     
     
     # 2. LIVE_PORTFOLIO 선처리
     #  2.2 PORTFOLIO에 있는 종목 DAILY_DATA 최신화
-    
-    
+    isLiveDataLoad = properties.getSelection(BIZ_PRE_PROCESS)[LIVE_DATA_LOAD]
+    if "True" == isLiveDataLoad:
+        print "executing live data load"
+        dataHandler = data_handler_factory.getDataHandler()
+        stockItems = getLivePortfolio(dataHandler)
+        insertLivePortfolioStockData(stockItems, dataHandler)
+        data_handler_factory.close(dataHandler)
+        
+        
 if __name__ == '__main__':
     print "simple_biz_preprocess test"
 #     pre_process()

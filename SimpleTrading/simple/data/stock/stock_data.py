@@ -9,18 +9,15 @@ import datetime
 
 from simple.common.util.properties_util import *
 
-MARKET_OPEN_TIME = "market_open_time"
-MARKET_CLOSE_TIME = "market_close_time"
-
 class StockTable():
     STOCK_ITEM = "STOCK_ITEM"
     STOCK_ITEM_DAILY = "STOCK_ITEM_DAILY"
     STOCK_TEST = "STOCK_TEST"
     
 class StockColumn():
-    STOCK_CD = "stock_cd"
-    MARKET_CD = "market_cd"
-    YM_DD = "ym_dd"
+    STOCK_CD = "STOCK_CD"
+    MARKET_CD = "MARKET_CD"
+    YM_DD = "YM_DD"
 
 class StockData():
 
