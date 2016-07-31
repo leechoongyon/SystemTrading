@@ -6,6 +6,10 @@ Created on 2016. 7. 23.
 import os
 
 
+def mkdir(dirPath):
+    if not os.path.isdir(dirPath):
+        os.mkdir(dirPath)
+
 if __name__ == '__main__':
     print os.path.dirname('SimpleTrading')
     print os.path.basename('.')
