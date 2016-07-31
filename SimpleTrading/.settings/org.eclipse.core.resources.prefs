@@ -3,6 +3,7 @@ encoding//erd/StockDictionary.xdic=utf-8
 encoding//properties/stock.properties=UTF-8
 encoding//simple/algorithm/trading_algorithm.py=utf-8
 encoding//simple/common/services.py=utf-8
+encoding//simple/common/util/file_util.py=utf-8
 encoding//simple/common/util/properties_util.py=utf-8
 encoding//simple/common/util/regex_util.py=utf-8
 encoding//simple/common/util/soup_util.py=utf-8

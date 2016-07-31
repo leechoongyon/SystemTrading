@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 2016. 7. 23.
 
@@ -11,7 +12,5 @@ def mkdir(dirPath):
         os.mkdir(dirPath)
 
 if __name__ == '__main__':
-    print os.path.dirname('SimpleTrading')
-    print os.path.basename('.')
-#     print os.path.dirname('./')
-    print os.path.expanduser('SimpleTrading')
+    rawInput = "C:/git/SimpleTrading/SimpleTrading/stock_data/기계/"
+    mkdir(rawInput.encode('utf-8'))
