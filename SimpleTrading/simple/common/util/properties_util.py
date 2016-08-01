@@ -7,7 +7,10 @@ Created on 2016. 7. 15.
 
 
 import ConfigParser
+import os
+
 from simple.config.configuration import PROPERTIES_PATH
+
 
 # DB_DATA
 DB_DATA = "DB_DATA"
@@ -36,7 +39,6 @@ class PropertiesUtil():
         self.config = ConfigParser.ConfigParser()
         self.config.read(filename)
         
- 
     def getSelection(self, section):
         dict1 = {}
         options = self.config.options(section)
@@ -50,6 +52,8 @@ class PropertiesUtil():
                 dict1[option] = None
         return dict1
 
+if not os.path.isfile(PROPERTIES_PATH):
+    print "PROPERTIES_PATH is not exist"
 properties = PropertiesUtil(PROPERTIES_PATH)
 
 
