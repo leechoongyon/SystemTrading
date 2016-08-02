@@ -36,12 +36,7 @@ if __name__ == '__main__':
 
     # 1. StockData 파일 만들기
     for stockCd in stockCds:    
-        pageNum = properties.getSelection(CRAWLER)[PAGE_NUM]
-        totalPageNum = data_crawler.getTotalPageNum(stockCd,
-                                         start, end, pageNum)
-        rows = data_crawler.getHistoricalData1(stockCd, start, end, 
-                                              int(pageNum), 
-                                              int(totalPageNum))
+        rows = data_crawler.getHistoricalData(stockCd, start, end)
         df = pd.DataFrame(rows, columns=["Date", "Open", "High", 
                                          "Low", "Close", "Volume", 
                                          "Adj Close"])
@@ -83,4 +78,5 @@ if __name__ == '__main__':
 
     # log_spread_residual
     spread_residual = getLogSpreadResidual(refinedDf, cointegration, stockCds)
-    plotData(spread_residual, xlabel="Date", ylabel="Spread_residual")
+    print spread_residual.dropna()
+#     plotData(spread_residual, xlabel="Date", ylabel="Spread_residual")

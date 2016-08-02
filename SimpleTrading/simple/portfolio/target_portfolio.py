@@ -14,6 +14,7 @@ from simple.common.util.time_util import getDayFromSpecificDay, \
 from simple.data.controlway.crawler.data_crawler import getHistoricalData
 from simple.data.controlway.db.factory import data_handler_factory
 from simple.data.stock.query.select_query import SELECT_STOCK_ITEM_WITH_PARAM
+from simple.strategy.pairtrading.common.pairtrading import applyPairTrading
 
 
 def pre_process():
@@ -104,7 +105,9 @@ def selectionOfStockItems():
             for preparatoryStockItem in stockItems:
                 if (stockCd != preparatoryStockItem['STOCK_CD']):
                     print "pair : %s \t %s" % (stockCd, preparatoryStockItem['STOCK_CD'])
-                    applyPairTrading()
+                    statistics = applyPairTrading(stockCd, preparatoryStockItem
+                                     , start, end, path)
+                    
         
     return refinedDf
     
