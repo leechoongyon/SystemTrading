@@ -65,7 +65,6 @@ if __name__ == '__main__':
     print get_day_from_specific_day(time, 1)
     '''
     
-    today = getToday()
     print getTodayWithFormatting("%Y%m%d")
     print getDayFromSpecificDay(time.time(), -700, "%Y%m%d")
     '''

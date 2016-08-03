@@ -18,3 +18,16 @@ INSERT_STOCK_ITEM_DAILY_01 = (
                 "VOLUME = VALUES(VOLUME), "
                 "ADJ_CLOSE_PRICE = VALUES(ADJ_CLOSE_PRICE)"
            )
+
+INSERT_TARGET_PORTFOLIO_01 = (
+    "INSERT INTO TARGET_PORTFOLIO " 
+        "(STOCK_CD, DD01_BEFR_YMD, HIGH_PRICE, "
+          "LOW_PRICE, YM_DD, ETC) "
+    "VALUES (%s, %s, %s, %s, %s, %s) "
+        "ON DUPLICATE KEY UPDATE "
+        "DD01_BEFR_YMD = VALUES(DD01_BEFR_YMD), "
+        "HIGH_PRICE = VALUES(HIGH_PRICE), "
+        "LOW_PRICE = VALUES(LOW_PRICE), "
+        "YM_DD = VALUES(YM_DD), "
+        "ETC = VALUES(ETC)"                          
+)

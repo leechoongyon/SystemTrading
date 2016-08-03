@@ -52,7 +52,7 @@ def selectionOfStockItems():
     start = getDayFromSpecificDay(time.time(), startNum, "%Y%m%d")
     end = getTodayWithFormatting("%Y%m%d")
     
-    columns = ['STOCK_CD', 'CURR_PRICE', 'HIGH', 'LOW', 'VAR', 'STD']
+    columns = ['STOCK_CD', 'DD01_BEFR_YMD_PRICE', 'HIGH_PRICE', 'LOW_PRICE', 'YM_DD', 'ETC']
     refinedDf = pd.DataFrame(columns=columns)
     count = 0
 
@@ -83,15 +83,16 @@ def selectionOfStockItems():
             earningsRate[0] = 0
             var = earningsRate.var()
             std = earningsRate.std()
-            refinedDf.loc[count] = [stockItem['STOCK_CD'], currPrice, closeMax, closeMin, var, std]
-            count += 1
+            
+            if currPrice < (closeMin * 1.2): 
+                refinedDf.loc[count] = [stockItem['STOCK_CD'], currPrice, closeMax, closeMin, end, 'Recommended by targetalgorithm']
+                count += 1
             
             # 1차 재무정보 가져와서 비교
             # 영업이익, 매출액, PBR, PER이 업종평균과 비교하면 어떤지
             
             # 2차 LOW와 CURR_PRICE 비교해서 차이가 10~20% 정도 되는지
             # 추후에 1.2를 옵션으로 조절하기
-            refinedDf = refinedDf[refinedDf['LOW'] * 1.2 > refinedDf['CURR_PRICE']]
             
             # 3차 PairTrading
             '''
@@ -102,16 +103,15 @@ def selectionOfStockItems():
             '''
             
         for stockCd in refinedDf['STOCK_CD']:
-            statisticsDf = pd.DataFrame(columns=['cointegration', 'residual'])
+            statiDf = pd.DataFrame(columns=['cointegration', 'residual'])
             index = 0
             for preparatoryStockItem in stockItems:
                 if (stockCd != preparatoryStockItem['STOCK_CD']):
-#                     print "pair : %s \t %s" % (stockCd, preparatoryStockItem['STOCK_CD'])
-                    statistics = applyPairTrading(str(stockCd), str(preparatoryStockItem['STOCK_CD']),
+                    stati = applyPairTrading(str(stockCd), str(preparatoryStockItem['STOCK_CD']),
                                                    start, end, path)
                     
-                    statisticsDf.loc[index] = [statistics[0], 
-                                               statistics[1]] 
+                    statiDf.loc[index] = [stati[0], 
+                                          stati[1]] 
                     index += 1
                     
                     
@@ -120,8 +120,8 @@ def selectionOfStockItems():
             # cointegration 0.5 이상 / residual 0 이하일 때 적용
             # 이를 Voting 기법 이용
             votingCount = 0
-            totalRows = statisticsDf['cointegration'].count()
-            for index, row in statisticsDf.iterrows():
+            totalRows = statiDf['cointegration'].count()
+            for index, row in statiDf.iterrows():
                 if row['cointegration'] > 0.5:
                     if row['residual'] < 0:
                         votingCount += 1

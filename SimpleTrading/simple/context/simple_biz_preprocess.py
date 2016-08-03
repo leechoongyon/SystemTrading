@@ -28,6 +28,7 @@ from simple.data.stock import process_stock_data
 from simple.data.stock.process_stock_data import getTargetPortfolio, \
     insertTargetPortfolioStockData, \
     getLivePortfolio, insertLivePortfolioStockData
+from simple.data.stock.query.insert_query import INSERT_TARGET_PORTFOLIO_01
 from simple.data.stock.stock_data import StockColumn, \
     stock_data, StockTable
 from simple.portfolio import target_portfolio
@@ -50,6 +51,8 @@ def init():
     stock_data.dict[MARKET_OPEN_TIME] = marketOpenTime 
     stock_data.dict[MARKET_CLOSE_TIME] = marketCloseTime
 
+
+
 def preProcess():
     
     print "preProcess starting"
@@ -57,26 +60,8 @@ def preProcess():
     # 0. STOCK_RELATED_DATA init
     init()
     
-    '''
-        1. TARGET_PORTFOLIO 읽어오기
-         1.1 읽어온 종목코드의 STOCK_ITEM_DEILY 최신 YM_DD 읽어오기 
-        2. LIVE_PORTFOLIO 읽어오기
-         2.1 읽어온 종목코드의 STOCK_ITEM_DEILY 최신 YM_DD 읽어오기
-        3. 읽어온 종목 코드들의 최신 YM_DD를 가지고   
-    ''' 
+    dataHandler = data_handler_factory.getDataHandler()
     
-    # 1. TARGET_PORTFOLIO 선처리
-    #  1.1 PORTFOLIO에 있는 종목 DAILY_DATA 최신화
-    isTargetDataLoad = properties.getSelection(BIZ_PRE_PROCESS)[TARGET_DATA_LOAD]
-    if "True" == isTargetDataLoad:
-        print "executing target data load"
-        dataHandler = data_handler_factory.getDataHandler()
-        stockItems = getTargetPortfolio(dataHandler)
-        startNum = properties.getSelection(BIZ_PRE_PROCESS)[TARGET_DATA_LOAD_PERIOD]
-        insertTargetPortfolioStockData(stockItems, dataHandler, startNum)
-        data_handler_factory.close(dataHandler)
-            
-        
     '''
       1.2 타겟포트폴리오 종목 선정
        1.2.1 업종별 코드 테이블 조회해서 업종별 코드 가져오기.
@@ -89,21 +74,14 @@ def preProcess():
     '''    
         
     refinedDf = target_portfolio.selectionOfStockItems()
-    print refinedDf
+    rows = []
+    for row in refinedDf.itertuples(index=False):
+        rows.append(tuple(row))
+    
+    dataHandler.execSqlManyWithParam(INSERT_TARGET_PORTFOLIO_01, rows)
+    data_handler_factory.close(dataHandler)
     
     
-    
-    # 2. LIVE_PORTFOLIO 선처리
-    #  2.2 PORTFOLIO에 있는 종목 DAILY_DATA 최신화
-    isLiveDataLoad = properties.getSelection(BIZ_PRE_PROCESS)[LIVE_DATA_LOAD]
-    if "True" == isLiveDataLoad:
-        print "executing live data load"
-        dataHandler = data_handler_factory.getDataHandler()
-        stockItems = getLivePortfolio(dataHandler)
-        insertLivePortfolioStockData(stockItems, dataHandler)
-        data_handler_factory.close(dataHandler)
-        
-        
 if __name__ == '__main__':
     print "simple_biz_preprocess test"
 #     pre_process()
