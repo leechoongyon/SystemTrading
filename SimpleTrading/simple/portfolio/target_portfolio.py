@@ -18,6 +18,7 @@ from simple.data.controlway.db.factory import data_handler_factory
 from simple.data.stock.query.select_query import SELECT_STOCK_ITEM_WITH_PARAM, \
     SELECT_TARGET_PORTFOLIO
 from simple.strategy.pairtrading.common.pairtrading import applyPairTrading
+from simple.data.stock.stock_data import StockColumn
 
 
 def preProcess():
@@ -72,7 +73,7 @@ def selectionOfStockItems():
     start = getDayFromSpecificDay(time.time(), startNum, "%Y%m%d")
     end = getTodayWithFormatting("%Y%m%d")
     
-    columns = ['STOCK_CD', 'DD01_BEFR_YMD_PRICE', 'HIGH_PRICE', 'LOW_PRICE', 'YM_DD', 'ETC']
+    columns = ['STOCK_CD', 'DD01_BEFR_YMD_PRICE', 'HIGH_PRICE', 'LOW_PRICE', 'REGST_YMD', 'ETC']
     refinedDf = pd.DataFrame(columns=columns)
     count = 0
 
@@ -81,20 +82,24 @@ def selectionOfStockItems():
     
     
     for toinItem in toinItems:
+        fncStdPassCount = 0
+
         print "toinItem : %s " % toinItem
+
         dataHandler = data_handler_factory.getDataHandler()
-        cursor = dataHandler.execSqlWithParam(SELECT_STOCK_ITEM_WITH_PARAM, toinItem)
+        cursor = dataHandler.execSqlWithParam(SELECT_STOCK_ITEM_WITH_PARAM, 
+                                              toinItem)
         stockItems = cursor.fetchall()
         
         for stockItem in stockItems:
-            rows = getHistoricalData(stockItem['STOCK_CD'], start, end)
+            rows = getHistoricalData(stockItem[StockColumn.STOCK_CD], start, end)
             df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", 
                                      "Close", "Volume", "Adj Close"])
-            df.to_csv(path + "/" + stockItem["STOCK_CD"] + ".csv", index=False)
+            df.to_csv(path + "/" + stockItem[StockColumn.STOCK_CD] + ".csv", index=False)
             
         for stockItem in stockItems:
-#             rows = getHistoricalData(stockItem['STOCK_CD'], start, end)
-            df = pd.read_csv(path + "/" + stockItem['STOCK_CD'] + ".csv")
+            df = pd.read_csv(path + "/" + stockItem[StockColumn.STOCK_CD] + 
+                             ".csv")
             df[['Close']] = df[['Close']].apply(pd.to_numeric)
             closeMax = df['Close'].max()
             closeMin = df['Close'].min()
@@ -106,8 +111,12 @@ def selectionOfStockItems():
             std = earningsRate.std()
             
             if currPrice < (closeMin * 1.2): 
-                refinedDf.loc[count] = [stockItem['STOCK_CD'], currPrice, closeMax, closeMin, end, 'Recommended by targetalgorithm']
+                refinedDf.loc[count] = [stockItem[StockColumn.STOCK_CD], 
+                                        currPrice, closeMax, 
+                                        closeMin, end, 
+                                        'Recommended by targetalgorithm']
                 count += 1
+                fncStdPassCount += 1
             
             # 1차 재무정보 가져와서 비교
             # 영업이익, 매출액, PBR, PER이 업종평균과 비교하면 어떤지
@@ -123,13 +132,14 @@ def selectionOfStockItems():
                 자기건 뺴고 돌리면 될듯. 돌리면서 Cointegration과 상관계수를 구해서 어느 일정 이상 되는지 판단하고 실제 그게 저평가인지 아닌지는 보팅기법을 써야겠지. 
             '''
             
-        for stockCd in refinedDf['STOCK_CD']:
+        for stockCd in refinedDf[count - fncStdPassCount :][StockColumn.STOCK_CD]:
             statiDf = pd.DataFrame(columns=['cointegration', 'residual'])
             index = 0
             for preparatoryStockItem in stockItems:
-                if (stockCd != preparatoryStockItem['STOCK_CD']):
-                    stati = applyPairTrading(str(stockCd), str(preparatoryStockItem['STOCK_CD']),
-                                                   start, end, path)
+                if (stockCd != preparatoryStockItem[StockColumn.STOCK_CD]):
+                    stati = applyPairTrading(str(stockCd), 
+                                             str(preparatoryStockItem[StockColumn.STOCK_CD]),
+                                             start, end, path)
                     
                     statiDf.loc[index] = [stati[0], 
                                           stati[1]] 
@@ -148,7 +158,7 @@ def selectionOfStockItems():
                         votingCount += 1
             
             if votingCount < (totalRows / 2):
-                refinedDf = refinedDf[refinedDf['STOCK_CD'] != stockCd]
+                refinedDf = refinedDf[refinedDf[StockColumn.STOCK_CD] != stockCd]
                 
     return refinedDf
     
