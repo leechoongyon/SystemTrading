@@ -11,9 +11,11 @@ from simple.common.util.properties_util import properties, BIZ_PRE_PROCESS, \
     TARGET_DATA_LOAD_PERIOD, STOCK_DOWNLOAD_PATH, STOCK_DATA
 from simple.common.util.time_util import getDayFromSpecificDay, \
     getTodayWithFormatting
-from simple.data.controlway.crawler.data_crawler import getHistoricalData
+from simple.data.controlway.crawler.data_crawler import getHistoricalData, \
+    getIntradayData
 from simple.data.controlway.db.factory import data_handler_factory
-from simple.data.stock.query.select_query import SELECT_STOCK_ITEM_WITH_PARAM
+from simple.data.stock.query.select_query import SELECT_STOCK_ITEM_WITH_PARAM, \
+    SELECT_TARGET_PORTFOLIO
 from simple.strategy.pairtrading.common.pairtrading import applyPairTrading
 
 
@@ -29,12 +31,26 @@ def perform():
     
     '''
         1. TARGET_PORTFOLIO 
-         1.1 기본적 분석 + 기술적 분석을 통해 종목 추천
-         1.2 추천된 종목을 언제 살지 매수 타이밍을 알아본다.
+         1.1 추천된 종목을 언제 살지 매수 타이밍을 알아본다.
+          1.1.1 타겟포트폴리오 종목 가져오기
+          1.1.2 해당 종목 현재가 가져오기
+          1.1.3 그 종목의 볼린저밴드, 기타 등등 비교
     '''
     
-    postProcess()
+    dataHandler = data_handler_factory.getDataHandler()
+    cursor = dataHandler.openSql(SELECT_TARGET_PORTFOLIO)
+    results = cursor.fetchall()
+    items = []
+    for result in results:
+        items.append(result)
     
+    # 하루치 현재가 가져오기
+    for item in items:
+        getIntradayData(item['STOCK_CD'])
+    
+
+    data_handler_factory.close(dataHandler)    
+    postProcess()
     
     
 def selectionOfStockItems():
@@ -133,4 +149,5 @@ def selectionOfStockItems():
     
     
 if __name__ == '__main__':
-    print selectionOfStockItems()    
+#     print selectionOfStockItems()
+    perform()    

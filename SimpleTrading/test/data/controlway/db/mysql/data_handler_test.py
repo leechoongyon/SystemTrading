@@ -5,7 +5,8 @@ Created on 2016. 7. 25.
 @author: lee
 '''
 from simple.data.controlway.db.factory import data_handler_factory
-from simple.data.stock.query.select_query import SELECT_STOCK_ITEM_WITH_PARAM
+from simple.data.stock.query.select_query import SELECT_STOCK_ITEM_WITH_PARAM, \
+    SELECT_TARGET_PORTFOLIO
 
 
 if __name__ == '__main__':
@@ -32,6 +33,15 @@ if __name__ == '__main__':
     data_handler_factory.close(data_handler)
     '''
     
+    '''
+        ex) 
+            
+    '''
+    
+    # select example
+    dataHandler = data_handler_factory.getDataHandler()
+    cursor = dataHandler.openSql(SELECT_TARGET_PORTFOLIO)
+    stockItems = cursor.fetchall()
     
     # selectWithParam example
     dataHandler = data_handler_factory.getDataHandler()

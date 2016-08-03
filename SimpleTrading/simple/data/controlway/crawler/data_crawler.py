@@ -26,7 +26,7 @@ from simple.data.controlway.db.factory import data_handler_factory
 
 PAGE_NUM = "page_num"
 
-def getIntradayData(symbol, interval_seconds=301, num_days=10):
+def getIntradayData(symbol, interval_seconds=301, num_days=1):
     # Specify URL string based on function inputs.
     url_string = 'http://www.google.com/finance/getprices?q={0}'.format(symbol.upper())
     url_string += "&i={0}&p={1}d&f=d,o,h,l,c,v".format(interval_seconds,num_days)

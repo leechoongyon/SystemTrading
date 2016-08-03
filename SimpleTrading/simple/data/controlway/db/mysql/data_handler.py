@@ -27,11 +27,6 @@ class DataHandler():
 			print e
 			self.conn.rollback()
 
-	'''
-		ex) 
-			cursor = dataHandler.openSql(SELECT_TARGET_PORTFOLIO)
-    	   	stockItems = cursor.fetchall()
-	'''
 	def openSql(self,sql):
 		try:
 			cursor = self.conn.cursor(mdb.cursors.DictCursor)
