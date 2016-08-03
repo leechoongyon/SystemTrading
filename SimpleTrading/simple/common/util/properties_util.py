@@ -25,6 +25,11 @@ MARKET_CLOSE_TIME = "market_close_time"
 # CRAWLER
 CRAWLER = "CRAWLER"
 
+# TARGET_PORTFOLIO
+TARGET_PORTFOLIO = "TARGET_PORTFOLIO"
+
+TOIN_ITEMS = "toin_items"
+
 # [BIZ_PRE_PROCESS]
 BIZ_PRE_PROCESS = "BIZ_PRE_PROCESS"
 
@@ -32,6 +37,8 @@ TARGET_DATA_LOAD = "target_data_load"
 TARGET_DATA_LOAD_PERIOD = "target_data_load_period"
 
 LIVE_DATA_LOAD = "live_data_load"
+
+
 
 
 class PropertiesUtil():

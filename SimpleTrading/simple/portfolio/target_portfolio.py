@@ -8,7 +8,8 @@ import time
 
 import pandas as pd
 from simple.common.util.properties_util import properties, BIZ_PRE_PROCESS, \
-    TARGET_DATA_LOAD_PERIOD, STOCK_DOWNLOAD_PATH, STOCK_DATA
+    TARGET_DATA_LOAD_PERIOD, STOCK_DOWNLOAD_PATH, STOCK_DATA, TARGET_PORTFOLIO,\
+    TOIN_ITEMS
 from simple.common.util.time_util import getDayFromSpecificDay, \
     getTodayWithFormatting
 from simple.data.controlway.crawler.data_crawler import getHistoricalData, \
@@ -59,8 +60,11 @@ def selectionOfStockItems():
         
     # 2. 업종별 코드 테이블에서 업종을 받아와서 STOCK_ITEM 조회
         
-    toinItems = ["통신업"]
+    rawList = properties.getSelection(TARGET_PORTFOLIO)[TOIN_ITEMS].split(",")
     
+    toinItems = []
+    for raw in rawList:     
+        toinItems.append(raw)
     # 3. 업종별 코드 테이블에서 업종을 받아와서 STOCK_ITEM 조회
 
     dataHandler = data_handler_factory.getDataHandler()
@@ -77,6 +81,7 @@ def selectionOfStockItems():
     
     
     for toinItem in toinItems:
+        print "toinItem : %s " % toinItem
         dataHandler = data_handler_factory.getDataHandler()
         cursor = dataHandler.execSqlWithParam(SELECT_STOCK_ITEM_WITH_PARAM, toinItem)
         stockItems = cursor.fetchall()
@@ -149,5 +154,5 @@ def selectionOfStockItems():
     
     
 if __name__ == '__main__':
-#     print selectionOfStockItems()
-    perform()    
+    print selectionOfStockItems()
+#     perform()    
