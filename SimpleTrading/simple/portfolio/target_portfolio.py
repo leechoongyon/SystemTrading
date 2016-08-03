@@ -17,15 +17,15 @@ from simple.data.stock.query.select_query import SELECT_STOCK_ITEM_WITH_PARAM
 from simple.strategy.pairtrading.common.pairtrading import applyPairTrading
 
 
-def pre_process():
+def preProcess():
     pass
 
-def post_process():
+def postProcess():
     pass
 
 def perform():
 
-    pre_process()
+    preProcess()
     
     '''
         1. TARGET_PORTFOLIO 
@@ -33,7 +33,7 @@ def perform():
          1.2 추천된 종목을 언제 살지 매수 타이밍을 알아본다.
     '''
     
-    post_process()
+    postProcess()
     
     
     
@@ -57,7 +57,7 @@ def selectionOfStockItems():
     count = 0
 
     path = properties.getSelection(STOCK_DATA)[STOCK_DOWNLOAD_PATH]
-    
+      
     
     
     for toinItem in toinItems:
@@ -102,13 +102,33 @@ def selectionOfStockItems():
             '''
             
         for stockCd in refinedDf['STOCK_CD']:
+            statisticsDf = pd.DataFrame(columns=['cointegration', 'residual'])
+            index = 0
             for preparatoryStockItem in stockItems:
                 if (stockCd != preparatoryStockItem['STOCK_CD']):
-                    print "pair : %s \t %s" % (stockCd, preparatoryStockItem['STOCK_CD'])
-                    statistics = applyPairTrading(stockCd, preparatoryStockItem
-                                     , start, end, path)
+#                     print "pair : %s \t %s" % (stockCd, preparatoryStockItem['STOCK_CD'])
+                    statistics = applyPairTrading(str(stockCd), str(preparatoryStockItem['STOCK_CD']),
+                                                   start, end, path)
                     
-        
+                    statisticsDf.loc[index] = [statistics[0], 
+                                               statistics[1]] 
+                    index += 1
+                    
+                    
+                    
+            # 통계를 보고 해당 종목을 제외할지 결정
+            # cointegration 0.5 이상 / residual 0 이하일 때 적용
+            # 이를 Voting 기법 이용
+            votingCount = 0
+            totalRows = statisticsDf['cointegration'].count()
+            for index, row in statisticsDf.iterrows():
+                if row['cointegration'] > 0.5:
+                    if row['residual'] < 0:
+                        votingCount += 1
+            
+            if votingCount < (totalRows / 2):
+                refinedDf = refinedDf[refinedDf['STOCK_CD'] != stockCd]
+                
     return refinedDf
     
     
