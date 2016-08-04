@@ -9,7 +9,7 @@ Created on 2016. 8. 2.
 import time
 
 import pandas as pd
-from simple.common.compute_stats import getLogSpreadResidual,\
+from simple.common.util.stats_util import getLogSpreadResidual,\
     getCointegrationUsingLog, getCorrelationCoefficientUsingLog
 from simple.common.util.properties_util import properties, BIZ_PRE_PROCESS, \
     TARGET_DATA_LOAD_PERIOD, STOCK_DOWNLOAD_PATH, STOCK_DATA

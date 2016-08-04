@@ -10,9 +10,9 @@ import math
 import os
 import time
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from simple.common.util.plt_util import plotData
 from simple.common.util.properties_util import properties, STOCK_DATA, \
     STOCK_DOWNLOAD_PATH
 from simple.common.util.time_util import getDayFromSpecificDay, \
@@ -47,14 +47,6 @@ def getCloseData(symbols, dates):
         df = df.join(tempDf)
 
     return df
-
-
-def plotData(df, title="Stock prices", xlabel="Date", ylabel="Price"):
-    """Plot stock prices with a custom title and meaningful axis labels."""
-    ax = df.plot(title=title, fontsize=12)
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    plt.show()
 
 def normalizePrice(df):
     pass
@@ -102,8 +94,9 @@ def normalizeSpread(symbols, normalDf):
 
 # 수익률 구하기 로그 형태로
 # 아마추어 퀀트에서 설명한 로그 수익률 구하기 (이게 정확)
-def getLogEarningsRate(afterStockPrice, beforeStockPrice):
-    return math.log(afterStockPrice / beforeStockPrice)
+# 로그 수익률 = ln(오늘 가격 / 어제 가격) = ln(오늘가격) - ln(어제가격)
+def getLogEarningsRate(df):
+    return np.log(df[1:] / df[:-1].values) 
 
 # 수익률 구하기 (이게 실제)
 def getEarningsRate(df):
@@ -149,6 +142,27 @@ def getCointegrationUsingearningsRate(df, symbols):
 
 if __name__ == '__main__':
     
+    # 한 종목의 로그수익률 그려보기
+    # 
+    
+    startNum = -30
+    start = getDayFromSpecificDay(time.time(), startNum, "%Y%m%d")
+    end = getTodayWithFormatting("%Y%m%d")
+    path = properties.getSelection(STOCK_DATA)[STOCK_DOWNLOAD_PATH]
+
+    symbols = ["CJ_CGV", "CJ"]
+    dates = pd.date_range(start, end)
+    sourceDf = pd.read_csv(path + "/" + symbols[0] + ".csv",
+                           index_col = 'Date',
+                           parse_dates=True, usecols=['Date', 'Close'],
+                           na_values=['nan'])
+    
+    sourceDf[['Close']] = sourceDf[['Close']].apply(pd.to_numeric)
+    refinedDf = np.log(sourceDf[1:] / sourceDf[:-1].values)
+    plotData(refinedDf)
+    
+    '''
+    
     startNum = -30
     start = getDayFromSpecificDay(time.time(), startNum, "%Y%m%d")
     end = getTodayWithFormatting("%Y%m%d")
@@ -177,3 +191,4 @@ if __name__ == '__main__':
     
     print getCointegrationUsingLog(refinedDf, symbols)
     print getCorrelationCoefficientUsingLog(refinedDf, symbols)
+    '''
