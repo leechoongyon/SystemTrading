@@ -9,12 +9,11 @@ Created on 2016. 8. 2.
 import time
 
 import pandas as pd
+from simple.common.compute_stats import getCointegration, getLogSpreadResidual
 from simple.common.util.properties_util import properties, BIZ_PRE_PROCESS, \
     TARGET_DATA_LOAD_PERIOD, STOCK_DOWNLOAD_PATH, STOCK_DATA
 from simple.common.util.time_util import getDayFromSpecificDay, \
     getTodayWithFormatting
-from simple.strategy.pairtrading.common.pairtrading_common import getCointegration, \
-    normalize, plotData, normalizeSpread, getLogSpread, getLogSpreadResidual
 
 
 def applyPairTrading(pairSource, pairTarget, start, end, path):

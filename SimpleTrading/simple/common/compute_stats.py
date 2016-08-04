@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 '''
-Created on 2016. 7. 10.
+Created on 2016. 8. 4.
 
 @author: lee
 '''
- 
+
+
 import math
 import os
 
@@ -24,10 +25,10 @@ def getData(symbols, dates):
     df = pd.DataFrame(index=dates)
 
     for symbol in symbols:
-        df_temp = pd.read_csv(symbolToPath(symbol, properties.getSelection(STOCK_DATA)['stock_download_path']), index_col='Date',
+        tempDf = pd.read_csv(symbolToPath(symbol, properties.getSelection(STOCK_DATA)['stock_download_path']), index_col='Date',
                 parse_dates=True, usecols=['Date', 'Adj Close'], na_values=['nan'])
-        df_temp = df_temp.rename(columns={'Adj Close': symbol})
-        df = df.join(df_temp)
+        tempDf = tempDf.rename(columns={'Adj Close': symbol})
+        df = df.join(tempDf)
 
     return df
 
@@ -36,10 +37,10 @@ def getCloseData(symbols, dates):
     df = pd.DataFrame(index=dates)
 
     for symbol in symbols:
-        df_temp = pd.read_csv(symbolToPath(symbol, properties.getSelection(STOCK_DATA)['stock_download_path']), index_col='Date',
+        tempDf = pd.read_csv(symbolToPath(symbol, properties.getSelection(STOCK_DATA)['stock_download_path']), index_col='Date',
                 parse_dates=True, usecols=['Date', 'Close'], na_values=['nan'])
-        df_temp = df_temp.rename(columns={'Close': symbol})
-        df = df.join(df_temp)
+        tempDf = tempDf.rename(columns={'Close': symbol})
+        df = df.join(tempDf)
 
     return df
 
@@ -57,13 +58,13 @@ def normalizePrice(df):
 def computeDailyReturns(df):
     """Compute and return the daily return values."""
     # TODO: Your code here
-    daily_returns = df.copy()
+    dailyReturns = df.copy()
     
     # 1일 앞부터 시작해서 뒤에서 -1까지 해야 수가 같겠지
-    daily_returns[1:] = (df[1:] / df[:-1].values) - 1
-    daily_returns.ix[0, :] = 0
+    dailyReturns[1:] = (df[1:] / df[:-1].values) - 1
+    dailyReturns.ix[0, :] = 0
     # Note: Returned DataFrame must have the same number of rows
-    return daily_returns
+    return dailyReturns
 
 def normalize(symbols, dates, df):
     
@@ -75,29 +76,29 @@ def normalize(symbols, dates, df):
         stds[symbol] = df[symbol].std()
         
     # normalize
-    normal_df = pd.DataFrame(index=dates)
+    normalDf = pd.DataFrame(index=dates)
     
     for symbol in symbols:
-        df_temp = (df[symbol] - means[symbol]) / stds[symbol]
-        normal_df = normal_df.join(df_temp)
+        dfTemp = (df[symbol] - means[symbol]) / stds[symbol]
+        normalDf = normalDf.join(dfTemp)
         
-    return normal_df
+    return normalDf
 
 
 # symbols required argument 2
 # 사용법 : symbols 2개가 넘어오고 정규화된 dataFrame이 넘어오면 그것의 values subtract
 # 해서 normalize_spread를 만듬
-def normalizeSpread(symbols, normal_df):
-    df_list = []
+def normalizeSpread(symbols, normalDf):
+    dfList = []
     for symbol in symbols:
-        df_list.append(normal_df[symbol])
+        dfList.append(normalDf[symbol])
     
-    normal_spread_df = pd.DataFrame(df_list[0].values - df_list[1].values, index=normal_df.index)
-    return normal_spread_df
+    normalSpreadDf = pd.DataFrame(dfList[0].values - dfList[1].values, index=normalDf.index)
+    return normalSpreadDf
 
 # 수익률 구하기
-def getEarningsRate(after_stock_price, before_stock_price):
-    return math.log(after_stock_price / before_stock_price)
+def getEarningsRate(afterStockPrice, beforeStockPrice):
+    return math.log(afterStockPrice / beforeStockPrice)
 
 
 def getLog(df):
@@ -105,17 +106,18 @@ def getLog(df):
 
 # log_spread와 log_spread_residual 는 다르다. residual는 잔차다 (두 개간의 차이)
 def getLogSpread(df, cointegration, symbols):
-    ln_df = getLog(df)
-    log_spread = ln_df[symbols[0]] - cointegration * ln_df[symbols[1]]
-    return log_spread
+    lnDf = getLog(df)
+    logSpread = lnDf[symbols[0]] - cointegration * lnDf[symbols[1]]
+    return logSpread
 
 def getLogSpreadResidual(df, cointegration, symbols):
-    log_spread = getLogSpread(df, cointegration, symbols) 
-    log_spread_mean = log_spread.mean()
-    log_spread_residual = log_spread - log_spread_mean
-    return log_spread_residual
+    logSpread = getLogSpread(df, cointegration, symbols) 
+    logSpreadMean = logSpread.mean()
+    logSpreadResidual = logSpread - logSpreadMean
+    return logSpreadResidual
 
 def getCointegration(df, symbols):
-    ln_df = np.log(df).round(2)
-    cointegration = ln_df.cov()[symbols[0]][symbols[1]] / ln_df[symbols[1]].var()
+    lnDf = np.log(df).round(2)
+    cointegration = lnDf.cov()[symbols[0]][symbols[1]] / lnDf[symbols[1]].var()
     return cointegration
+

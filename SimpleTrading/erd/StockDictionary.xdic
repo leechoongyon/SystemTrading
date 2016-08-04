@@ -38,4 +38,6 @@
   <term name="전" physicalName="BEFR"/>
   <term name="일자" physicalName="YMD"/>
   <term name="1일" physicalName="DD01"/>
+  <term name="총" physicalName="TOTL"/>
+  <term name="금액" physicalName="AMT"/>
 </tm:TermDictionary>
