@@ -78,9 +78,7 @@ def selectionOfStockItems():
     count = 0
 
     path = properties.getSelection(STOCK_DATA)[STOCK_DOWNLOAD_PATH]
-      
-    
-    
+
     for toinItem in toinItems:
         fncStdPassCount = 0
 
@@ -133,7 +131,7 @@ def selectionOfStockItems():
             '''
             
         for stockCd in refinedDf[count - fncStdPassCount :][StockColumn.STOCK_CD]:
-            statiDf = pd.DataFrame(columns=['cointegration', 'residual'])
+            statiDf = pd.DataFrame(columns=['cointegration', 'residual', 'correlationCoefficient'])
             index = 0
             for preparatoryStockItem in stockItems:
                 if (stockCd != preparatoryStockItem[StockColumn.STOCK_CD]):
@@ -142,7 +140,8 @@ def selectionOfStockItems():
                                              start, end, path)
                     
                     statiDf.loc[index] = [stati[0], 
-                                          stati[1]] 
+                                          stati[1],
+                                          stati[2]] 
                     index += 1
                     
                     

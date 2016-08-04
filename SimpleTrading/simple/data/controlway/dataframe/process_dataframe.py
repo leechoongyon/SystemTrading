@@ -11,7 +11,7 @@ import pandas as pd
 import pandas_datareader.data as web
 from simple.common.util import dataframe_util, string_util
 from simple.common.util.properties_util import PropertiesUtil, STOCK_DATA, \
-    DB_DATA, properties
+    DB_DATA, properties, STOCK_DOWNLOAD_PATH
 from simple.data.controlway.db.factory.data_handler_factory import getDataHandler
 from simple.data.controlway.db.mysql.data_handler import DataHandler
 
@@ -83,8 +83,11 @@ if __name__ == '__main__':
     
     # CJ CGV (079160)
     '''
+    start = '2014-08-05'
+    end = '2016-08-05'
+    path = properties.getSelection(STOCK_DATA)[STOCK_DOWNLOAD_PATH]
     out = web.DataReader("079160.KS", "yahoo", start, end)
-    out.to_csv(config.DATA_PATH + "/CJ_CGV.csv")
+    out.to_csv(path + "/CJ_CGV.csv")
     '''
     
     # 제일제당 우 (097955)
@@ -153,10 +156,11 @@ if __name__ == '__main__':
     
     # CJ (001040)
     '''
-    start = '2014-01-01'
-    end = '2016-07-19'
+    start = '2014-08-05'
+    end = '2016-08-05'
+    path = properties.getSelection(STOCK_DATA)[STOCK_DOWNLOAD_PATH]
     out = web.DataReader("001040.KS", "yahoo", start, end)
-    out.to_csv('C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/CJ.csv')
+    out.to_csv(path + "/CJ.csv")
     '''
     
     # CJ우 (001045)

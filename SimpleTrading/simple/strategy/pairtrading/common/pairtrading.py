@@ -9,7 +9,8 @@ Created on 2016. 8. 2.
 import time
 
 import pandas as pd
-from simple.common.compute_stats import getCointegration, getLogSpreadResidual
+from simple.common.compute_stats import getLogSpreadResidual,\
+    getCointegrationUsingLog, getCorrelationCoefficientUsingLog
 from simple.common.util.properties_util import properties, BIZ_PRE_PROCESS, \
     TARGET_DATA_LOAD_PERIOD, STOCK_DOWNLOAD_PATH, STOCK_DATA
 from simple.common.util.time_util import getDayFromSpecificDay, \
@@ -45,7 +46,10 @@ def applyPairTrading(pairSource, pairTarget, start, end, path):
     refinedDf = df.dropna()
     
     # get cointegration
-    cointegration = getCointegration(refinedDf, stockCds)
+    cointegration = getCointegrationUsingLog(refinedDf, stockCds)
+    
+    # get CorrelationCoefficient
+    correlationCoefficient = getCorrelationCoefficientUsingLog(refinedDf, stockCds)
     
     # log_spread_residual
     spreadResidual = getLogSpreadResidual(refinedDf, cointegration, stockCds)
@@ -55,7 +59,7 @@ def applyPairTrading(pairSource, pairTarget, start, end, path):
     # 만약 sort가 필요하면 위에걸 넣고 소트하는데 리소스 소모되니 그냥 찍자    
     residual = spreadResidual.iloc[-1]
     
-    statistics = [cointegration, residual]
+    statistics = [cointegration, residual, correlationCoefficient]
     
     return statistics
 

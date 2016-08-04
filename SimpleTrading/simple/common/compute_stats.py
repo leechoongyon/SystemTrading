@@ -8,11 +8,15 @@ Created on 2016. 8. 4.
 
 import math
 import os
+import time
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from simple.common.util.properties_util import properties, STOCK_DATA
+from simple.common.util.properties_util import properties, STOCK_DATA, \
+    STOCK_DOWNLOAD_PATH
+from simple.common.util.time_util import getDayFromSpecificDay, \
+    getTodayWithFormatting
 from simple.config.configuration import PROPERTIES_PATH
 
 
@@ -96,15 +100,23 @@ def normalizeSpread(symbols, normalDf):
     normalSpreadDf = pd.DataFrame(dfList[0].values - dfList[1].values, index=normalDf.index)
     return normalSpreadDf
 
-# 수익률 구하기
-def getEarningsRate(afterStockPrice, beforeStockPrice):
+# 수익률 구하기 로그 형태로
+# 아마추어 퀀트에서 설명한 로그 수익률 구하기 (이게 정확)
+def getLogEarningsRate(afterStockPrice, beforeStockPrice):
     return math.log(afterStockPrice / beforeStockPrice)
 
+# 수익률 구하기 (이게 실제)
+def getEarningsRate(df):
+    earningsRate = df['Close'].copy()
+    earningsRate[1:] = (earningsRate[1:] / earningsRate[:-1].values) - 1
+    earningsRate[0] = 0
+    return earningsRate
 
 def getLog(df):
     return np.log(df).round(2)
 
 # log_spread와 log_spread_residual 는 다르다. residual는 잔차다 (두 개간의 차이)
+# 로그스프레드와 로그수익률은 다른 개념
 def getLogSpread(df, cointegration, symbols):
     lnDf = getLog(df)
     logSpread = lnDf[symbols[0]] - cointegration * lnDf[symbols[1]]
@@ -116,8 +128,52 @@ def getLogSpreadResidual(df, cointegration, symbols):
     logSpreadResidual = logSpread - logSpreadMean
     return logSpreadResidual
 
-def getCointegration(df, symbols):
+# 이건 로그 이용해서 cointegration 구하기 (아마추어 퀀트)
+def getCointegrationUsingLog(df, symbols):
     lnDf = np.log(df).round(2)
     cointegration = lnDf.cov()[symbols[0]][symbols[1]] / lnDf[symbols[1]].var()
     return cointegration
 
+# 로그 이용해서 상관계수 구하기
+def getCorrelationCoefficientUsingLog(df, symbols):
+    # A와 B의 공분산 / (A의 로그 표준편차 * B의 로그 표준편차)
+    cointegration = getCointegrationUsingLog(df, symbols)
+    correlationCofficient = cointegration / ( df[symbols[0]].values.std() * df[symbols[1]].values.std() )
+    return correlationCofficient
+
+# -----------------------------------------------------
+
+# 이건 수익률을 이용해서 각 공분산을 구한 뒤 cointegration 구하기
+def getCointegrationUsingearningsRate(df, symbols):
+    pass
+
+if __name__ == '__main__':
+    
+    startNum = -30
+    start = getDayFromSpecificDay(time.time(), startNum, "%Y%m%d")
+    end = getTodayWithFormatting("%Y%m%d")
+    
+    symbols = ["CJ_CGV", "CJ"]
+    dates = pd.date_range(start, end)
+    path = properties.getSelection(STOCK_DATA)[STOCK_DOWNLOAD_PATH]
+    
+    df = pd.DataFrame(index=dates)
+    sourceDf = pd.read_csv(path + "/" + symbols[0] + ".csv",
+                           index_col = 'Date',
+                           parse_dates=True, usecols=['Date', 'Close'],
+                           na_values=['nan'])
+    
+    targetDf = pd.read_csv(path + "/" + symbols[1] + ".csv",
+                           index_col = 'Date',
+                           parse_dates=True, usecols=['Date', 'Close'],
+                           na_values=['nan'])
+    
+    df_temp = sourceDf.rename(columns={'Close': symbols[0]})
+    df = df.join(df_temp)
+    df_temp = targetDf.rename(columns={'Close': symbols[1]})
+    df = df.join(df_temp)
+    
+    refinedDf = df.dropna()
+    
+    print getCointegrationUsingLog(refinedDf, symbols)
+    print getCorrelationCoefficientUsingLog(refinedDf, symbols)
