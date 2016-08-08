@@ -5,12 +5,16 @@ Created on 2016. 7. 14.
 @author: lee
 '''
 
-from simple.strategy.pairtrading.common.pairtrading_common import *
-
-import math
-import numpy as np
-import time
 import datetime
+import math
+import time
+
+import numpy as np
+import pandas as pd
+from simple.common.util.plt_util import plotData
+from simple.common.util.stats_util import getCointegrationUsingLog, getData, \
+    normalize, normalizeSpread, getLogSpread, getLogSpreadResidual
+
 
 if __name__ == '__main__':
     
@@ -28,30 +32,30 @@ if __name__ == '__main__':
 
     # 2014-01-01 ~ 2017-07-21 (0.806989394181) 이건 또 고평가네 거의 10%
     symbols = ['MEIRTZ_FINANCIAL_GROUP', 'MEIRTZ_SECURITY']
-    df = get_data(symbols, dates)
+    df = getData(symbols, dates)
     refined_df = df.dropna()
     
     
     # normalize
     normal_df = normalize(symbols, dates, refined_df)
-    plot_data(normal_df)
+    plotData(normal_df)
 
     # normalize_spread
-    normal_spread_df = normalize_spread(symbols, normal_df)
-    plot_data(normal_spread_df)
+    normal_spread_df = normalizeSpread(symbols, normal_df)
+    plotData(normal_spread_df)
 
 
 
 
     # cointegration    
-    cointegration = get_cointegration(refined_df, symbols)
+    cointegration = getCointegrationUsingLog(refined_df, symbols)
     print cointegration
     
     # log_spread
-    log_spread = get_log_spread(refined_df, cointegration, symbols)
-    plot_data(log_spread, xlabel="Date", ylabel="log spread")
+    log_spread = getLogSpread(refined_df, cointegration, symbols)
+    plotData(log_spread, xlabel="Date", ylabel="log spread")
 
     # log_spread_residual
-    spread_residual = get_log_spread_residual(refined_df, cointegration, symbols)
-    plot_data(spread_residual, xlabel="Date", ylabel="Spread_residual")
+    spread_residual = getLogSpreadResidual(refined_df, cointegration, symbols)
+    plotData(spread_residual, xlabel="Date", ylabel="Spread_residual")
 
