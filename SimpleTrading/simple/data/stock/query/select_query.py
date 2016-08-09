@@ -15,7 +15,7 @@ SELECT_LIVE_PORTFOLIO = ("select * from live_portfolio;")
 SELECT_STOCK_ITEM_WITH_PARAM = (
 "select * "
  + "from stock_item "
- + "where stock_group_cd = %s "
+ + "where toin_cd = %s "
 )    
 
 SELECT_JOIN_STOCK_ITEM_DAILY_AND_TARGET_PORTFOLIO = (

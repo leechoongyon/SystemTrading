@@ -22,6 +22,7 @@ from simple.data.controlway.db.factory import data_handler_factory
 from simple.data.stock.query.select_query import SELECT_TARGET_PORTFOLIO, \
     SELECT_STOCK_ITEM_WITH_PARAM
 from simple.data.stock.stock_data import StockColumn
+from simple.strategy.pairtrading.common.pair_trading_common import applyPairTrading
 
 
 def buy():
@@ -151,52 +152,6 @@ def recommend():
                 refinedDf = refinedDf[refinedDf[StockColumn.STOCK_CD] != stockCd]
                 
     return refinedDf
-
-def applyPairTrading(pairSource, pairTarget, start, end, path):
-
-    statistics = []
-    
-    # Create refinedDf
-    
-    stockCds = [pairSource, pairTarget]
-    
-    dates = pd.date_range(start, end)
-    
-    df = pd.DataFrame(index=dates)
-    sourceDf = pd.read_csv(path + "/" + pairSource + ".csv",
-                           index_col = 'Date',
-                           parse_dates=True, usecols=['Date', 'Close'],
-                           na_values=['nan'])
-    
-    targetDf = pd.read_csv(path + "/" + pairTarget + ".csv",
-                           index_col = 'Date',
-                           parse_dates=True, usecols=['Date', 'Close'],
-                           na_values=['nan'])
-    
-    df_temp = sourceDf.rename(columns={'Close': pairSource})
-    df = df.join(df_temp)
-    df_temp = targetDf.rename(columns={'Close': pairTarget})
-    df = df.join(df_temp)
-    
-    refinedDf = df.dropna()
-    
-    # get cointegration
-    cointegration = getCointegrationUsingLog(refinedDf, stockCds)
-    
-    # get CorrelationCoefficient
-    correlationCoefficient = getCorrelationCoefficientUsingLog(refinedDf, stockCds)
-    
-    # log_spread_residual
-    spreadResidual = getLogSpreadResidual(refinedDf, cointegration, stockCds)
-#     plotData(spread_residual, xlabel="Date", ylabel="Spread_residual")
-#     spreadResidual.sort_index(ascending=False).iloc[0]
-    
-    # 만약 sort가 필요하면 위에걸 넣고 소트하는데 리소스 소모되니 그냥 찍자    
-    residual = spreadResidual.iloc[-1]
-    
-    statistics = [cointegration, residual, correlationCoefficient]
-    
-    return statistics
 
 def valueAnalysis():
     pass
