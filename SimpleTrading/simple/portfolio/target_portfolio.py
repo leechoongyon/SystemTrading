@@ -4,7 +4,16 @@ Created on 2016. 7. 15.
 
 @author: lee
 '''
-from simple.strategy.pairtrading import pairtrading
+import time
+
+from simple.common.util.properties_util import properties, BIZ_PRE_PROCESS, \
+    TARGET_DATA_LOAD_PERIOD, STOCK_DATA, STOCK_DOWNLOAD_PATH, TARGET_PORTFOLIO, \
+    TYPES
+from simple.common.util.time_util import getDayFromSpecificDay, \
+    getTodayWithFormatting
+from simple.data.controlway.db.factory import data_handler_factory
+from simple.strategy.pairtrading import pairtrading, pair_trading
+from simple.strategy.pairtrading.pair_trading import PairTrading
 
 
 def preProcess():
@@ -37,9 +46,23 @@ def perform():
 def selectionOfStockItems():
     
     # 각 전력의 Recommend 가 여기에 위치
-    recommendDf = pairtrading.recommend()
+    dataHandler = data_handler_factory.getDataHandler()
+    startNum = int(properties.getSelection(BIZ_PRE_PROCESS)[TARGET_DATA_LOAD_PERIOD])
+    start = getDayFromSpecificDay(time.time(), startNum, "%Y%m%d")
+    end = getTodayWithFormatting("%Y%m%d")
+    path = properties.getSelection(STOCK_DATA)[STOCK_DOWNLOAD_PATH] + "/" + end
+    types = properties.getSelection(TARGET_PORTFOLIO)[TYPES]
     
+    pairTrading = PairTrading(start, end, path, dataHandler, types)
+    recommend = pairTrading.recommend()
+    
+    
+    return recommend
     
 if __name__ == '__main__':
-    print selectionOfStockItems()
+#     print selectionOfStockItems()
 #     perform()    
+
+    end = getTodayWithFormatting("%Y%m%d")
+    path = properties.getSelection(STOCK_DATA)[STOCK_DOWNLOAD_PATH] + "/" + end
+    print path

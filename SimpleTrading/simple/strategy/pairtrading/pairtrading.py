@@ -12,8 +12,6 @@ import pandas as pd
 from simple.common.util.properties_util import properties, BIZ_PRE_PROCESS, \
     TARGET_DATA_LOAD_PERIOD, STOCK_DOWNLOAD_PATH, STOCK_DATA, TARGET_PORTFOLIO, \
     TOIN_CODES
-from simple.common.util.stats_util import getLogSpreadResidual, \
-    getCointegrationUsingLog, getCorrelationCoefficientUsingLog
 from simple.common.util.time_util import getDayFromSpecificDay, \
     getTodayWithFormatting
 from simple.data.controlway.crawler.data_crawler import getIntradayData, \
@@ -22,7 +20,6 @@ from simple.data.controlway.db.factory import data_handler_factory
 from simple.data.stock.query.select_query import SELECT_TARGET_PORTFOLIO, \
     SELECT_STOCK_ITEM_WITH_PARAM
 from simple.data.stock.stock_data import StockColumn
-from simple.strategy.pairtrading.common.pair_trading_common import applyPairTrading
 
 
 def buy():
@@ -118,7 +115,8 @@ def recommend():
            refinedDf를 for문으로 돌릴 때 저 위쪽에 stockItems 가 있으니 그 stockITems와 같이 for문을 돌리면 되겠네.
                 자기건 뺴고 돌리면 될듯. 돌리면서 Cointegration과 상관계수를 구해서 어느 일정 이상 되는지 판단하고 실제 그게 저평가인지 아닌지는 보팅기법을 써야겠지. 
             '''
-            
+        
+        '''    
         for stockCd in refinedDf[count - fncStdPassCount :][StockColumn.STOCK_CD]:
             statiDf = pd.DataFrame(columns=['cointegration', 'residual', 'correlationCoefficient'])
             index = 0
@@ -150,7 +148,7 @@ def recommend():
             
             if votingCount < (totalRows / 2):
                 refinedDf = refinedDf[refinedDf[StockColumn.STOCK_CD] != stockCd]
-                
+        '''      
     return refinedDf
 
 def valueAnalysis():
@@ -172,4 +170,4 @@ if __name__ == '__main__':
     start = getDayFromSpecificDay(time.time(), startNum, "%Y%m%d")
     end = getTodayWithFormatting("%Y%m%d")
     path = properties.getSelection(STOCK_DATA)[STOCK_DOWNLOAD_PATH]
-    print applyPairTrading('017670', '030200', start, end, path)
+#     print applyPairTrading('017670', '030200', start, end, path)

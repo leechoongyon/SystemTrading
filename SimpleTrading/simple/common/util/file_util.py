@@ -6,13 +6,30 @@ Created on 2016. 7. 23.
 '''
 import os
 import sys
+import time
 
-def mkdir(dirPath):
-    if not os.path.isdir(dirPath):
-        os.mkdir(dirPath)
+def mkdir(path):
+    if not os.path.isdir(path):
+        os.mkdir(path)
+
+
+def isFile(path):
+    return os.path.isfile(path)
+
+def isDir(path):
+    return os.path.isdir(path)
 
 if __name__ == '__main__':
     
-    rawInput = "C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data/machine"
+    '''
+    startNum = int(properties.getSelection(BIZ_PRE_PROCESS)[TARGET_DATA_LOAD_PERIOD])
+    start = getDayFromSpecificDay(time.time(), startNum, "%Y%m%d")
+    end = getTodayWithFormatting("%Y%m%d")
+    path = properties.getSelection(STOCK_DATA)[STOCK_DOWNLOAD_PATH] + "/" + end
+    '''
     
-    mkdir(rawInput)
+    
+    raw = "C:/git/SimpleTrading/SimpleTrading/stock_data/018260.csv"
+    r = "C:\git\SimpleTrading\SimpleTrading\stock_data\018260.csv"
+#     r = r.replace('\/', '/')
+    print not isFile(raw)

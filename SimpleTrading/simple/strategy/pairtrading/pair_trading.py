@@ -4,9 +4,11 @@ Created on 2016. 8. 9.
 
 @author: lee
 '''
+
 import time
 
 import pandas as pd
+from simple.common.util import file_util
 from simple.common.util.properties_util import properties, BIZ_PRE_PROCESS, \
     TARGET_DATA_LOAD_PERIOD, STOCK_DATA, STOCK_DOWNLOAD_PATH, TARGET_PORTFOLIO, \
     TOIN_CODES
@@ -18,16 +20,17 @@ from simple.data.controlway.db.factory import data_handler_factory
 from simple.data.stock.query.select_query import SELECT_TARGET_PORTFOLIO, \
     SELECT_STOCK_ITEM_WITH_PARAM
 from simple.data.stock.stock_data import StockColumn
-from simple.strategy.pairtrading.common.pair_trading_common import applyPairTrading
+from simple.strategy.pairtrading.common.pair_trading_common import PairTradingCommon
 
 
 class PairTrading():
     
-    def __init__(self, start, end, path, dataHandler):
+    def __init__(self, start, end, path, dataHandler, types):
         self.start = start
         self.end = end
         self.path = path
         self.dataHandler = dataHandler
+        self.types = types
         
     def buy(self):
         dataHandler = data_handler_factory.getDataHandler()
@@ -48,10 +51,21 @@ class PairTrading():
         pass
 
     def recommend(self):
-        # 1. 업종별 테이블 조회
-        # 일단 테스트를 위해 properties 정의된 업종만 조회     
+        
+        # 가치분석
+        self.valueAnalysis()
+        
+        # 기술적분석
+        result = self.techAnalysis()
+        
+        return result
+        
+        
+    def recommendWithUpJong(self):
+        # 일단 properties 에서 업종종류 가져옴
         raws = properties.getSelection(TARGET_PORTFOLIO)[TOIN_CODES].split(",")
         toinCodes = []
+        result = []
         for raw in raws:     
             toinCodes.append(raw)
         
@@ -60,41 +74,47 @@ class PairTrading():
                                                   toinCode)
             stockItems = cursor.fetchall()
             
-            # 2.1 받아온 종목들을 file 에 저장 (DB에 저장하면 리소스 소모 심함)
+            # 받아온 종목들을 file 에 저장 (DB에 저장하면 리소스 소모 심함)
             for stockItem in stockItems:
-                rows = getHistoricalData(stockItem[StockColumn.STOCK_CD], start, end)
-                df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", 
-                                         "Close", "Volume", "Adj Close"])
-                df.to_csv(path + "/" + stockItem[StockColumn.STOCK_CD] + ".csv", index=False)
+                stockCd = str(stockItem[StockColumn.STOCK_CD])
+                stockFilePath = self.path + "/" + stockCd + ".csv"
+                
+                if not file_util.isFile(stockFilePath):
+                    file_util.mkdir(self.path)
+                    rows = getHistoricalData(stockCd, self.start, self.end)
+                    df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", 
+                                             "Close", "Volume", "Adj Close"])
+                    df.to_csv(stockFilePath, index=False)
             
             # techAnalysis 
             # 여기서 pair 종목을 전부 뽑아냄.
             # 리턴 컬럼 sourcePair, targetPair, cointegration, residual, correlationCoefficient
-            techResults = self.techAnalysis(stockItems)
-            print techResults
+            pairTradingCommon = PairTradingCommon(self.start, self.end, self.path)
+            techResult = pairTradingCommon.applyPairTrading(stockItems)
+            result.append(techResult)
         
+        return result
+    
+    def recommendWithGroup(self):
+        pass
+    
     def valueAnalysis(self):
         pass
     
-    def techAnalysis(self, stockItems):
+    def techAnalysis(self):
         
-        statiList = []
+        totalResult = []
         
-        for stockItem in stockItems:
-            for pairItem in stockItems:
-                stockCd = str(stockItem[StockColumn.STOCK_CD])
-                pairCd = str(pairItem[StockColumn.STOCK_CD])
-                if (stockCd != pairCd):
-                    stati = applyPairTrading(stockCd,
-                                            pairCd,
-                                            self.start, 
-                                            self.end, 
-                                            self.path)
-                    
-                    if (0.5 < stati[2] and stati[2] < 1.5):
-                        statiList.append(stati)
+        if "upJong" in self.types:
+            result = self.recommendWithUpJong()
+            print result
+            totalResult.append(result)
+        
+        if "group" in self.types:
+            result = self.recommendWithGroup()
+            totalResult.append(result)
                         
-        return statiList
+        return totalResult
 
 if __name__ == '__main__':
     dataHandler = data_handler_factory.getDataHandler()
