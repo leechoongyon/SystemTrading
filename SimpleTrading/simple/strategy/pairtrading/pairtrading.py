@@ -17,8 +17,9 @@ from simple.common.util.time_util import getDayFromSpecificDay, \
 from simple.data.controlway.crawler.data_crawler import getIntradayData, \
     getHistoricalData
 from simple.data.controlway.db.factory import data_handler_factory
-from simple.data.stock.query.select_query import SELECT_TARGET_PORTFOLIO, \
-    SELECT_STOCK_ITEM_WITH_PARAM
+from simple.data.stock.query.select_query import SELECT_TARGET_PORTFOLIO,\
+    SELECT_STOCK_ITEM_WITH_TOIN_CD
+    
 from simple.data.stock.stock_data import StockColumn
 
 
@@ -69,7 +70,7 @@ def recommend():
         print "toinCode : %s " % toinCode
 
         dataHandler = data_handler_factory.getDataHandler()
-        cursor = dataHandler.execSqlWithParam(SELECT_STOCK_ITEM_WITH_PARAM, 
+        cursor = dataHandler.execSqlWithParam(SELECT_STOCK_ITEM_WITH_TOIN_CD, 
                                               toinCode)
         stockItems = cursor.fetchall()
         

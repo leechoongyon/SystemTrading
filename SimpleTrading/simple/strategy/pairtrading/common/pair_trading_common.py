@@ -28,7 +28,6 @@ class PairTradingCommon():
                     stati = self.computingPairTrading(stockCd,
                                                       pairCd)
                                              
-                        
                     if (0.5 < stati[2] and stati[2] < 1.5):
                         statiList.append(stati)
                             

@@ -45,6 +45,7 @@ def preProcess():
     
     recommend = target_portfolio.selectionOfStockItems()
     
+    print recommend
 #     dataHandler.execSqlManyWithParam(INSERT_TARGET_PORTFOLIO_01, rows)
     data_handler_factory.close(dataHandler)
     

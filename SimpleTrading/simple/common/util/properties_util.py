@@ -67,13 +67,17 @@ properties = PropertiesUtil(PROPERTIES_PATH)
 
 
 if __name__ == '__main__':
+
+    types = properties.getSelection("TARGET_PORTFOLIO")["types"]
     
+    '''    
     isTargetDataLoad = properties.getSelection("BIZ_PRE_PROCESS")["target_data_load"]
     
     if isTargetDataLoad == "True":
         print "True"
     else :
         print "False"
+    '''
     
 #     print properties.get_selection("DB_DATA")['host']
 #     print properties.config_section_map("DB_DATA")['host']

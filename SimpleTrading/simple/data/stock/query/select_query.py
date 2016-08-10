@@ -10,9 +10,17 @@ from enum import Enum
 
 SELECT_TARGET_PORTFOLIO = ("select * from target_portfolio;")
 SELECT_LIVE_PORTFOLIO = ("select * from live_portfolio;")
+SELECT_STOCK_GROUP = ("select * from stock_group;")
+ 
+ 
+SELECT_STOCK_ITEM_WITH_GROUP_CD = (
+"select * "
+ + "from stock_item "
+ + "where group_cd = %s "
+) 
     
 
-SELECT_STOCK_ITEM_WITH_PARAM = (
+SELECT_STOCK_ITEM_WITH_TOIN_CD = (
 "select * "
  + "from stock_item "
  + "where toin_cd = %s "

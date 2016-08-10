@@ -18,7 +18,8 @@ from simple.data.controlway.crawler.data_crawler import getIntradayData, \
     getHistoricalData
 from simple.data.controlway.db.factory import data_handler_factory
 from simple.data.stock.query.select_query import SELECT_TARGET_PORTFOLIO, \
-    SELECT_STOCK_ITEM_WITH_PARAM
+     SELECT_STOCK_GROUP, \
+    SELECT_STOCK_ITEM_WITH_GROUP_CD, SELECT_STOCK_ITEM_WITH_TOIN_CD
 from simple.data.stock.stock_data import StockColumn
 from simple.strategy.pairtrading.common.pair_trading_common import PairTradingCommon
 
@@ -31,9 +32,12 @@ class PairTrading():
         self.path = path
         self.dataHandler = dataHandler
         self.types = types
+        self.pairTradingCommon = PairTradingCommon(self.start, self.end, self.path)
+    
+    def __del__(self):
+        data_handler_factory.close(self.dataHandler)
         
     def buy(self):
-        dataHandler = data_handler_factory.getDataHandler()
         cursor = dataHandler.openSql(SELECT_TARGET_PORTFOLIO)
         results = cursor.fetchall()
         items = []
@@ -43,9 +47,6 @@ class PairTrading():
         # 하루치 현재가 가져오기
         for item in items:
             getIntradayData(item['STOCK_CD'])
-        
-    
-        data_handler_factory.close(dataHandler)
     
     def sell(self):
         pass
@@ -70,7 +71,7 @@ class PairTrading():
             toinCodes.append(raw)
         
         for toinCode in toinCodes:
-            cursor = self.dataHandler.execSqlWithParam(SELECT_STOCK_ITEM_WITH_PARAM, 
+            cursor = self.dataHandler.execSqlWithParam(SELECT_STOCK_ITEM_WITH_TOIN_CD, 
                                                   toinCode)
             stockItems = cursor.fetchall()
             
@@ -89,14 +90,38 @@ class PairTrading():
             # techAnalysis 
             # 여기서 pair 종목을 전부 뽑아냄.
             # 리턴 컬럼 sourcePair, targetPair, cointegration, residual, correlationCoefficient
-            pairTradingCommon = PairTradingCommon(self.start, self.end, self.path)
-            techResult = pairTradingCommon.applyPairTrading(stockItems)
+            techResult = self.pairTradingCommon.applyPairTrading(stockItems)
             result.append(techResult)
         
         return result
     
     def recommendWithGroup(self):
-        pass
+        cursor = self.dataHandler.openSql(SELECT_STOCK_GROUP)
+        groupItems = cursor.fetchall()
+        result = []
+        
+        for groupItem in groupItems:
+            groupCd = groupItem[StockColumn.GROUP_CD]
+            cursor = self.dataHandler.execSqlWithParam(SELECT_STOCK_ITEM_WITH_GROUP_CD, 
+                                                       groupCd)
+            stockItems = cursor.fetchall()
+            
+            # 받아온 종목들을 file 에 저장 (DB에 저장하면 리소스 소모 심함)
+            for stockItem in stockItems:
+                stockCd = str(stockItem[StockColumn.STOCK_CD])
+                stockFilePath = self.path + "/" + stockCd + ".csv"
+                
+                if not file_util.isFile(stockFilePath):
+                    file_util.mkdir(self.path)
+                    rows = getHistoricalData(stockCd, self.start, self.end)
+                    df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", 
+                                             "Close", "Volume", "Adj Close"])
+                    df.to_csv(stockFilePath, index=False)
+                        
+            techResult = self.pairTradingCommon.applyPairTrading(stockItems)
+            result.append(techResult)
+        
+        return result
     
     def valueAnalysis(self):
         pass

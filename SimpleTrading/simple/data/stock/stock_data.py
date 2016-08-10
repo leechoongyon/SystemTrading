@@ -13,11 +13,13 @@ class StockTable():
     STOCK_ITEM = "STOCK_ITEM"
     STOCK_ITEM_DAILY = "STOCK_ITEM_DAILY"
     STOCK_TEST = "STOCK_TEST"
+    STOCK_GROUP = "STOCK_GROUP"
     
 class StockColumn():
     STOCK_CD = "STOCK_CD"
     MARKET_CD = "MARKET_CD"
     YM_DD = "YM_DD"
+    GROUP_CD = "GROUP_CD"
 
 class StockData():
 
