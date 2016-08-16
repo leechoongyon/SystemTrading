@@ -16,7 +16,7 @@ class PairTradingCommon():
         self.end = end
         self.path = path
 
-    def applyPairTrading(self, stockItems):
+    def applyPairTrading(self, stockItems, type, typeCode):
         
         statiList = []
             
@@ -26,17 +26,19 @@ class PairTradingCommon():
                 pairCd = str(pairItem[StockColumn.STOCK_CD])
                 if (stockCd != pairCd):
                     stati = self.computingPairTrading(stockCd,
-                                                      pairCd)
+                                                      pairCd,
+                                                      type,
+                                                      typeCode)
                                              
-                    if (0.5 < stati[2] and stati[2] < 1.5):
+                    if (0.5 < stati[4] and stati[4] < 1.5):
                         statiList.append(stati)
                             
         return statiList
     
     
-    def computingPairTrading(self, pairSourceCode, pairTargetCode):
+    def computingPairTrading(self, pairSourceCode, pairTargetCode, type, typeCode):
     
-        statistics = []
+#         statistics = []
         
         # Create refinedDf
         
@@ -76,6 +78,12 @@ class PairTradingCommon():
         # 만약 sort가 필요하면 위에걸 넣고 소트하는데 리소스 소모되니 그냥 찍자    
         residual = spreadResidual.iloc[-1]
         
-        statistics = [pairSourceCode, pairTargetCode, cointegration, residual, correlationCoefficient]
+        statistics = [pairSourceCode, 
+                      pairTargetCode, 
+                      type, 
+                      typeCode, 
+                      cointegration, 
+                      residual, 
+                      correlationCoefficient]
         
         return statistics

@@ -62,7 +62,7 @@ class PairTrading():
         return result
         
         
-    def recommendWithUpJong(self):
+    def recommendStockUpJong(self, type):
         # 일단 properties 에서 업종종류 가져옴
         raws = properties.getSelection(TARGET_PORTFOLIO)[TOIN_CODES].split(",")
         toinCodes = []
@@ -90,12 +90,12 @@ class PairTrading():
             # techAnalysis 
             # 여기서 pair 종목을 전부 뽑아냄.
             # 리턴 컬럼 sourcePair, targetPair, cointegration, residual, correlationCoefficient
-            techResult = self.pairTradingCommon.applyPairTrading(stockItems)
+            techResult = self.pairTradingCommon.applyPairTrading(stockItems, type, toinCode)
             result.append(techResult)
         
         return result
     
-    def recommendWithGroup(self):
+    def recommendStockGroup(self, type):
         cursor = self.dataHandler.openSql(SELECT_STOCK_GROUP)
         groupItems = cursor.fetchall()
         result = []
@@ -118,7 +118,7 @@ class PairTrading():
                                              "Close", "Volume", "Adj Close"])
                     df.to_csv(stockFilePath, index=False)
                         
-            techResult = self.pairTradingCommon.applyPairTrading(stockItems)
+            techResult = self.pairTradingCommon.applyPairTrading(stockItems, type, groupCd)
             result.append(techResult)
         
         return result
@@ -128,16 +128,15 @@ class PairTrading():
     
     def techAnalysis(self):
         
-        totalResult = []
+        totalResult = {}
         
         if "upJong" in self.types:
-            result = self.recommendWithUpJong()
-            print result
-            totalResult.append(result)
+            result = self.recommendStockUpJong("upJong")
+            totalResult['upJong'] = result
         
         if "group" in self.types:
-            result = self.recommendWithGroup()
-            totalResult.append(result)
+            result = self.recommendStockGroup("group")
+            totalResult['group'] = result
                         
         return totalResult
 

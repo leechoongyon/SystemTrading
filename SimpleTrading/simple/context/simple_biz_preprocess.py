@@ -45,7 +45,19 @@ def preProcess():
     
     recommend = target_portfolio.selectionOfStockItems()
     
-    print recommend
+    for type in recommend.keys():
+        results = recommend.get(type)
+        for result in results:
+            for pair in result:
+                print pair
+    
+    '''
+    stockGroup = recommend.get('group')
+    for group in stockGroup:
+        for pair in group:
+            print pair
+    '''
+                
 #     dataHandler.execSqlManyWithParam(INSERT_TARGET_PORTFOLIO_01, rows)
     data_handler_factory.close(dataHandler)
     
