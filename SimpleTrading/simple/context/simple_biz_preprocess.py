@@ -46,6 +46,10 @@ def preProcess():
     recommend = target_portfolio.selectionOfStockItems()
     
     for type in recommend.keys():
+        
+        print 50 * "*"
+        print "type : %s " % type
+        print 50 * "*"
         results = recommend.get(type)
         for result in results:
             for pair in result:
