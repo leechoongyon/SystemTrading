@@ -108,7 +108,7 @@ def getHistoricalData(stockCd, start, end):
 if __name__ == '__main__':
     
     start = "2014-01-01"
-    end = "2016-07-25"
+    end = "2016-08-14"
     # kakao = 035720 / combine = 047770
     symbol = "035720"
 #     symbol = "047770"
@@ -116,7 +116,6 @@ if __name__ == '__main__':
     rows = getHistoricalData(symbol, start, end)
     for row in rows:
         print row
-    
     
     '''
     rows = getHistoricalData(symbol, start, end, int(pageNum), int(totalPageNum))
