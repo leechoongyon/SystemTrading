@@ -19,7 +19,8 @@ from simple.data.controlway.crawler.data_crawler import getIntradayData, \
 from simple.data.controlway.db.factory import data_handler_factory
 from simple.data.stock.query.select_query import SELECT_TARGET_PORTFOLIO, \
      SELECT_STOCK_GROUP, \
-    SELECT_STOCK_ITEM_WITH_GROUP_CD, SELECT_STOCK_ITEM_WITH_TOIN_CD
+    SELECT_STOCK_ITEM_WITH_GROUP_CD, SELECT_STOCK_ITEM_WITH_TOIN_CD,\
+    SELECT_STOCK_TOIN
 from simple.data.stock.stock_data import StockColumn
 from simple.strategy.pairtrading.common.pair_trading_common import PairTradingCommon
 
@@ -62,15 +63,26 @@ class PairTrading():
         return result
         
         
-    def recommendWithUpJong(self):
+    def recommendStockUpJong(self, type):
+        
         # 일단 properties 에서 업종종류 가져옴
+        '''
         raws = properties.getSelection(TARGET_PORTFOLIO)[TOIN_CODES].split(",")
         toinCodes = []
+        '''
+
+        cursor = self.dataHandler.openSql(SELECT_STOCK_TOIN)
+        toinItems = cursor.fetchall()
+        
         result = []
+        
+        '''
         for raw in raws:     
             toinCodes.append(raw)
+        '''
         
-        for toinCode in toinCodes:
+        for toinItem in toinItems:
+            toinCode = toinItem[StockColumn.TOIN_CD]
             cursor = self.dataHandler.execSqlWithParam(SELECT_STOCK_ITEM_WITH_TOIN_CD, 
                                                   toinCode)
             stockItems = cursor.fetchall()
@@ -83,19 +95,20 @@ class PairTrading():
                 if not file_util.isFile(stockFilePath):
                     file_util.mkdir(self.path)
                     rows = getHistoricalData(stockCd, self.start, self.end)
-                    df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", 
-                                             "Close", "Volume", "Adj Close"])
+                    df = pd.DataFrame(rows, columns=["Date", "Open", "High", 
+                                                     "Low", "Close", "Volume",
+                                                      "Adj Close"])
                     df.to_csv(stockFilePath, index=False)
             
             # techAnalysis 
             # 여기서 pair 종목을 전부 뽑아냄.
             # 리턴 컬럼 sourcePair, targetPair, cointegration, residual, correlationCoefficient
-            techResult = self.pairTradingCommon.applyPairTrading(stockItems)
+            techResult = self.pairTradingCommon.applyPairTrading(stockItems, type, toinCode)
             result.append(techResult)
         
         return result
     
-    def recommendWithGroup(self):
+    def recommendStockGroup(self, type):
         cursor = self.dataHandler.openSql(SELECT_STOCK_GROUP)
         groupItems = cursor.fetchall()
         result = []
@@ -118,7 +131,7 @@ class PairTrading():
                                              "Close", "Volume", "Adj Close"])
                     df.to_csv(stockFilePath, index=False)
                         
-            techResult = self.pairTradingCommon.applyPairTrading(stockItems)
+            techResult = self.pairTradingCommon.applyPairTrading(stockItems, type, groupCd)
             result.append(techResult)
         
         return result
@@ -128,16 +141,15 @@ class PairTrading():
     
     def techAnalysis(self):
         
-        totalResult = []
+        totalResult = {}
         
         if "upJong" in self.types:
-            result = self.recommendWithUpJong()
-            print result
-            totalResult.append(result)
+            result = self.recommendStockUpJong("upJong")
+            totalResult['upJong'] = result
         
         if "group" in self.types:
-            result = self.recommendWithGroup()
-            totalResult.append(result)
+            result = self.recommendStockGroup("group")
+            totalResult['group'] = result
                         
         return totalResult
 

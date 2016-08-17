@@ -55,8 +55,6 @@ def selectionOfStockItems():
     
     pairTrading = PairTrading(start, end, path, dataHandler, types)
     recommend = pairTrading.recommend()
-    
-    
     return recommend
     
 if __name__ == '__main__':

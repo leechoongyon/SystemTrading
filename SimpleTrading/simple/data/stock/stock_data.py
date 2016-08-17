@@ -20,7 +20,8 @@ class StockColumn():
     MARKET_CD = "MARKET_CD"
     YM_DD = "YM_DD"
     GROUP_CD = "GROUP_CD"
-
+    TOIN_CD = "TOIN_CD"
+    
 class StockData():
 
     def __init__(self):

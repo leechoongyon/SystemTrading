@@ -31,7 +31,7 @@ if __name__ == '__main__':
 #     symbols = ['MEIRTZ_FINANCIAL_GROUP', 'MEIRTZ_FIRE&MARINE_INSURANCE']
 
     # 2014-01-01 ~ 2017-07-21 (0.806989394181) 이건 또 고평가네 거의 10%
-    symbols = ['MEIRTZ_FINANCIAL_GROUP', 'MEIRTZ_FIRE&MARINE_INSURANCE']
+    symbols = ['MEIRTZ_FINANCIAL_GROUP', 'MEIRTZ_SECURITY']
     df = getData(symbols, dates)
     refined_df = df.dropna()
     

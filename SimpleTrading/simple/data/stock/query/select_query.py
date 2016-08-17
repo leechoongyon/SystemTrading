@@ -11,7 +11,7 @@ from enum import Enum
 SELECT_TARGET_PORTFOLIO = ("select * from target_portfolio;")
 SELECT_LIVE_PORTFOLIO = ("select * from live_portfolio;")
 SELECT_STOCK_GROUP = ("select * from stock_group;")
- 
+SELECT_STOCK_TOIN = ("select * from stock_toin;")
  
 SELECT_STOCK_ITEM_WITH_GROUP_CD = (
 "select * "
