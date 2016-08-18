@@ -25,6 +25,7 @@ encoding//simple/strategy/pairtrading/common/pair_trading_common.py=utf-8
 encoding//simple/strategy/pairtrading/pair_trading.py=utf-8
 encoding//simple/strategy/pairtrading/pairtrading.py=utf-8
 encoding//sql/STOCK_ITEM\ test\ data.sql=UTF-8
+encoding//test/backtest/bacttest_test.py=utf-8
 encoding//test/data/controlway/crawler/data_crawler_test.py=utf-8
 encoding//test/data/controlway/db/mysql/data_handler_test.py=utf-8
 encoding//test/data/stock/process_stock_data_test.py=utf-8
