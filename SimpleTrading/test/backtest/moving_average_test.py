@@ -28,6 +28,7 @@ def initialize(context):
     add_history(20, '1d', 'price')
     context.i = 0
     context.stockCd = '035720'
+    context.investment = False
      
 def handle_data(context, data):
 #     order(symbol('035720'), 1)
@@ -38,14 +39,20 @@ def handle_data(context, data):
 
     ma5 = history(5, '1d', 'price').mean()
     ma20 = history(20, '1d', 'price').mean()
+    buy = False
+    sell = False
     sym = symbol(context.stockCd)
-    record(kakao=data[sym].price, ma5=ma5[sym], ma20=ma20[sym])
     
-    if ma5[sym] > ma20[sym]:
+    if ma5[sym] > ma20[sym] and context.investment == False:
         order_target(sym, 1)
-    else:
+        context.investment = True
+        buy = True
+    elif ma5[sym] < ma20[sym] and context.investment == True:
         order_target(sym, -1)
-     
+        context.investment = False
+        sell = True
+    
+    record(kakao=data[sym].price, ma5=ma5[sym], ma20=ma20[sym], buy=buy, sell=sell)
     
 
 if __name__ == '__main__':
@@ -92,14 +99,19 @@ if __name__ == '__main__':
     data[stockCd] = np.where(1, df[stockCd], df[stockCd])
     
     
-    print data
-    
-    
     algo = TradingAlgorithm(initialize=initialize, handle_data=handle_data)
     results = algo.run(data)
 
-    print results[['starting_cash', 'ending_cash', 'ending_value']].head()
-    print results.info()
+    print results[['starting_cash', 'ending_cash', 'ending_value', 'portfolio_value']]
+#     print results.info()
+    
+    results[['ma5', 'ma20']].plot()
+#     results[['portfolio_value']].plot()
+    
+    plt.plot(results.ix[results.buy == True].index, results.ma5[results.buy == True], '^')
+    plt.plot(results.ix[results.sell == True].index, results.ma5[results.sell == True], 'v')
+    
+    plt.show()
     
     
     '''
