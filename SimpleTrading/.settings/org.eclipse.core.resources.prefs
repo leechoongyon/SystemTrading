@@ -13,6 +13,7 @@ encoding//simple/context/simple_biz_postprocess.py=utf-8
 encoding//simple/context/simple_biz_preprocess.py=utf-8
 encoding//simple/core/job/simple_job.py=utf-8
 encoding//simple/core/launch/support/simple_job_launcher.py=utf-8
+encoding//simple/data/collector/stock_data_collector.py=utf-8
 encoding//simple/data/controlway/crawler/data_crawler.py=utf-8
 encoding//simple/data/controlway/dataframe/process_dataframe.py=utf-8
 encoding//simple/data/controlway/db/mysql/data_handler.py=utf-8

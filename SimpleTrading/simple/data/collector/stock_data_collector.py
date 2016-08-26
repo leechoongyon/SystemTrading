@@ -1,14 +1,31 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 2016. 8. 26.
 
 @author: lee
 '''
-
-
 '''
     그룹별 / 업종별 / WICS별 데이터를 수집
     
 '''
+
+from simple.data.controlway.crawler.stock_toin_crawler import getAllStockCdThroughDaum
+
+
+def downloadAllStockCd(path, marketNms):
+    for marketNm in marketNms:
+        f = open(path + "/" + marketNm, "w")
+        stockCds = getAllStockCdThroughDaum(marketNm)
+        for stockCd in stockCds:
+            f.write("{}\n".format(stockCd))
+        f.close()
+
+def getAllStockCd(path, marketNm):
+    f = open(path + "/" + marketNm, "r")
+    stockCds = f.readlines()
+    f.close()
+    return stockCds
+    
 
 def collectStockDataForGroup():
     
@@ -35,4 +52,15 @@ def collectStockDataForWics():
 
 
 if __name__ == '__main__':
-    pass
+    
+    # downloadAllStockCode
+    '''
+    path = "C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data"
+    marketNms = ["kospi", "kosdaq"]
+    downloadAllStockCd(path, marketNms)
+    '''
+    
+    # getAllStockCd
+    path = "C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data"
+    marketNm = "kospi"
+    print getAllStockCd(path, marketNm)
