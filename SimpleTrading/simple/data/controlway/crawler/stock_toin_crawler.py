@@ -7,6 +7,18 @@ Created on 2016. 8. 26.
 from bs4 import BeautifulSoup
 import requests
 
+def getStockInfoThroughDaum(stockCd):
+    url = "http://finance.daum.net/item/main.daum?code={0}".format(stockCd)
+    sourceCode = requests.get(url)
+    plainText = sourceCode.text
+    soup = BeautifulSoup(plainText, "lxml")
+    
+    # ul class  :  list_price / 
+    items = soup.find_all('ul')
+    
+    for item in items:
+        print item
+    
 def getAllStockCdThroughDaum(marketNm):
     
     url = ""
@@ -21,8 +33,8 @@ def getAllStockCdThroughDaum(marketNm):
     stockCds = []
     
     sourceCode = requests.get(url)
-    plain_text = sourceCode.text
-    soup = BeautifulSoup(plain_text, "lxml")
+    plainText = sourceCode.text
+    soup = BeautifulSoup(plainText, "lxml")
     toins = soup.find_all("table", {"class":"gTable clr"})
     
     for toin in toins:
@@ -36,6 +48,6 @@ def getAllStockCdThroughDaum(marketNm):
     return stockCds
             
 if __name__ == '__main__':
-    pass
+    getStockInfoThroughDaum("006360")
 #     kospiCd = getAllStockCdThroughDaum("kospi")
 #     kosdaqCd = getAllStockCdThroughDaum("kosdaq")
