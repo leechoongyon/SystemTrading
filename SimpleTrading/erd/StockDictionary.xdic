@@ -40,4 +40,5 @@
   <term name="1일" physicalName="DD01"/>
   <term name="총" physicalName="TOTL"/>
   <term name="금액" physicalName="AMT"/>
+  <term name="최고" physicalName="HGEST"/>
 </tm:TermDictionary>
