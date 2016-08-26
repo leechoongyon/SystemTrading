@@ -31,7 +31,7 @@ class BoxStrategy():
         
         '''
             1. STOCK_ITEM 전부 돌리기.
-             1.1 STOCK_ITEM에서 현재가가 2년 최저가에 근접하는지 
+             1.1 STOCK_ITEM에서 52주 최저가에 근접하는지 
              1.2 최저가 근접 퍼센트는 옵션으로 제어
         '''
         

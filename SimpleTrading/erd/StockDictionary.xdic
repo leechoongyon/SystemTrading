@@ -41,4 +41,8 @@
   <term name="총" physicalName="TOTL"/>
   <term name="금액" physicalName="AMT"/>
   <term name="최고" physicalName="HGEST"/>
+  <term name="수정" physicalName="RVSE"/>
+  <term name="시분초" physicalName="TMST"/>
+  <term name="사이트" physicalName="SITE"/>
+  <term name="종류" physicalName="TYPE"/>
 </tm:TermDictionary>
