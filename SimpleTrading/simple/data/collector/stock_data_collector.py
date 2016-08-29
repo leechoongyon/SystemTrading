@@ -9,7 +9,8 @@ Created on 2016. 8. 26.
     
 '''
 
-from simple.data.controlway.crawler.stock_toin_crawler import getAllStockCdThroughDaum
+from simple.data.controlway.crawler.stock_crawler import getAllStockCdThroughDaum,\
+    getBasicStockInfoThroughDaum
 
 
 def downloadAllStockCd(path, marketNms):
@@ -51,16 +52,47 @@ def collectStockDataForWics():
     pass
 
 
+def storeBasicStockInfoInDB(row):
+    
+
+
 if __name__ == '__main__':
     
-    # downloadAllStockCode
+    # 1. downloadAllStockCode
+    #    초기에 한 번 파일을 생성했으면 당분간 또 생성안해도 됨
     '''
     path = "C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data"
     marketNms = ["kospi", "kosdaq"]
     downloadAllStockCd(path, marketNms)
     '''
     
-    # getAllStockCd
+    # 2. getAllStockCd
+    '''
     path = "C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data"
     marketNm = "kospi"
     print getAllStockCd(path, marketNm)
+    '''
+    
+    
+    # 3. getBasicStockInfoThroughDaum
+    '''
+         기본주가정보
+       0. 현재가 / 1. 시가 / 2. 전일비 / 3. 고가 / 4. 등락률
+       5. 저가 / 6. 거래량 / 7. 매도 / 8. 거래대금 / 9. 매수
+       10. 상한가 / 11. 52주 고가 / 12. 하한가 / 13. 52주 저가 / 14. 연중 최고가
+       15. 50일 고가 / 16. 연중 최저가 / 17. 50일 저가 / 18. 시가총액 / 19. 자본금
+       20. 상장주식수 / 21. 액면가 / 22. 결산월 / 23. 상장일 / 24. 업종 PER
+       25. PER
+    '''
+    
+    stockCd = "006360"
+    row = getBasicStockInfoThroughDaum(stockCd)
+    
+    # 4. StoreBasicStockInfoInDB
+    '''
+        저장할 목록
+        1. 현재가 (0) / 2. 52주 고가 (11) / 3. 52주 저가 (13) / 4. 시가총액 (18) / 5. 업종 PER (24)
+        6. PER (25) 
+    '''
+    storeBasicStockInfoInDB(row)
+    
