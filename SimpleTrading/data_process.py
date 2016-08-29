@@ -26,6 +26,7 @@ class DataProcess():
     def __init__(self, dataHandler):
         self.dataHandler = dataHandler
 
+    '''
     def decideM24CWhinLwstPrice(self, sql, codes, start, end):
         try:
             update_params = {}
@@ -36,12 +37,13 @@ class DataProcess():
                 result = results[0]
                 update_param = {'m24c_whin_lwst_price':result[0], 'stock_cd':code}
                 update_params.add(update_param)
-            self.dataHandler.execSqlManyexecSqlManyWithParame_params)
+            self.dataHandler.execSqlManyexecSqlManyWithParams(params)
         
         except Exception, e:
             print "Error decideM24CWhinLwstPrice codes : %s" % code
             print e
-    
+    '''
+        
     def getStockCodes(self, market_type):
         cursor = self.dataHandler.openSql(self.select_stock_item_sql)
         results = cursor.fetchall()

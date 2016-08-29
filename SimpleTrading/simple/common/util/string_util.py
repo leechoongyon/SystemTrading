@@ -9,8 +9,6 @@ import re
 import unicodedata
 
 
-
-
 '''
     ex) print multi_replace("94,100.00", {",":"", ".":""})
         9410000
@@ -34,12 +32,32 @@ def replace(str, old, new):
     return str.replace(old, new)
     
 
-def convertUnicodeToString(str):
-    return unicodedata.normalize("NFKD", str).encode('ascii', 'ignore')
+def convertUnicodeToString(data):
+    results = []
+    if type(data) is list:
+        for obj in data:
+            if type(obj) is unicode:
+                results.append(unicodedata.normalize("NFKD", obj).encode('ascii', 'ignore'))
+            else:
+                results.append(obj)
+        return results
+        
+    return unicodedata.normalize("NFKD", data).encode('ascii', 'ignore')
 
+def searchIndex(regex, str):
+    m = re.search(regex, str)
+    if m:
+        return m.start()
+    else:
+        print "No regex in that string"
 
 if __name__ == '__main__':
-    print convertUnicodeToString(u"Klüft skräms inför på fédéral électoral große")
+
+    # 
+    str = "Hello"
+    print searchIndex("\d", str)
+
+#     print convertUnicodeToString(u"Klüft skräms inför på fédéral électoral große")
     
     '''
     str = [] 
