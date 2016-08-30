@@ -11,6 +11,7 @@ Created on 2016. 8. 26.
 
 import sys
 
+from simple.common.util import string_util
 from simple.common.util.time_util import getTodayWithFormatting
 from simple.data.controlway.crawler.stock_crawler import getAllStockCdThroughDaum, \
     getBasicStockInfoThroughDaum
@@ -75,37 +76,54 @@ def convertStockType(rows):
         tempRow = str(unicode(row))
         
         if index == 2:
-            tempRow = int(tempRow)
+            if tempRow is '':
+                tempRow = 0
+            else:
+                tempRow = int(tempRow)
         elif index == 3:
-            tempRow= int(tempRow)
+            if tempRow is '':
+                tempRow = 0
+            else:
+                tempRow= int(tempRow)
         elif index == 4:
-            tempRow = int(tempRow)
-        elif index == 5:
-            tempRow = float(tempRow)    
-        elif index == 6:
-            tempRow = float(tempRow)
-        elif index == 7:
-            tempRow = float(tempRow)
-        elif index == 8:
-            tempRow = float(tempRow)
-        elif index == 10:
-            tempRow = float(tempRow)
-        elif index == 12:
-            tempRow = float(tempRow)
+            if tempRow is '':
+                tempRow = 0
+            else:
+                tempRow = int(tempRow)
+        elif index == 5 :
+            if tempRow is '':
+                tempRow = 0.0
+            else:
+                tempRow = float(tempRow)    
+        elif index == 6 :
+            if tempRow is '':
+                tempRow = 0.0
+            else:
+                tempRow = float(tempRow)
+        elif index == 7 :
+            if tempRow is '':
+                tempRow = 0.0
+            else:
+                tempRow = float(tempRow)
+        elif index == 8 :
+            if tempRow is '':
+                tempRow = 0.0
+            else:
+                tempRow = float(tempRow)
+        elif index == 10 :
+            if tempRow is '':
+                tempRow = 0.0
+            else:
+                tempRow = float(tempRow)
+        elif index == 12 :
+            if tempRow is '':
+                tempRow = 0.0
+            else:
+                tempRow = float(tempRow)
         
         index += 1    
         realRow.append(tempRow)
         
-#     row[2] = int(row[2])
-#     row[3] = int(row[3])
-#     row[4] = int(row[4])
-#     row[5] = float(row[5])
-#     row[6] = float(row[6])
-#     row[7] = float(row[7])
-#     row[8] = float(row[8])
-#     row[10] = float(row[10])
-#     row[12] = float(row[12])
-
     return realRow
 
 def processStockData(tempRows):
@@ -124,6 +142,7 @@ def processStockData(tempRows):
                tempRow[15], tempRow[28], tempRow[30], tempRow[29],
                tempRow[31], tempRow[32], tempRow[26], tempRow[33],
                tempRow[20]]
+        print "row : %s " % row
         realRow = convertStockType(row)
         rows.append(realRow)
         
@@ -140,14 +159,32 @@ if __name__ == '__main__':
     '''
     
     # 2. getAllStockCd
+    
+    # kospi 
     '''
     path = "C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data"
     marketNm = "kospi"
-    print getAllStockCd(path, marketNm)
+    rawItems = getAllStockCd(path, marketNm)
+    
+    kospiStockCd = []
+    for rawItem in rawItems:
+        stockCd = string_util.sub("\n", "", rawItem)
+        kospiStockCd.append(stockCd)
+        
     '''
     
+    # kosdaq
+    path = "C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data"
+    marketNm = "kosdaq"
+    rawItems = getAllStockCd(path, marketNm)
+    
+    kosdaqStockCd = []
+    for rawItem in rawItems:
+        stockCd = string_util.sub("\n", "", rawItem)
+        kosdaqStockCd.append(stockCd)
     
     # 3. getBasicStockInfoThroughDaum
+    
     '''
          기본주가정보
        0. 종목코드 / 1. 종목명 / 2. 현재가 / 3. 시가 / 4. 전일비 / 5. 고가 / 6. 등락률
@@ -158,16 +195,21 @@ if __name__ == '__main__':
        27. PER / 28.EPS / 29. PER / 30. BPS / 31. PBR / 32. 업종
        33. WICS
     '''
-    
-    stockCd = "006360"
-    gsRow = getBasicStockInfoThroughDaum(stockCd)
-    
-    stockCd = "035720"
-    kakaoRow = getBasicStockInfoThroughDaum(stockCd)
-    
+
+    # kospi
+    '''
     rows = []
-    rows.append(gsRow)
-    rows.append(kakaoRow)
+    for stockCd in kospiStockCd:
+        row = getBasicStockInfoThroughDaum(stockCd)
+        rows.append(row)
+    '''
+    
+    # kosdaq
+    rows = []
+    for stockCd in kosdaqStockCd:
+        row = getBasicStockInfoThroughDaum(stockCd)
+        rows.append(row)
+
     
     # 4. StockData 가공
     '''

@@ -49,7 +49,7 @@ def searchIndex(regex, str):
     if m:
         return m.start()
     else:
-        print "No regex in that string"
+        print "No regex in that string / regex : %s, str : %s " % (regex, str)
 
 
 def isNumber(str):
@@ -61,6 +61,11 @@ def isNumber(str):
 
 def convertStringToNum(str):
     return float(str)
+
+
+def sub(old, new, str):
+    result = re.sub(old, new, str) 
+    return result
 
 if __name__ == '__main__':
 

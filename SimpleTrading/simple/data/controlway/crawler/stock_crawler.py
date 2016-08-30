@@ -4,7 +4,6 @@ Created on 2016. 8. 26.
 
 @author: lee
 '''
-
 '''
     기본주가정보
     1. 현재가 / 2. 시가 / 3. 전일비 / 4. 고가 / 5. 등락률
@@ -15,10 +14,14 @@ Created on 2016. 8. 26.
     26. PER
 '''
 
+import sys
+
 from bs4 import BeautifulSoup
 import requests
 
-from simple.common.util import regex_util, string_util
+from simple.common.util import string_util
+from simple.data.controlway.db.factory import data_handler_factory
+from simple.data.stock.query.insert_query import INSERT_STOCK_ITEM_01
 
 
 def miniTest(stockCd):
@@ -32,7 +35,7 @@ def miniTest(stockCd):
     totalStockInfos = soup.find('ul', {'class':'list_descstock'})
     tt = totalStockInfos.find_all('dd')
     for t in tt:
-        row.append(regex_util.sub(old, new, t.text))
+        row.append(string_util.sub(old, new, t.text))
         
     
     index = row[5].find('(')
@@ -62,6 +65,7 @@ def miniTest(stockCd):
     
     
 def getBasicStockInfoThroughDaum(stockCd):
+    
     old = "[,%\t\n ]"
     new = ""
     row = []
@@ -75,9 +79,10 @@ def getBasicStockInfoThroughDaum(stockCd):
     totalStockInfos = soup.find('ul', {'class':'list_descstock'})
     tt = totalStockInfos.find_all('dd')
     for t in tt:
-        tempRow.append(regex_util.sub(old, new, t.text))
+        tempRow.append(string_util.sub(old, new, t.text))
     
     # 5,7,8,9 가 필요한 것
+    
     index = tempRow[5].find('(')
     temps = tempRow[5][:index].split('/')
     eps = temps[0]
@@ -89,9 +94,18 @@ def getBasicStockInfoThroughDaum(stockCd):
     pbr = temps[1]
     
     toinIndex = string_util.searchIndex("\d", tempRow[8])
-    toin = tempRow[8][:toinIndex-1]
+    toin = ""
+    if toinIndex is not None:
+        toin = tempRow[8][:toinIndex-1]
+    else:
+        toin = ""
+        
     wicsIndex = string_util.searchIndex("\d", tempRow[9])
-    wics = tempRow[9][:wicsIndex-1]
+    wics = ""
+    if wicsIndex is not None:
+        wics = tempRow[9][:wicsIndex-1]
+    else:
+        wics = ""
     
     # 기본 주가 정보
     stockNm = soup.find('em', {'class':'screen_out'}).text
@@ -103,7 +117,7 @@ def getBasicStockInfoThroughDaum(stockCd):
     for stockInfo in stockInfos:
         infos = stockInfo.find_all('td', {'class':'num'})
         for info in infos:
-            processedData = regex_util.sub(old, new, info.text)
+            processedData = string_util.sub(old, new, info.text)
             row.append(processedData)
     
     row.append(eps)
@@ -112,7 +126,6 @@ def getBasicStockInfoThroughDaum(stockCd):
     row.append(pbr)
     row.append(toin)
     row.append(wics)
-#     row = string_util.convertUnicodeToString(row)
     return row
     
 def getAllStockCdThroughDaum(marketNm):
@@ -142,13 +155,107 @@ def getAllStockCdThroughDaum(marketNm):
             stockCds.append(stockCd)
             
     return stockCds
+
+def processStockData(tempRows):
+
+    '''
+        저장할 목록
+        0. 종목코드 (0) / 1. 종목명(1) / 2. 현재가(2) / 3. 52주 고가(13)
+        4. 52주 저가 (15) / 5. EPS(28) / 6. BPS(30) / 7. PER(29)
+        8. PBR(31) / 9. TOIN(32) / 10. TOIN_PER(26)
+        11. WICS(33) / 12. 시가총액(20)
+    '''
+    
+    rows = []
+    for tempRow in tempRows:
+        row = [tempRow[0], tempRow[1], tempRow[2], tempRow[13],
+               tempRow[15], tempRow[28], tempRow[30], tempRow[29],
+               tempRow[31], tempRow[32], tempRow[26], tempRow[33],
+               tempRow[20]]
+        realRow = convertStockType(row)
+        rows.append(realRow)
+        
+    return rows
             
+            
+def convertStockType(rows):
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+    
+    realRow = []
+    index = 0
+    print rows
+    for row in rows:
+        tempRow = str(unicode(row))
+        
+        if index == 2:
+            if tempRow is '':
+                tempRow = 0
+            else:
+                tempRow = int(tempRow)
+        elif index == 3:
+            if tempRow is '':
+                tempRow = 0
+            else:
+                tempRow= int(tempRow)
+        elif index == 4:
+            if tempRow is '':
+                tempRow = 0
+            else:
+                tempRow = int(tempRow)
+        elif index == 5 :
+            if tempRow is '':
+                tempRow = 0.0
+            else:
+                tempRow = float(tempRow)    
+        elif index == 6 :
+            if tempRow is '':
+                tempRow = 0.0
+            else:
+                tempRow = float(tempRow)
+        elif index == 7 :
+            if tempRow is '':
+                tempRow = 0.0
+            else:
+                tempRow = float(tempRow)
+        elif index == 8 :
+            if tempRow is '':
+                tempRow = 0.0
+            else:
+                tempRow = float(tempRow)
+        elif index == 10 :
+            if tempRow is '':
+                tempRow = 0.0
+            else:
+                tempRow = float(tempRow)
+        elif index == 12 :
+            if tempRow is '':
+                tempRow = 0.0
+            else:
+                tempRow = float(tempRow)
+        
+        index += 1    
+        realRow.append(tempRow)
+        
+    return realRow
+
+def storeBasicStockInfoInDB(rows):
+    dataHandler = data_handler_factory.getDataHandler()
+    dataHandler.execSqlManyWithParam(INSERT_STOCK_ITEM_01,
+                                           rows)
+
+    data_handler_factory.close(dataHandler)
+
 if __name__ == '__main__':
     
-    stockCd = "006360"
+    stockCd = "225430"
 #     miniTest(stockCd)
-    row = getBasicStockInfoThroughDaum("006360")
-    for r in row:
-        print r
+    rows = []
+    row = getBasicStockInfoThroughDaum(stockCd)
+    rows.append(row)
+    realRows = processStockData(rows)
+    print "realRows : %s " % realRows
+    storeBasicStockInfoInDB(realRows)            
+    
 #     kospiCd = getAllStockCdThroughDaum("kospi")
 #     kosdaqCd = getAllStockCdThroughDaum("kosdaq")
