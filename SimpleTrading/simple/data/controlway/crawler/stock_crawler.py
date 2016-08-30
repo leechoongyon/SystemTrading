@@ -65,7 +65,6 @@ def getBasicStockInfoThroughDaum(stockCd):
     old = "[,%\t\n ]"
     new = ""
     row = []
-    dict = {}
     tempRow = []
     url = "http://finance.daum.net/item/quote.daum?code={0}".format(stockCd)
     sourceCode = requests.get(url)

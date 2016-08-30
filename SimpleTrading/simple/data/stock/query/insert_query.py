@@ -9,7 +9,7 @@ INSERT_STOCK_ITEM_01 = (
                 "(STOCK_CD, STOCK_NM, CUR_PRICE, 52WEEK_HIGH_PRICE, "
                 " 52WEEK_LOW_PRICE, EPS, BPS, PER, PBR, "
                 " TOIN, TOIN_PER, WICS, MARKET_CAPITALIZATION, LST_RVSE_DT)"
-            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,sysdate) "
+            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,now()) "
             "ON DUPLICATE KEY UPDATE "
                 "STOCK_NM = VALUES(STOCK_NM),"
                 "CUR_PRICE = VALUES(CUR_PRICE), "

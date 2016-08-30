@@ -51,6 +51,17 @@ def searchIndex(regex, str):
     else:
         print "No regex in that string"
 
+
+def isNumber(str):
+    try:
+        tmp = float(str)
+        return True
+    except ValueError:
+        return False
+
+def convertStringToNum(str):
+    return float(str)
+
 if __name__ == '__main__':
 
     # 

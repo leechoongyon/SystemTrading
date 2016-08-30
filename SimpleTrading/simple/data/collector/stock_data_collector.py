@@ -10,6 +10,7 @@ Created on 2016. 8. 26.
 '''
 
 import sys
+
 from simple.common.util.time_util import getTodayWithFormatting
 from simple.data.controlway.crawler.stock_crawler import getAllStockCdThroughDaum, \
     getBasicStockInfoThroughDaum
@@ -62,7 +63,50 @@ def storeBasicStockInfoInDB(rows):
     dataHandler.execSqlManyWithParam(INSERT_STOCK_ITEM_01,
                                            rows)
 
-    data_handler_factory.close(DataHandler)
+    data_handler_factory.close(dataHandler)
+
+def convertStockType(rows):
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+    
+    realRow = []
+    index = 0
+    for row in rows:
+        tempRow = str(unicode(row))
+        
+        if index == 2:
+            tempRow = int(tempRow)
+        elif index == 3:
+            tempRow= int(tempRow)
+        elif index == 4:
+            tempRow = int(tempRow)
+        elif index == 5:
+            tempRow = float(tempRow)    
+        elif index == 6:
+            tempRow = float(tempRow)
+        elif index == 7:
+            tempRow = float(tempRow)
+        elif index == 8:
+            tempRow = float(tempRow)
+        elif index == 10:
+            tempRow = float(tempRow)
+        elif index == 12:
+            tempRow = float(tempRow)
+        
+        index += 1    
+        realRow.append(tempRow)
+        
+#     row[2] = int(row[2])
+#     row[3] = int(row[3])
+#     row[4] = int(row[4])
+#     row[5] = float(row[5])
+#     row[6] = float(row[6])
+#     row[7] = float(row[7])
+#     row[8] = float(row[8])
+#     row[10] = float(row[10])
+#     row[12] = float(row[12])
+
+    return realRow
 
 def processStockData(tempRows):
 
@@ -71,20 +115,18 @@ def processStockData(tempRows):
         0. 종목코드 (0) / 1. 종목명(1) / 2. 현재가(2) / 3. 52주 고가(13)
         4. 52주 저가 (15) / 5. EPS(28) / 6. BPS(30) / 7. PER(29)
         8. PBR(31) / 9. TOIN(32) / 10. TOIN_PER(26)
-        11. WICS(33) / 12. 시가총액(20) / 13. 현재날짜
+        11. WICS(33) / 12. 시가총액(20)
     '''
     
     rows = []
-    today = getTodayWithFormatting("%Y%m%d")
     for tempRow in tempRows:
         row = [tempRow[0], tempRow[1], tempRow[2], tempRow[13],
                tempRow[15], tempRow[28], tempRow[30], tempRow[29],
                tempRow[31], tempRow[32], tempRow[26], tempRow[33],
-               tempRow[20], today]
-        rows.append(row)
- 
-    
-    
+               tempRow[20]]
+        realRow = convertStockType(row)
+        rows.append(realRow)
+        
     return rows
 
 if __name__ == '__main__':
@@ -126,7 +168,6 @@ if __name__ == '__main__':
     rows = []
     rows.append(gsRow)
     rows.append(kakaoRow)
-
     
     # 4. StockData 가공
     '''
@@ -139,28 +180,6 @@ if __name__ == '__main__':
 
     rows = processStockData(rows)
     
-#     reload(sys)
-#     sys.setdefaultencoding('utf-8')
-#     
-#     r = range(0,13)
-#     for row in rows:
-#         for i in r:
-#             row[i] = str(unicode(row[i]))
-        
-    r = range(0,13)
-    for row in rows:
-        for i in r:
-            print type(row[i])
-        
-    
-#     for row in rows:
-#         row[0] = str(unicode(row[0]))
-#         row[1] = str(unicode(row[1]))
-#         row[2] = str()
-#         print row[1]
-#         print row[2]
-        
-        
     # 5. StoreBasicStockInfoInDB
-#     storeBasicStockInfoInDB(rows)
+    storeBasicStockInfoInDB(rows)
     
