@@ -64,7 +64,7 @@ def miniTest(stockCd):
     print "wics : %s " % wics
     
     
-def getBasicStockInfoThroughDaum(stockCd):
+def getBasicStockInfoThroughDaum(stockCd, marketType):
     
     old = "[,%\t\n ]"
     new = ""
@@ -108,7 +108,11 @@ def getBasicStockInfoThroughDaum(stockCd):
         wics = ""
     
     # 기본 주가 정보
-    stockNm = soup.find('em', {'class':'screen_out'}).text
+#     stockNm = soup.find('em', {'class':'screen_out'}).text
+    stockNmItem = soup.find('div', {'class':'topInfo'})
+    stockNm = stockNmItem.find('h2').text
+    
+    
     basicStockInfos = soup.find('div', {'class':'leftDiv'})
     stockInfos = basicStockInfos.find_all("tr")
     
@@ -126,6 +130,7 @@ def getBasicStockInfoThroughDaum(stockCd):
     row.append(pbr)
     row.append(toin)
     row.append(wics)
+    row.append(marketType)
     return row
     
 def getAllStockCdThroughDaum(marketNm):
@@ -248,14 +253,14 @@ def storeBasicStockInfoInDB(rows):
 
 if __name__ == '__main__':
     
-    stockCd = "225430"
-#     miniTest(stockCd)
+    stockCd = "000075"
+    miniTest(stockCd)
     rows = []
-    row = getBasicStockInfoThroughDaum(stockCd)
-    rows.append(row)
-    realRows = processStockData(rows)
-    print "realRows : %s " % realRows
-    storeBasicStockInfoInDB(realRows)            
+#     row = getBasicStockInfoThroughDaum(stockCd)
+#     rows.append(row)
+#     realRows = processStockData(rows)
+#     print "realRows : %s " % realRows
+#     storeBasicStockInfoInDB(realRows)            
     
 #     kospiCd = getAllStockCdThroughDaum("kospi")
 #     kosdaqCd = getAllStockCdThroughDaum("kosdaq")

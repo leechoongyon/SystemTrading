@@ -8,8 +8,9 @@ INSERT_STOCK_ITEM_01 = (
            "INSERT INTO STOCK_ITEM " 
                 "(STOCK_CD, STOCK_NM, CUR_PRICE, 52WEEK_HIGH_PRICE, "
                 " 52WEEK_LOW_PRICE, EPS, BPS, PER, PBR, "
-                " TOIN, TOIN_PER, WICS, MARKET_CAPITALIZATION, LST_RVSE_DT)"
-            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,now()) "
+                " TOIN, TOIN_PER, WICS, MARKET_CAPITALIZATION, LST_RVSE_DT, "
+                " MARKET_CD)"
+            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,now(), %s) "
             "ON DUPLICATE KEY UPDATE "
                 "STOCK_NM = VALUES(STOCK_NM),"
                 "CUR_PRICE = VALUES(CUR_PRICE), "
@@ -23,7 +24,8 @@ INSERT_STOCK_ITEM_01 = (
                 "TOIN_PER = VALUES(TOIN_PER), "
                 "WICS = VALUES(WICS), "
                 "MARKET_CAPITALIZATION = VALUES(MARKET_CAPITALIZATION), "
-                "LST_RVSE_DT = VALUES(LST_RVSE_DT)"
+                "LST_RVSE_DT = VALUES(LST_RVSE_DT), "
+                "MARKET_CD = VALUES(MARKET_CD)"
            )
 
 

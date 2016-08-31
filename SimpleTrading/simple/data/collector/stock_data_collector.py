@@ -133,7 +133,7 @@ def processStockData(tempRows):
         0. 종목코드 (0) / 1. 종목명(1) / 2. 현재가(2) / 3. 52주 고가(13)
         4. 52주 저가 (15) / 5. EPS(28) / 6. BPS(30) / 7. PER(29)
         8. PBR(31) / 9. TOIN(32) / 10. TOIN_PER(26)
-        11. WICS(33) / 12. 시가총액(20)
+        11. WICS(33) / 12. 시가총액(20) / 13. marketType
     '''
     
     rows = []
@@ -141,8 +141,7 @@ def processStockData(tempRows):
         row = [tempRow[0], tempRow[1], tempRow[2], tempRow[13],
                tempRow[15], tempRow[28], tempRow[30], tempRow[29],
                tempRow[31], tempRow[32], tempRow[26], tempRow[33],
-               tempRow[20]]
-        print "row : %s " % row
+               tempRow[20], tempRow[34]]
         realRow = convertStockType(row)
         rows.append(realRow)
         
@@ -160,8 +159,8 @@ if __name__ == '__main__':
     
     # 2. getAllStockCd
     
-    # kospi 
-    '''
+    
+    # kospi
     path = "C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data"
     marketNm = "kospi"
     rawItems = getAllStockCd(path, marketNm)
@@ -170,9 +169,7 @@ if __name__ == '__main__':
     for rawItem in rawItems:
         stockCd = string_util.sub("\n", "", rawItem)
         kospiStockCd.append(stockCd)
-        
-    '''
-    
+
     # kosdaq
     path = "C:/Windows/System32/git/SystemTrading/SimpleTrading/stock_data"
     marketNm = "kosdaq"
@@ -182,7 +179,7 @@ if __name__ == '__main__':
     for rawItem in rawItems:
         stockCd = string_util.sub("\n", "", rawItem)
         kosdaqStockCd.append(stockCd)
-    
+
     # 3. getBasicStockInfoThroughDaum
     
     '''
@@ -193,23 +190,20 @@ if __name__ == '__main__':
        17. 50일 고가 / 18. 연중 최저가 / 19. 50일 저가 / 20. 시가총액 / 21. 자본금
        22. 상장주식수 / 23. 액면가 / 24. 결산월 / 25. 상장일 / 26. 업종 PER
        27. PER / 28.EPS / 29. PER / 30. BPS / 31. PBR / 32. 업종
-       33. WICS
+       33. WICS / 34. marketType
     '''
 
     # kospi
-    '''
     rows = []
     for stockCd in kospiStockCd:
-        row = getBasicStockInfoThroughDaum(stockCd)
+        row = getBasicStockInfoThroughDaum(stockCd, "kospi")
         rows.append(row)
-    '''
     
     # kosdaq
-    rows = []
+    
     for stockCd in kosdaqStockCd:
-        row = getBasicStockInfoThroughDaum(stockCd)
+        row = getBasicStockInfoThroughDaum(stockCd, "kosdaq")
         rows.append(row)
-
     
     # 4. StockData 가공
     '''
@@ -217,9 +211,8 @@ if __name__ == '__main__':
         0. 종목코드 (0) / 1. 종목명(1) / 2. 현재가(2) / 3. 52주 고가(13)
         4. 52주 저가 (15) / 5. EPS(28) / 6. BPS(30) / 7. PER(29)
         8. PBR(31) / 9. TOIN(32) / 10. TOIN_PER(26)
-        11. WICS(33) / 12. 시가총액(20)
+        11. WICS(33) / 12. 시가총액(20) / 13. marketType
     '''
-
     rows = processStockData(rows)
     
     # 5. StoreBasicStockInfoInDB
