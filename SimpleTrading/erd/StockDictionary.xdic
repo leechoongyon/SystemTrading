@@ -34,7 +34,7 @@
   <term name="기타" physicalName="ETC"/>
   <term name="업종" physicalName="TOIN"/>
   <term name="대분류" physicalName="BIGCSS"/>
-  <term name="현재" physicalName="NOW"/>
+  <term name="현재" physicalName="CUR"/>
   <term name="전" physicalName="BEFR"/>
   <term name="일자" physicalName="YMD"/>
   <term name="1일" physicalName="DD01"/>
@@ -45,4 +45,11 @@
   <term name="시분초" physicalName="TMST"/>
   <term name="사이트" physicalName="SITE"/>
   <term name="종류" physicalName="TYPE"/>
+  <term name="주" physicalName="WEEK"/>
+  <term name="EPS" physicalName="EPS"/>
+  <term name="BPS" physicalName="BPS"/>
+  <term name="PBR" physicalName="PBR"/>
+  <term name="PER" physicalName="PER"/>
+  <term name="시가총액" physicalName="MARKET_CAPITALIZATION"/>
+  <term name="WICS" physicalName="WICS"/>
 </tm:TermDictionary>
