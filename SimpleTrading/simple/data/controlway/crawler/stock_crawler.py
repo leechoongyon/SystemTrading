@@ -133,6 +133,18 @@ def getBasicStockInfoThroughDaum(stockCd, marketType):
     row.append(marketType)
     return row
     
+    
+def getFinancialStockInfoThroughDaum(stockCd):
+    
+    url = "http://wisefn.stock.daum.net/company/c1030001_1.aspx?cmp_cd=088350"
+#     url = "http://finance.daum.net/item/company.daum?code=088350&type=11"
+#     url = "http://finance.daum.net/item/company.daum?code={0}&type=11".format(stockCd)
+    sourceCode = requests.get(url)
+    plainText = sourceCode.text
+    soup = BeautifulSoup(plainText, "lxml")
+    
+    print soup
+
 def getAllStockCdThroughDaum(marketNm):
     
     url = ""
@@ -253,9 +265,10 @@ def storeBasicStockInfoInDB(rows):
 
 if __name__ == '__main__':
     
-    stockCd = "000075"
-    miniTest(stockCd)
-    rows = []
+    stockCd = "088350"
+    getFinancialStockInfoThroughDaum(stockCd)
+    
+#     miniTest(stockCd)
 #     row = getBasicStockInfoThroughDaum(stockCd)
 #     rows.append(row)
 #     realRows = processStockData(rows)

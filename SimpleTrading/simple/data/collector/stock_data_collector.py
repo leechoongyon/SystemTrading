@@ -147,7 +147,7 @@ def processStockData(tempRows):
         
     return rows
 
-if __name__ == '__main__':
+def collectBasicStockInfo():
     
     # 1. downloadAllStockCode
     #    초기에 한 번 파일을 생성했으면 당분간 또 생성안해도 됨
@@ -217,4 +217,14 @@ if __name__ == '__main__':
     
     # 5. StoreBasicStockInfoInDB
     storeBasicStockInfoInDB(rows)
+
+def collectFinancialStockInfo():
+    pass
+
+if __name__ == '__main__':
     
+    # 1. 종목기본정보 가져오기 
+    collectBasicStockInfo()
+
+    # 2. 재무정보 가져오기
+    collectFinancialStockInfo()
