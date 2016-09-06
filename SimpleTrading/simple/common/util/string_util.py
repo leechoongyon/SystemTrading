@@ -63,6 +63,11 @@ def convertStringToNum(str):
     return float(str)
 
 
+def removeKorean(str):
+    hangul = re.compile('^ \.\,\?\!a-zA-Z0-9\u3131-\u3163\uac00-\ud7a3]+')
+    result = hangul.sub("", str)
+    return result
+
 def sub(old, new, str):
     result = re.sub(old, new, str) 
     return result

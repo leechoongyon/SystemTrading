@@ -4,17 +4,59 @@ Created on 2016. 7. 29.
 
 @author: lee
 '''
+import json
 import os
+import re
+import urllib2
 
 from bs4 import BeautifulSoup
 import requests
-
-import pandas as pd
-from simple.common.util import file_util, string_util
-from simple.common.util.properties_util import properties, STOCK_DATA
-from simple.data.controlway.crawler.data_crawler import getHistoricalData
+from simple.common.util import string_util
 
 
+def getFinancialStockInfoThroughDaum(stockCd):
+
+    dict = {}
+
+    url = "http://wisefn.stock.daum.net/company/cF1001.aspx?cmp_cd=005380&finGubun=MAIN"
+    sourceCode = requests.get(url)
+    plainText = sourceCode.text
+    soup = BeautifulSoup(plainText, "lxml")
+    script = soup.find(lang="javascript")
+    
+    '''
+    # json 됨
+    js = json.loads(script.string.split(";")[0].split(" = ")[1])
+    print js
+    '''
+    
+    rawData = script.string.split(";")[0].split(" = ")[1]
+    old = "[연결\<\>brspan class\(\)IFRS\/mutiow\\'vhge\=\-\;]"
+    new = ""
+    dates = string_util.sub(old, new, rawData)
+    dates = string_util.convertUnicodeToString(dates)
+    jsDate = json.loads(dates)
+    dict['date'] = jsDate
+
+    rawData = script.string.split(";")[1].split(" = ")[1]
+    jsStats = json.loads(rawData)
+    dict['stats'] = jsStats
+    
+    return dict
+    
+    '''
+    old = "[\<\>brspan class\(\)IFRS연결\/mutiow\"\'vhge\=\-\;]"
+    new = ""
+    url = "http://wisefn.stock.daum.net/company/cF1001.aspx?cmp_cd={0}&finGubun=MAIN".format(stockCd)
+    for line in urllib2.urlopen(url):
+        if "changeFin " in line:
+            data = string_util.sub(old, new, line)
+            processedData = json.loads(data)
+            print processedData
+    
+        if "changeFinData" in line:
+    '''     
+    
 def getBasicStockInfoThroughDaum(stockCd):
     
     old = "[,%\t\n ]"
@@ -31,44 +73,17 @@ def getBasicStockInfoThroughDaum(stockCd):
     print stockNm.find('h2').text
 
 if __name__ == '__main__':
+    
+    '''
     start = "2014-01-01"
     end = "2016-07-25"
     # kakao = 035720 / combine = 047770
     symbol = "000070"
- 
     getBasicStockInfoThroughDaum(symbol)
- 
-    '''
-        
     '''
  
- 
- 
-    '''
-    # history를 읽어서 df에 담기   
-    rows = getHistoricalData(symbol, start, end)
-    df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", 
-                                     "Close", "Volume", "Adj Close"])
+    stockCd = "000070"
+    dict = getFinancialStockInfoThroughDaum(stockCd)
+    print dict['date']
+    print dict['stats']
     
-    df[['Close']] = df[['Close']].apply(pd.to_numeric)
-    closeMax = df['Close'].max()
-    closeMin = df['Close'].min()
-    
-    columns = ['STOCK_CD', 'HIGH', 'LOW', 'STDEV']
-    refinedDf = pd.DataFrame(columns=columns)
-    refinedDf.loc[0] = [symbol, closeMax, closeMin, 0]
-    print refinedDf
-    '''
-    
-    '''
-    rows = getHistoricalData(symbol, start, end)
-    df = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", 
-                                     "Close", "Volume", "Adj Close"])
-    path = properties.getSelection(STOCK_DATA)['stock_download_path']
-#     df.to_csv(path + "/기계/" + symbol + ".csv", index=False)
-    rPath = "C:/git/SimpleTrading/SimpleTrading/stock_data/기계/"
-    file_util.mkdir(rPath)
-    df.to_csv(os.path.join(path, "/기계/035720.csv"), index=False)
-    df = pd.read_csv(path + "/기계/" + symbol + ".csv")
-    print df
-    '''
