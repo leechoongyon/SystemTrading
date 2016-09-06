@@ -185,16 +185,19 @@ if __name__ == '__main__':
 
     # GLD    
     '''
+    start = '2009-01-01'
+    end = '2012-12-31'
     out = web.DataReader("GLD", "yahoo", start, end)
-    out.to_csv('./data/GLD.csv')
+    out.to_csv('./GLD.csv')
     '''
     
     # GOOG
     '''
+    start = '2009-01-01'
+    end = '2012-12-31'
     out = web.DataReader("GOOG", "yahoo", start, end)
-    out.to_csv('./data/GOOG.csv')
+    out.to_csv('./GOOG.csv')
     '''
-    
     ######################################################
     # H                                                  #  
     ######################################################
@@ -291,10 +294,11 @@ if __name__ == '__main__':
     
     # IBM
     '''
+    start = '2009-01-01'
+    end = '2012-12-31'
     out = web.DataReader("IBM", "yahoo", start, end)
-    out.to_csv('./data/IBM.csv')
+    out.to_csv('./IBM.csv')
     '''
-    
     ######################################################
     # M                                                  #  
     ######################################################
@@ -374,8 +378,10 @@ if __name__ == '__main__':
     
     # SPY
     '''
+    start = '2009-01-01'
+    end = '2012-12-31'
     out =  web.DataReader("^GSPC", "yahoo", start, end)
-    out.to_csv('./data/SPY.csv')
+    out.to_csv('./SPY.csv')
     '''
     
     ######################################################
@@ -384,10 +390,11 @@ if __name__ == '__main__':
     
     # XOM
     '''
+    start = '2009-01-01'
+    end = '2012-12-31'
     out =  web.DataReader("XOM", "yahoo", start, end)
-    out.to_csv('./data/XOM.csv')
+    out.to_csv('./XOM.csv')
     '''
-    
     
     
     

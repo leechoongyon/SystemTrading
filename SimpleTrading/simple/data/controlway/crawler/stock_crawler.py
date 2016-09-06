@@ -133,8 +133,6 @@ def getBasicStockInfoThroughDaum(stockCd, marketType):
     row.append(marketType)
     return row
     
-<<<<<<< HEAD
-    
 def getFinancialStockInfoThroughDaum(stockCd):
     
     url = "http://wisefn.stock.daum.net/company/c1030001_1.aspx?cmp_cd=088350"
@@ -264,137 +262,14 @@ def storeBasicStockInfoInDB(rows):
 
     data_handler_factory.close(dataHandler)
 
-if __name__ == '__main__':
-    
-    stockCd = "088350"
-    getFinancialStockInfoThroughDaum(stockCd)
-    
-#     miniTest(stockCd)
-=======
-def getAllStockCdThroughDaum(marketNm):
-    
-    url = ""
-    if marketNm == "kospi":
-        url = "http://finance.daum.net/quote/all.daum?type=U&stype=P"
-    elif marketNm == "kosdaq":
-        url = "http://finance.daum.net/quote/all.daum?type=U&stype=Q"
-    else:
-        print "ERROR invalid marketNm : %s" , marketNm
-    
-    
-    stockCds = []
-    
-    sourceCode = requests.get(url)
-    plainText = sourceCode.text
-    soup = BeautifulSoup(plainText, "lxml")
-    toins = soup.find_all("table", {"class":"gTable clr"})
-    
-    for toin in toins:
-        stockItems = toin.find_all("a")
-        for stockItem in stockItems:
-            tempStockItem = str(stockItem)
-            index = tempStockItem.find("code")
-            stockCd = tempStockItem[index + 5: index + 11]
-            stockCds.append(stockCd)
-            
-    return stockCds
 
-def processStockData(tempRows):
-
-    '''
-        저장할 목록
-        0. 종목코드 (0) / 1. 종목명(1) / 2. 현재가(2) / 3. 52주 고가(13)
-        4. 52주 저가 (15) / 5. EPS(28) / 6. BPS(30) / 7. PER(29)
-        8. PBR(31) / 9. TOIN(32) / 10. TOIN_PER(26)
-        11. WICS(33) / 12. 시가총액(20)
-    '''
-    
-    rows = []
-    for tempRow in tempRows:
-        row = [tempRow[0], tempRow[1], tempRow[2], tempRow[13],
-               tempRow[15], tempRow[28], tempRow[30], tempRow[29],
-               tempRow[31], tempRow[32], tempRow[26], tempRow[33],
-               tempRow[20]]
-        realRow = convertStockType(row)
-        rows.append(realRow)
-        
-    return rows
-            
-            
-def convertStockType(rows):
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
-    
-    realRow = []
-    index = 0
-    print rows
-    for row in rows:
-        tempRow = str(unicode(row))
-        
-        if index == 2:
-            if tempRow is '':
-                tempRow = 0
-            else:
-                tempRow = int(tempRow)
-        elif index == 3:
-            if tempRow is '':
-                tempRow = 0
-            else:
-                tempRow= int(tempRow)
-        elif index == 4:
-            if tempRow is '':
-                tempRow = 0
-            else:
-                tempRow = int(tempRow)
-        elif index == 5 :
-            if tempRow is '':
-                tempRow = 0.0
-            else:
-                tempRow = float(tempRow)    
-        elif index == 6 :
-            if tempRow is '':
-                tempRow = 0.0
-            else:
-                tempRow = float(tempRow)
-        elif index == 7 :
-            if tempRow is '':
-                tempRow = 0.0
-            else:
-                tempRow = float(tempRow)
-        elif index == 8 :
-            if tempRow is '':
-                tempRow = 0.0
-            else:
-                tempRow = float(tempRow)
-        elif index == 10 :
-            if tempRow is '':
-                tempRow = 0.0
-            else:
-                tempRow = float(tempRow)
-        elif index == 12 :
-            if tempRow is '':
-                tempRow = 0.0
-            else:
-                tempRow = float(tempRow)
-        
-        index += 1    
-        realRow.append(tempRow)
-        
-    return realRow
-
-def storeBasicStockInfoInDB(rows):
-    dataHandler = data_handler_factory.getDataHandler()
-    dataHandler.execSqlManyWithParam(INSERT_STOCK_ITEM_01,
-                                           rows)
-
-    data_handler_factory.close(dataHandler)
 
 if __name__ == '__main__':
     
     stockCd = "000075"
     miniTest(stockCd)
     rows = []
->>>>>>> branch 'master' of https://github.com/leechoongyon/SystemTrading.git
+
 #     row = getBasicStockInfoThroughDaum(stockCd)
 #     rows.append(row)
 #     realRows = processStockData(rows)
