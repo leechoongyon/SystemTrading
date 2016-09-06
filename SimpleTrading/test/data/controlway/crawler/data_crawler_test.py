@@ -84,6 +84,8 @@ if __name__ == '__main__':
  
     stockCd = "000070"
     dict = getFinancialStockInfoThroughDaum(stockCd)
-    print dict['date']
-    print dict['stats']
+#     print dict['date']
+    print dict['stats'][0][0][0]
+    print dict['stats'][0][0]
+    
     

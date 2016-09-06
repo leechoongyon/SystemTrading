@@ -52,4 +52,6 @@
   <term name="PER" physicalName="PER"/>
   <term name="시가총액" physicalName="MARKET_CAPITALIZATION"/>
   <term name="WICS" physicalName="WICS"/>
+  <term name="날짜" physicalName="DATES"/>
+  <term name="표기" physicalName="MARK"/>
 </tm:TermDictionary>
