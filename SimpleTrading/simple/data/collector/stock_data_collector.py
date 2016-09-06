@@ -69,9 +69,6 @@ def storeBasicStockInfoInDB(rows):
 def convertStockType(rows):
     reload(sys)
     sys.setdefaultencoding('utf-8')
-<<<<<<< HEAD
-=======
-    
     realRow = []
     index = 0
     for row in rows:
@@ -149,91 +146,9 @@ def processStockData(tempRows):
         
     return rows
 
-if __name__ == '__main__':
->>>>>>> branch 'master' of https://github.com/leechoongyon/SystemTrading.git
-    
-<<<<<<< HEAD
-    realRow = []
-    index = 0
-    for row in rows:
-        tempRow = str(unicode(row))
-        
-        if index == 2:
-            if tempRow is '':
-                tempRow = 0
-            else:
-                tempRow = int(tempRow)
-        elif index == 3:
-            if tempRow is '':
-                tempRow = 0
-            else:
-                tempRow= int(tempRow)
-        elif index == 4:
-            if tempRow is '':
-                tempRow = 0
-            else:
-                tempRow = int(tempRow)
-        elif index == 5 :
-            if tempRow is '':
-                tempRow = 0.0
-            else:
-                tempRow = float(tempRow)    
-        elif index == 6 :
-            if tempRow is '':
-                tempRow = 0.0
-            else:
-                tempRow = float(tempRow)
-        elif index == 7 :
-            if tempRow is '':
-                tempRow = 0.0
-            else:
-                tempRow = float(tempRow)
-        elif index == 8 :
-            if tempRow is '':
-                tempRow = 0.0
-            else:
-                tempRow = float(tempRow)
-        elif index == 10 :
-            if tempRow is '':
-                tempRow = 0.0
-            else:
-                tempRow = float(tempRow)
-        elif index == 12 :
-            if tempRow is '':
-                tempRow = 0.0
-            else:
-                tempRow = float(tempRow)
-        
-        index += 1    
-        realRow.append(tempRow)
-        
-    return realRow
-
-def processStockData(tempRows):
-
-    '''
-        저장할 목록
-        0. 종목코드 (0) / 1. 종목명(1) / 2. 현재가(2) / 3. 52주 고가(13)
-        4. 52주 저가 (15) / 5. EPS(28) / 6. BPS(30) / 7. PER(29)
-        8. PBR(31) / 9. TOIN(32) / 10. TOIN_PER(26)
-        11. WICS(33) / 12. 시가총액(20) / 13. marketType
-    '''
-    
-    rows = []
-    for tempRow in tempRows:
-        row = [tempRow[0], tempRow[1], tempRow[2], tempRow[13],
-               tempRow[15], tempRow[28], tempRow[30], tempRow[29],
-               tempRow[31], tempRow[32], tempRow[26], tempRow[33],
-               tempRow[20], tempRow[34]]
-        realRow = convertStockType(row)
-        rows.append(realRow)
-        
-    return rows
 
 def collectBasicStockInfo():
-    
-=======
->>>>>>> branch 'master' of https://github.com/leechoongyon/SystemTrading.git
+
     # 1. downloadAllStockCode
     #    초기에 한 번 파일을 생성했으면 당분간 또 생성안해도 됨
     '''
@@ -302,7 +217,6 @@ def collectBasicStockInfo():
     
     # 5. StoreBasicStockInfoInDB
     storeBasicStockInfoInDB(rows)
-<<<<<<< HEAD
 
 def collectFinancialStockInfo():
     pass
@@ -314,6 +228,6 @@ if __name__ == '__main__':
 
     # 2. 재무정보 가져오기
     collectFinancialStockInfo()
-=======
+
     
->>>>>>> branch 'master' of https://github.com/leechoongyon/SystemTrading.git
+
