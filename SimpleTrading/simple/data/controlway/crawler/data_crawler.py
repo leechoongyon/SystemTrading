@@ -113,9 +113,11 @@ if __name__ == '__main__':
     symbol = "035720"
 #     symbol = "047770"
 
-    rows = getHistoricalData(symbol, start, end)
-    for row in rows:
-        print row
+#     print getIntradayData(symbol)
+
+#     rows = getHistoricalData(symbol, start, end)
+#     for row in rows:
+#         print row
     
     
     '''
